@@ -305,31 +305,21 @@ class HateSpeechDetector {
     }
 
     applyShatterEffect(element) {
-        // Add shattering class to the element
-        element.classList.add('hate-speech-shattering');
-        
-        // Get element dimensions and position
+        // Get element dimensions and position for particle effect
         const rect = element.getBoundingClientRect();
         
-        // Hide element immediately
-        element.style.visibility = 'hidden';
-        
-        // Create particle explosion
+        // Create particle explosion at the current position
         this.createParticleExplosion(rect);
         
-        // Clean up and replace with censored text after animation
+        // Immediately remove the element to allow text reflow
+        const parent = element.parentNode;
+        parent.removeChild(element);
+        parent.normalize(); // Merge adjacent text nodes
+        
+        // Clean up particles after animation
         setTimeout(() => {
             this.cleanupParticleEffect();
-            
-            // Replace with censored text
-            const censoredSpan = document.createElement('span');
-            censoredSpan.className = 'hate-speech-censored';
-            censoredSpan.textContent = '[Content Removed]';
-            censoredSpan.title = 'This content was removed by the Hate Speech Detector';
-            
-            element.parentNode.replaceChild(censoredSpan, element);
-            element.parentNode.normalize();
-        }, 1000);
+        }, 1200);
     }
 
     createParticleExplosion(rect) {
