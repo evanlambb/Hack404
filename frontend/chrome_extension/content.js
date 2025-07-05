@@ -34,18 +34,103 @@ class HateSpeechDetector {
 
         if (!this.isEnabled) return;
 
-        // Find all paragraph elements
-        const paragraphs = document.querySelectorAll('p');
+        // Find all text-containing elements, prioritizing leaf nodes and elements with meaningful text
+        const allElements = document.querySelectorAll('*');
+        const textElements = [];
         
-        for (const paragraph of paragraphs) {
-            const text = paragraph.textContent.trim();
-            if (text.length > 10) { // Only analyze paragraphs with meaningful content
-                await this.analyzeParagraph(paragraph, text);
+        for (const element of allElements) {
+            if (this.shouldSkipElement(element)) continue;
+            
+            const text = this.getDirectTextContent(element);
+            if (text.length > 10) {
+                textElements.push({ element, text });
+            }
+        }
+        
+        // Sort by element depth (deeper elements first) to avoid conflicts with nested scanning
+        textElements.sort((a, b) => this.getElementDepth(b.element) - this.getElementDepth(a.element));
+        
+        for (const { element, text } of textElements) {
+            // Double-check that element wasn't already processed by a nested scan
+            if (!element.classList.contains('hate-speech-scanned')) {
+                await this.analyzeTextElement(element, text);
             }
         }
     }
 
-    async analyzeParagraph(paragraph, text) {
+    getElementDepth(element) {
+        let depth = 0;
+        let current = element;
+        while (current.parentElement) {
+            depth++;
+            current = current.parentElement;
+        }
+        return depth;
+    }
+
+    shouldSkipElement(element) {
+        // Skip if element is not visible
+        const style = window.getComputedStyle(element);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+            return true;
+        }
+        
+        // Skip if element has already been scanned
+        if (element.classList.contains('hate-speech-scanned')) {
+            return true;
+        }
+        
+        // Skip certain types of elements that shouldn't contain user content
+        const tagName = element.tagName.toLowerCase();
+        if (['script', 'style', 'noscript', 'meta', 'link', 'title', 'head', 'html', 'body'].includes(tagName)) {
+            return true;
+        }
+        
+        // Skip elements that are part of the browser UI or extension UI
+        if (element.classList.contains('hate-speech-highlight') || 
+            element.closest('[data-extension]') ||
+            element.closest('.chrome-extension')) {
+            return true;
+        }
+        
+        // Skip input elements and form controls
+        if (['input', 'textarea', 'select', 'button'].includes(tagName)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    getDirectTextContent(element) {
+        // Get the full text content but avoid scanning nested elements that will be scanned separately
+        let text = '';
+        
+        // If the element has no child elements, just return its text content
+        if (element.children.length === 0) {
+            return element.textContent.trim();
+        }
+        
+        // For elements with children, we need to be more careful
+        // We'll get text from text nodes and inline elements, but skip block-level elements
+        const inlineElements = ['span', 'a', 'strong', 'em', 'b', 'i', 'u', 'small', 'mark', 'del', 'ins', 'sub', 'sup', 'code'];
+        
+        for (const node of element.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                text += node.textContent;
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                const tagName = node.tagName.toLowerCase();
+                // Include inline elements in the text
+                if (inlineElements.includes(tagName)) {
+                    text += node.textContent;
+                }
+                // For block elements, we'll scan them separately, so skip them here
+            }
+        }
+        
+        return text.trim();
+    }
+
+    async analyzeTextElement(element, text) {
         try {
             const response = await fetch(this.apiUrl, {
                 method: 'POST',
@@ -66,15 +151,15 @@ class HateSpeechDetector {
             const result = await response.json();
             
             if (result.hate_speech_detected && result.hate_speech_clauses.length > 0) {
-                this.highlightHateSpeech(paragraph, result.hate_speech_clauses);
+                this.highlightHateSpeech(element, result.hate_speech_clauses);
             }
         } catch (error) {
             console.error('Error analyzing text:', error);
         }
     }
 
-    highlightHateSpeech(paragraph, hateSpeechClauses) {
-        let originalText = paragraph.textContent;
+    highlightHateSpeech(element, hateSpeechClauses) {
+        let originalText = element.textContent;
         let highlightedHTML = originalText;
 
         // Sort clauses by length (longest first) to avoid partial replacements
@@ -95,8 +180,8 @@ class HateSpeechDetector {
 
         // Only update if we found matches
         if (highlightedHTML !== originalText) {
-            paragraph.innerHTML = highlightedHTML;
-            paragraph.classList.add('hate-speech-scanned');
+            element.innerHTML = highlightedHTML;
+            element.classList.add('hate-speech-scanned');
         }
     }
 
