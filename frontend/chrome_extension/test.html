@@ -24,14 +24,43 @@
             margin: 20px 0;
             border-radius: 5px;
         }
+        .instructions {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
     </style>
 </head>
 <body>
     <h1>Hate Speech Detection Test Page</h1>
     
+    <div class="instructions">
+        <h3>How to Test the Extension</h3>
+        <p><strong>New Feature:</strong> Hover over any highlighted hate speech to see both the detailed information tooltip AND an <strong>X</strong> button to remove the content!</p>
+        <ol>
+            <li>Load the extension in your browser</li>
+            <li>Wait for the page to be scanned</li>
+            <li>Look for highlighted text (red border with pulsing animation)</li>
+            <li><strong>Hover</strong> over highlighted text to see:
+                <ul>
+                    <li>Informational tooltip showing confidence level and AI justification</li>
+                    <li>Gray X button in the top-right corner</li>
+                </ul>
+            </li>
+            <li><strong>Click the X</strong> to immediately remove the content (no confirmation needed)</li>
+            <li>Removed content will be replaced with "[Content Removed]" text</li>
+        </ol>
+    </div>
+    
     <div class="test-section">
         <h2>Normal Content</h2>
-        <p>This is a normal paragraph with neutral content. It contains no offensive language and should not be highlighted by the hate speech detector.</p>
+        <p>This is a normal paragraph with neutral content, which is kind of gay like a woman, which is kind of gay, like a woman, faggot behaviour bro. It contains no offensive language and should not be highlighted by the hate speech detector.</p>
         
         <p>Here's another paragraph discussing technology. Modern web browsers support many advanced features that make browsing more secure and efficient.</p>
         
