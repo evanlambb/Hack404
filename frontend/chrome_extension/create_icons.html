@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Extension Icons</title>
+</head>
+<body>
+    <h1>Icon Creator</h1>
+    <p>Click the buttons below to download PNG icons for the extension:</p>
+    
+    <button onclick="createIcon(16)">Download 16x16 Icon</button>
+    <button onclick="createIcon(48)">Download 48x48 Icon</button>
+    <button onclick="createIcon(128)">Download 128x128 Icon</button>
+    
+    <div id="preview"></div>
+
+    <script>
+        function createIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw red circle background
+            ctx.fillStyle = '#f44336';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - 1, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw white exclamation mark
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${Math.floor(size * 0.6)}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('!', size/2, size/2);
+            
+            // Create download link
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon${size}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            // Show preview
+            const preview = document.getElementById('preview');
+            preview.innerHTML = '';
+            const img = new Image();
+            img.src = canvas.toDataURL();
+            img.style.margin = '10px';
+            img.style.border = '1px solid #ccc';
+            preview.appendChild(img);
+        }
+    </script>
+</body>
+</html>
