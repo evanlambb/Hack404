@@ -341,13 +341,37 @@ class HateSpeechDetector {
         const fragmentCount = 8;
         const fragments = [];
         
+        // Calculate center point of the original element
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
         for (let i = 0; i < fragmentCount; i++) {
             const fragment = document.createElement('span');
             fragment.className = 'shatter-fragment';
             fragment.textContent = originalText;
             fragment.setAttribute('data-fragment-index', (i + 1).toString());
             
-            // Copy essential styles
+            // Calculate conceptual fragment position for direction calculation
+            const col = i % 4;
+            const row = Math.floor(i / 4);
+            const conceptualX = rect.left + (col * rect.width / 4) + (rect.width / 8);
+            const conceptualY = rect.top + (row * rect.height / 2) + (rect.height / 4);
+            
+            // Calculate direction from center to this fragment's conceptual center
+            const directionX = conceptualX - centerX;
+            const directionY = conceptualY - centerY;
+            
+            // Normalize and scale the direction
+            const distance = Math.sqrt(directionX * directionX + directionY * directionY) || 1;
+            const normalizedX = directionX / distance;
+            const normalizedY = directionY / distance;
+            
+            // Calculate final position (much further away)
+            const explosionDistance = 200;
+            const finalX = normalizedX * explosionDistance;
+            const finalY = normalizedY * explosionDistance;
+            
+            // Copy essential styles - KEEP ORIGINAL FULL SIZE
             fragment.style.position = 'fixed';
             fragment.style.top = rect.top + 'px';
             fragment.style.left = rect.left + 'px';
@@ -363,21 +387,27 @@ class HateSpeechDetector {
             fragment.style.borderRadius = computedStyle.borderRadius;
             fragment.style.backgroundColor = computedStyle.backgroundColor;
             fragment.style.color = computedStyle.color;
+            fragment.style.transformOrigin = 'center center';
+            fragment.style.overflow = 'hidden';
             
-            // Create different clipping regions for each fragment
-            const col = i % 4;
-            const row = Math.floor(i / 4);
+            // Create clipping mask for this fragment (same as before)
             const clipX1 = col * 25;
             const clipY1 = row * 50;
             const clipX2 = clipX1 + 25;
             const clipY2 = clipY1 + 50;
-            
             fragment.style.clipPath = `polygon(${clipX1}% ${clipY1}%, ${clipX2}% ${clipY1}%, ${clipX2}% ${clipY2}%, ${clipX1}% ${clipY2}%)`;
+            
+            // Set CSS custom properties for the explosion direction
+            fragment.style.setProperty('--explosion-x', finalX + 'px');
+            fragment.style.setProperty('--explosion-y', finalY + 'px');
+            
+            // Apply the animation
+            fragment.style.animation = 'shatter-explosion 0.8s ease-out forwards';
             
             document.body.appendChild(fragment);
             fragments.push(fragment);
             
-            console.log(`Created fragment ${i + 1}:`, fragment);
+            console.log(`Fragment ${i + 1}: direction(${normalizedX.toFixed(2)}, ${normalizedY.toFixed(2)}) final(${finalX}, ${finalY})`);
         }
         
         // Store fragments for cleanup

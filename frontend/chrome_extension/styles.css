@@ -146,53 +146,20 @@
     opacity: 1;
 }
 
-/* Glass shatter effect - explosion style */
-@keyframes shatter-fragment-1 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(15px, -15px); }
-    100% { opacity: 0; transform: scale(0.1) translate(120px, -120px); }
-}
-
-@keyframes shatter-fragment-2 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(15px, -8px); }
-    100% { opacity: 0; transform: scale(0.1) translate(140px, -80px); }
-}
-
-@keyframes shatter-fragment-3 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(-12px, -18px); }
-    100% { opacity: 0; transform: scale(0.1) translate(-130px, -140px); }
-}
-
-@keyframes shatter-fragment-4 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(-15px, -10px); }
-    100% { opacity: 0; transform: scale(0.1) translate(-120px, -100px); }
-}
-
-@keyframes shatter-fragment-5 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(18px, 15px); }
-    100% { opacity: 0; transform: scale(0.1) translate(150px, 130px); }
-}
-
-@keyframes shatter-fragment-6 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(12px, 18px); }
-    100% { opacity: 0; transform: scale(0.1) translate(110px, 140px); }
-}
-
-@keyframes shatter-fragment-7 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(-18px, 12px); }
-    100% { opacity: 0; transform: scale(0.1) translate(-140px, 120px); }
-}
-
-@keyframes shatter-fragment-8 {
-    0% { opacity: 1; transform: scale(1) translate(0, 0); }
-    10% { opacity: 0.9; transform: scale(0.95) translate(-12px, 15px); }
-    100% { opacity: 0; transform: scale(0.1) translate(-110px, 130px); }
+/* Glass shatter effect - true explosion from center */
+@keyframes shatter-explosion {
+    0% { 
+        opacity: 1; 
+        transform: scale(1) translate(0, 0); 
+    }
+    10% { 
+        opacity: 0.9; 
+        transform: scale(0.95) translate(calc(var(--explosion-x) * 0.1), calc(var(--explosion-y) * 0.1)); 
+    }
+    100% { 
+        opacity: 0; 
+        transform: scale(0.1) translate(var(--explosion-x), var(--explosion-y)); 
+    }
 }
 
 @keyframes crack-lines {
@@ -252,46 +219,8 @@
     animation-duration: 0.8s !important;
     animation-timing-function: ease-out !important;
     animation-fill-mode: forwards !important;
-}
-
-.shatter-fragment[data-fragment-index="1"] {
-    animation-name: shatter-fragment-1 !important;
     animation-delay: 0s !important;
-}
-
-.shatter-fragment[data-fragment-index="2"] {
-    animation-name: shatter-fragment-2 !important;
-    animation-delay: 0s !important;
-}
-
-.shatter-fragment[data-fragment-index="3"] {
-    animation-name: shatter-fragment-3 !important;
-    animation-delay: 0s !important;
-}
-
-.shatter-fragment[data-fragment-index="4"] {
-    animation-name: shatter-fragment-4 !important;
-    animation-delay: 0s !important;
-}
-
-.shatter-fragment[data-fragment-index="5"] {
-    animation-name: shatter-fragment-5 !important;
-    animation-delay: 0s !important;
-}
-
-.shatter-fragment[data-fragment-index="6"] {
-    animation-name: shatter-fragment-6 !important;
-    animation-delay: 0s !important;
-}
-
-.shatter-fragment[data-fragment-index="7"] {
-    animation-name: shatter-fragment-7 !important;
-    animation-delay: 0s !important;
-}
-
-.shatter-fragment[data-fragment-index="8"] {
-    animation-name: shatter-fragment-8 !important;
-    animation-delay: 0s !important;
+    transform-origin: center center !important;
 }
 
 /* Enhanced shatter effect with particle-like debris */
