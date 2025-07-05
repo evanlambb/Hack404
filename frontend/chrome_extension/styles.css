@@ -17,9 +17,9 @@
 
 /* Tooltip element */
 .hate-speech-tooltip {
-    background-color: #666 !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
     color: white !important;
-    border: 2px solid white !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
     padding: 8px 12px !important;
     border-radius: 4px !important;
     font-size: 12px !important;
@@ -31,15 +31,17 @@
     font-family: Arial, sans-serif !important;
     line-height: 1.4 !important;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+    backdrop-filter: blur(5px) !important;
 }
 
 /* X button element */
 .hate-speech-x-button {
     width: 18px !important;
     height: 18px !important;
-    background-color: #666 !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(5px) !important;
     color: white !important;
-    border: 2px solid white !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
     border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
@@ -49,7 +51,7 @@
     z-index: 10001 !important;
     cursor: pointer !important;
     line-height: 1 !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4) !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
     transition: all 0.2s ease !important;
     font-family: Arial, sans-serif !important;
     pointer-events: auto !important;
@@ -57,7 +59,7 @@
 }
 
 .hate-speech-x-button:hover {
-    background-color: #555 !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
     transform: scale(1.1) !important;
 }
 
@@ -111,9 +113,9 @@
     bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #666;
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
-    border: 2px solid white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     padding: 8px 12px;
     border-radius: 4px;
     font-size: 12px;
@@ -133,7 +135,7 @@
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: #666;
+    border-top-color: rgba(0, 0, 0, 0.5);
     z-index: 10000;
     opacity: 0;
     pointer-events: none;
