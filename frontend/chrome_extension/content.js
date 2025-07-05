@@ -297,21 +297,151 @@ class HateSpeechDetector {
         // Clean up tooltip and X button
         this.hideTooltipAndXButton(highlightElement);
         
-        // Add animation class
-        highlightElement.classList.add('hate-speech-removing');
+        // Add some debugging
+        console.log('Starting shatter effect for element:', highlightElement);
         
-        // Wait for animation to complete, then replace with censored text
+        // Apply glass shatter effect
+        this.applyShatterEffect(highlightElement);
+    }
+
+    applyShatterEffect(element) {
+        // Add shattering class to the element
+        element.classList.add('hate-speech-shattering');
+        
+        // Get element dimensions and position
+        const rect = element.getBoundingClientRect();
+        const originalText = element.textContent;
+        const computedStyle = window.getComputedStyle(element);
+        
+        // Make element invisible but keep it in place for positioning reference
+        element.style.visibility = 'hidden';
+        
+        // Create fragments with a slight delay to ensure the crack animation shows first
         setTimeout(() => {
+            this.createShatterFragments(element, rect, originalText, computedStyle);
+            this.createDebrisParticles(rect);
+        }, 100);
+        
+        // Clean up and replace with censored text after animation
+        setTimeout(() => {
+            this.cleanupShatterEffect();
+            
+            // Replace with censored text
             const censoredSpan = document.createElement('span');
             censoredSpan.className = 'hate-speech-censored';
             censoredSpan.textContent = '[Content Removed]';
             censoredSpan.title = 'This content was removed by the Hate Speech Detector';
             
-            highlightElement.parentNode.replaceChild(censoredSpan, highlightElement);
+            element.parentNode.replaceChild(censoredSpan, element);
+            element.parentNode.normalize();
+        }, 1200);
+    }
+
+    createShatterFragments(element, rect, originalText, computedStyle) {
+        const fragmentCount = 8;
+        const fragments = [];
+        
+        for (let i = 0; i < fragmentCount; i++) {
+            const fragment = document.createElement('span');
+            fragment.className = 'shatter-fragment';
+            fragment.textContent = originalText;
+            fragment.setAttribute('data-fragment-index', (i + 1).toString());
             
-            // Normalize the parent to merge adjacent text nodes if needed
-            highlightElement.parentNode.normalize();
-        }, 300); // Match the animation duration
+            // Copy essential styles
+            fragment.style.position = 'fixed';
+            fragment.style.top = rect.top + 'px';
+            fragment.style.left = rect.left + 'px';
+            fragment.style.width = rect.width + 'px';
+            fragment.style.height = rect.height + 'px';
+            fragment.style.fontSize = computedStyle.fontSize;
+            fragment.style.fontFamily = computedStyle.fontFamily;
+            fragment.style.fontWeight = computedStyle.fontWeight;
+            fragment.style.lineHeight = computedStyle.lineHeight;
+            fragment.style.padding = computedStyle.padding;
+            fragment.style.margin = '0';
+            fragment.style.border = computedStyle.border;
+            fragment.style.borderRadius = computedStyle.borderRadius;
+            fragment.style.backgroundColor = computedStyle.backgroundColor;
+            fragment.style.color = computedStyle.color;
+            
+            // Create different clipping regions for each fragment
+            const col = i % 4;
+            const row = Math.floor(i / 4);
+            const clipX1 = col * 25;
+            const clipY1 = row * 50;
+            const clipX2 = clipX1 + 25;
+            const clipY2 = clipY1 + 50;
+            
+            fragment.style.clipPath = `polygon(${clipX1}% ${clipY1}%, ${clipX2}% ${clipY1}%, ${clipX2}% ${clipY2}%, ${clipX1}% ${clipY2}%)`;
+            
+            document.body.appendChild(fragment);
+            fragments.push(fragment);
+            
+            console.log(`Created fragment ${i + 1}:`, fragment);
+        }
+        
+        // Store fragments for cleanup
+        window.shatterFragments = fragments;
+    }
+
+    createDebrisParticles(rect) {
+        // Create debris particles that explode outward
+        const debrisCount = 12;
+        const debrisList = [];
+        
+        for (let i = 0; i < debrisCount; i++) {
+            const debris = document.createElement('div');
+            debris.className = 'shatter-debris';
+            debris.style.position = 'fixed';
+            debris.style.top = (rect.top + rect.height / 2) + 'px';
+            debris.style.left = (rect.left + rect.width / 2) + 'px';
+            debris.style.width = '4px';
+            debris.style.height = '4px';
+            debris.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            debris.style.borderRadius = '50%';
+            debris.style.zIndex = '10000';
+            debris.style.pointerEvents = 'none';
+            
+            // Use different debris animations in a cycle
+            const animationIndex = (i % 6) + 1;
+            debris.style.animation = `debris-scatter-${animationIndex} 0.8s ease-out forwards`;
+            debris.style.animationDelay = '0s'; // All start immediately
+            
+            document.body.appendChild(debris);
+            debrisList.push(debris);
+        }
+        
+        // Store debris for cleanup
+        window.shatterDebris = debrisList;
+    }
+
+    cleanupShatterEffect() {
+        // Remove all fragments
+        if (window.shatterFragments) {
+            window.shatterFragments.forEach(fragment => {
+                if (fragment.parentNode) {
+                    fragment.parentNode.removeChild(fragment);
+                }
+            });
+            window.shatterFragments = null;
+        }
+        
+        // Remove all debris
+        if (window.shatterDebris) {
+            window.shatterDebris.forEach(debris => {
+                if (debris.parentNode) {
+                    debris.parentNode.removeChild(debris);
+                }
+            });
+            window.shatterDebris = null;
+        }
+        
+        // Clean up any orphaned shatter elements
+        document.querySelectorAll('.shatter-fragment, .shatter-debris').forEach(el => {
+            if (el.parentNode) {
+                el.parentNode.removeChild(el);
+            }
+        });
     }
 
     removeHighlights() {

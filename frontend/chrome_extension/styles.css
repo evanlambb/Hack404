@@ -145,3 +145,225 @@
 .hate-speech-highlight[title]:hover:not(.show-x)::before {
     opacity: 1;
 }
+
+/* Glass shatter effect - explosion style */
+@keyframes shatter-fragment-1 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(15px, -15px); }
+    100% { opacity: 0; transform: scale(0.1) translate(120px, -120px); }
+}
+
+@keyframes shatter-fragment-2 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(15px, -8px); }
+    100% { opacity: 0; transform: scale(0.1) translate(140px, -80px); }
+}
+
+@keyframes shatter-fragment-3 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(-12px, -18px); }
+    100% { opacity: 0; transform: scale(0.1) translate(-130px, -140px); }
+}
+
+@keyframes shatter-fragment-4 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(-15px, -10px); }
+    100% { opacity: 0; transform: scale(0.1) translate(-120px, -100px); }
+}
+
+@keyframes shatter-fragment-5 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(18px, 15px); }
+    100% { opacity: 0; transform: scale(0.1) translate(150px, 130px); }
+}
+
+@keyframes shatter-fragment-6 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(12px, 18px); }
+    100% { opacity: 0; transform: scale(0.1) translate(110px, 140px); }
+}
+
+@keyframes shatter-fragment-7 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(-18px, 12px); }
+    100% { opacity: 0; transform: scale(0.1) translate(-140px, 120px); }
+}
+
+@keyframes shatter-fragment-8 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    10% { opacity: 0.9; transform: scale(0.95) translate(-12px, 15px); }
+    100% { opacity: 0; transform: scale(0.1) translate(-110px, 130px); }
+}
+
+@keyframes crack-lines {
+    0% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    30% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+.hate-speech-shattering {
+    position: relative !important;
+    overflow: visible !important;
+    pointer-events: none !important;
+}
+
+.hate-speech-shattering::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -5px !important;
+    left: -5px !important;
+    right: -5px !important;
+    bottom: -5px !important;
+    background-image: 
+        linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.8) 41%, rgba(255,255,255,0.8) 42%, transparent 43%),
+        linear-gradient(-45deg, transparent 40%, rgba(255,255,255,0.8) 41%, rgba(255,255,255,0.8) 42%, transparent 43%),
+        linear-gradient(30deg, transparent 30%, rgba(255,255,255,0.6) 31%, rgba(255,255,255,0.6) 32%, transparent 33%),
+        linear-gradient(-30deg, transparent 30%, rgba(255,255,255,0.6) 31%, rgba(255,255,255,0.6) 32%, transparent 33%),
+        linear-gradient(60deg, transparent 45%, rgba(255,255,255,0.7) 46%, rgba(255,255,255,0.7) 47%, transparent 48%) !important;
+    z-index: 10002 !important;
+    pointer-events: none !important;
+    animation: crack-lines 0.3s ease-out forwards !important;
+}
+
+.shatter-fragment {
+    position: fixed !important;
+    background-color: inherit !important;
+    color: inherit !important;
+    border: inherit !important;
+    border-radius: inherit !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    z-index: 10001 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    animation-duration: 0.8s !important;
+    animation-timing-function: ease-out !important;
+    animation-fill-mode: forwards !important;
+}
+
+.shatter-fragment[data-fragment-index="1"] {
+    animation-name: shatter-fragment-1 !important;
+    animation-delay: 0s !important;
+}
+
+.shatter-fragment[data-fragment-index="2"] {
+    animation-name: shatter-fragment-2 !important;
+    animation-delay: 0s !important;
+}
+
+.shatter-fragment[data-fragment-index="3"] {
+    animation-name: shatter-fragment-3 !important;
+    animation-delay: 0s !important;
+}
+
+.shatter-fragment[data-fragment-index="4"] {
+    animation-name: shatter-fragment-4 !important;
+    animation-delay: 0s !important;
+}
+
+.shatter-fragment[data-fragment-index="5"] {
+    animation-name: shatter-fragment-5 !important;
+    animation-delay: 0s !important;
+}
+
+.shatter-fragment[data-fragment-index="6"] {
+    animation-name: shatter-fragment-6 !important;
+    animation-delay: 0s !important;
+}
+
+.shatter-fragment[data-fragment-index="7"] {
+    animation-name: shatter-fragment-7 !important;
+    animation-delay: 0s !important;
+}
+
+.shatter-fragment[data-fragment-index="8"] {
+    animation-name: shatter-fragment-8 !important;
+    animation-delay: 0s !important;
+}
+
+/* Enhanced shatter effect with particle-like debris */
+@keyframes debris-scatter-1 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    100% { opacity: 0; transform: scale(0) translate(100px, -60px); }
+}
+
+@keyframes debris-scatter-2 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    100% { opacity: 0; transform: scale(0) translate(-80px, 70px); }
+}
+
+@keyframes debris-scatter-3 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    100% { opacity: 0; transform: scale(0) translate(90px, 80px); }
+}
+
+@keyframes debris-scatter-4 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    100% { opacity: 0; transform: scale(0) translate(-70px, -90px); }
+}
+
+@keyframes debris-scatter-5 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    100% { opacity: 0; transform: scale(0) translate(60px, -100px); }
+}
+
+@keyframes debris-scatter-6 {
+    0% { opacity: 1; transform: scale(1) translate(0, 0); }
+    100% { opacity: 0; transform: scale(0) translate(-95px, 45px); }
+}
+
+.shatter-debris {
+    position: fixed !important;
+    width: 3px !important;
+    height: 3px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 50% !important;
+    z-index: 10000 !important;
+    pointer-events: none !important;
+    animation-duration: 1s !important;
+    animation-timing-function: ease-out !important;
+    animation-fill-mode: forwards !important;
+}
+
+.shatter-debris:nth-child(odd) {
+    --debris-x: 200px;
+    --debris-y: -150px;
+    animation-delay: 0.1s !important;
+}
+
+.shatter-debris:nth-child(even) {
+    --debris-x: -180px;
+    --debris-y: 120px;
+    animation-delay: 0.15s !important;
+}
+
+/* Final cleanup animation */
+@keyframes shatter-complete {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0);
+        display: none;
+    }
+}
+
+.hate-speech-shatter-complete {
+    animation: shatter-complete 0.1s ease-out forwards !important;
+    animation-delay: 0.8s !important;
+}
