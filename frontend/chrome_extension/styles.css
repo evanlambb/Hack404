@@ -8,6 +8,8 @@
     position: relative !important;
     box-sizing: content-box !important;
     animation: pulse-red 2s ease-in-out infinite !important;
+    font-weight: normal !important;
+    color: black !important;
 }
 
 .hate-speech-highlight:hover {
