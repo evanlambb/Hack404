@@ -310,21 +310,16 @@ class HateSpeechDetector {
         
         // Get element dimensions and position
         const rect = element.getBoundingClientRect();
-        const originalText = element.textContent;
-        const computedStyle = window.getComputedStyle(element);
         
-        // Make element invisible but keep it in place for positioning reference
+        // Hide element immediately
         element.style.visibility = 'hidden';
         
-        // Create fragments with a slight delay to ensure the crack animation shows first
-        setTimeout(() => {
-            this.createShatterFragments(element, rect, originalText, computedStyle);
-            this.createDebrisParticles(rect);
-        }, 100);
+        // Create particle explosion
+        this.createParticleExplosion(rect);
         
         // Clean up and replace with censored text after animation
         setTimeout(() => {
-            this.cleanupShatterEffect();
+            this.cleanupParticleEffect();
             
             // Replace with censored text
             const censoredSpan = document.createElement('span');
@@ -334,145 +329,66 @@ class HateSpeechDetector {
             
             element.parentNode.replaceChild(censoredSpan, element);
             element.parentNode.normalize();
-        }, 1200);
+        }, 1000);
     }
 
-    createShatterFragments(element, rect, originalText, computedStyle) {
-        const fragmentCount = 8;
-        const fragments = [];
-        
-        // Calculate center point of the original element
+    createParticleExplosion(rect) {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         
-        for (let i = 0; i < fragmentCount; i++) {
-            const fragment = document.createElement('span');
-            fragment.className = 'shatter-fragment';
-            fragment.textContent = originalText;
-            fragment.setAttribute('data-fragment-index', (i + 1).toString());
+        // Create red outer particles (faster) - increased count
+        for (let i = 0; i < 25; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'explosion-particle red-particle';
+            particle.style.position = 'fixed';
+            particle.style.top = centerY + 'px';
+            particle.style.left = centerX + 'px';
             
-            // Calculate conceptual fragment position for direction calculation
-            const col = i % 4;
-            const row = Math.floor(i / 4);
-            const conceptualX = rect.left + (col * rect.width / 4) + (rect.width / 8);
-            const conceptualY = rect.top + (row * rect.height / 2) + (rect.height / 4);
+            // Calculate random direction
+            const angle = (i / 25) * 360 + (Math.random() - 0.5) * 30;
+            const distance = 120 + Math.random() * 80;
+            const endX = Math.cos(angle * Math.PI / 180) * distance;
+            const endY = Math.sin(angle * Math.PI / 180) * distance;
             
-            // Calculate direction from center to this fragment's conceptual center
-            const directionX = conceptualX - centerX;
-            const directionY = conceptualY - centerY;
+            particle.style.setProperty('--end-x', endX + 'px');
+            particle.style.setProperty('--end-y', endY + 'px');
+            particle.style.animationDelay = (Math.random() * 0.1) + 's';
             
-            // Normalize and scale the direction
-            const distance = Math.sqrt(directionX * directionX + directionY * directionY) || 1;
-            const normalizedX = directionX / distance;
-            const normalizedY = directionY / distance;
-            
-            // Calculate final position (much further away)
-            const explosionDistance = 200;
-            const finalX = normalizedX * explosionDistance;
-            const finalY = normalizedY * explosionDistance;
-            
-            // Copy essential styles - KEEP ORIGINAL FULL SIZE
-            fragment.style.position = 'fixed';
-            fragment.style.top = rect.top + 'px';
-            fragment.style.left = rect.left + 'px';
-            fragment.style.width = rect.width + 'px';
-            fragment.style.height = rect.height + 'px';
-            fragment.style.fontSize = computedStyle.fontSize;
-            fragment.style.fontFamily = computedStyle.fontFamily;
-            fragment.style.fontWeight = computedStyle.fontWeight;
-            fragment.style.lineHeight = computedStyle.lineHeight;
-            fragment.style.padding = computedStyle.padding;
-            fragment.style.margin = '0';
-            fragment.style.border = computedStyle.border;
-            fragment.style.borderRadius = computedStyle.borderRadius;
-            fragment.style.backgroundColor = computedStyle.backgroundColor;
-            fragment.style.color = computedStyle.color;
-            fragment.style.transformOrigin = 'center center';
-            fragment.style.overflow = 'hidden';
-            
-            // Create clipping mask for this fragment (same as before)
-            const clipX1 = col * 25;
-            const clipY1 = row * 50;
-            const clipX2 = clipX1 + 25;
-            const clipY2 = clipY1 + 50;
-            fragment.style.clipPath = `polygon(${clipX1}% ${clipY1}%, ${clipX2}% ${clipY1}%, ${clipX2}% ${clipY2}%, ${clipX1}% ${clipY2}%)`;
-            
-            // Set CSS custom properties for the explosion direction
-            fragment.style.setProperty('--explosion-x', finalX + 'px');
-            fragment.style.setProperty('--explosion-y', finalY + 'px');
-            
-            // Apply the animation
-            fragment.style.animation = 'shatter-explosion 0.8s ease-out forwards';
-            
-            document.body.appendChild(fragment);
-            fragments.push(fragment);
-            
-            console.log(`Fragment ${i + 1}: direction(${normalizedX.toFixed(2)}, ${normalizedY.toFixed(2)}) final(${finalX}, ${finalY})`);
+            document.body.appendChild(particle);
         }
         
-        // Store fragments for cleanup
-        window.shatterFragments = fragments;
+        // Create light red inner particles (slower) - increased count
+        for (let i = 0; i < 18; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'explosion-particle light-red-particle';
+            particle.style.position = 'fixed';
+            particle.style.top = centerY + 'px';
+            particle.style.left = centerX + 'px';
+            
+            // Calculate random direction with shorter distance
+            const angle = (i / 18) * 360 + (Math.random() - 0.5) * 45;
+            const distance = 60 + Math.random() * 40;
+            const endX = Math.cos(angle * Math.PI / 180) * distance;
+            const endY = Math.sin(angle * Math.PI / 180) * distance;
+            
+            particle.style.setProperty('--end-x', endX + 'px');
+            particle.style.setProperty('--end-y', endY + 'px');
+            particle.style.animationDelay = (Math.random() * 0.15) + 's';
+            
+            document.body.appendChild(particle);
+        }
     }
 
-    createDebrisParticles(rect) {
-        // Create debris particles that explode outward
-        const debrisCount = 12;
-        const debrisList = [];
-        
-        for (let i = 0; i < debrisCount; i++) {
-            const debris = document.createElement('div');
-            debris.className = 'shatter-debris';
-            debris.style.position = 'fixed';
-            debris.style.top = (rect.top + rect.height / 2) + 'px';
-            debris.style.left = (rect.left + rect.width / 2) + 'px';
-            debris.style.width = '4px';
-            debris.style.height = '4px';
-            debris.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-            debris.style.borderRadius = '50%';
-            debris.style.zIndex = '10000';
-            debris.style.pointerEvents = 'none';
-            
-            // Use different debris animations in a cycle
-            const animationIndex = (i % 6) + 1;
-            debris.style.animation = `debris-scatter-${animationIndex} 0.8s ease-out forwards`;
-            debris.style.animationDelay = '0s'; // All start immediately
-            
-            document.body.appendChild(debris);
-            debrisList.push(debris);
-        }
-        
-        // Store debris for cleanup
-        window.shatterDebris = debrisList;
-    }
-
-    cleanupShatterEffect() {
-        // Remove all fragments
-        if (window.shatterFragments) {
-            window.shatterFragments.forEach(fragment => {
-                if (fragment.parentNode) {
-                    fragment.parentNode.removeChild(fragment);
-                }
-            });
-            window.shatterFragments = null;
-        }
-        
-        // Remove all debris
-        if (window.shatterDebris) {
-            window.shatterDebris.forEach(debris => {
-                if (debris.parentNode) {
-                    debris.parentNode.removeChild(debris);
-                }
-            });
-            window.shatterDebris = null;
-        }
-        
-        // Clean up any orphaned shatter elements
-        document.querySelectorAll('.shatter-fragment, .shatter-debris').forEach(el => {
-            if (el.parentNode) {
-                el.parentNode.removeChild(el);
+    cleanupParticleEffect() {
+        // Remove all particles
+        document.querySelectorAll('.explosion-particle').forEach(particle => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
             }
         });
     }
+
+    // ...existing code...
 
     removeHighlights() {
         // Remove all existing highlights and their associated elements
