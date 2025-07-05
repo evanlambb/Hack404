@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page for Hate Speech Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hate Speech Detection Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Normal Content</h2>
+        <p>This is a normal paragraph with neutral content. It contains no offensive language and should not be highlighted by the hate speech detector.</p>
+        
+        <p>Here's another paragraph discussing technology. Modern web browsers support many advanced features that make browsing more secure and efficient.</p>
+        
+        <p>This paragraph talks about positive community building. Working together and supporting each other creates stronger communities where everyone can thrive.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Potentially Problematic Content</h2>
+        <p>This paragraph contains some potentially problematic language that might be flagged by hate speech detection systems, depending on the sensitivity settings.</p>
+        
+        <p>Testing content with various types of language to see how the AI model responds to different contexts and phrases.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Mixed Content</h2>
+        <p>This paragraph starts with normal content but then includes some potentially offensive language mixed in with regular text to test partial highlighting.</p>
+        
+        <p>Another test paragraph that combines neutral discussion with potentially problematic elements to evaluate the precision of the detection system.</p>
+        <p> I hate black people</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Dynamic Content Test</h2>
+        <p id="dynamic-content">This content will be updated dynamically to test the mutation observer.</p>
+        <button onclick="addDynamicContent()">Add Dynamic Content</button>
+    </div>
+
+    <script>
+        function addDynamicContent() {
+            const container = document.getElementById('dynamic-content');
+            const newParagraph = document.createElement('p');
+            newParagraph.textContent = 'This is dynamically added content that should also be scanned for hate speech by the extension.';
+            container.appendChild(newParagraph);
+        }
+    </script>
+</body>
+</html>
