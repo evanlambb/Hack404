@@ -173,7 +173,7 @@ class HateSpeechDetector {
                 return `<span class="hate-speech-highlight" 
                               data-confidence="${clause.confidence}"
                               data-original-text="${this.escapeHtml(match)}"
-                              data-tooltip="Hate speech detected (Confidence: ${(clause.confidence * 100).toFixed(1)}%)&#10;${clause.justification}&#10;&#10;Click the X to remove this content">
+                              data-tooltip="Hate speech detected (Confidence: ${(clause.confidence * 100).toFixed(1)}%)&#10;${clause.justification}&#10;&#10;Click anywhere on this text to remove it">
                           ${match}
                         </span>`;
             });
@@ -202,83 +202,50 @@ class HateSpeechDetector {
     addHoverListeners(container) {
         const highlights = container.querySelectorAll('.hate-speech-highlight');
         highlights.forEach(highlight => {
+            // Add click event to delete the hate speech element
+            highlight.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.removeHateSpeechElement(highlight);
+            });
+            
+            // Add hover effect to show tooltip
             highlight.addEventListener('mouseenter', (e) => {
-                // Clear any existing hide timeout
-                clearTimeout(highlight._hideTimeout);
-                this.showTooltipAndXButton(highlight);
+                this.showTooltip(highlight);
             });
             
             highlight.addEventListener('mouseleave', (e) => {
-                // Add a delay before hiding to allow moving to X button or tooltip
-                highlight._hideTimeout = setTimeout(() => {
-                    this.hideTooltipAndXButton(highlight);
-                }, 200);
+                this.hideTooltip(highlight);
             });
         });
     }
 
-    showTooltipAndXButton(highlightElement) {
-        // Remove any existing tooltip and X button
-        this.hideTooltipAndXButton(highlightElement);
+    showTooltip(highlightElement) {
+        // Remove any existing tooltip
+        this.hideTooltip(highlightElement);
 
         // Create tooltip
         const tooltip = document.createElement('div');
         tooltip.className = 'hate-speech-tooltip';
         tooltip.innerHTML = highlightElement.getAttribute('data-tooltip');
         
-        // Add mouse events to tooltip to keep it visible
-        tooltip.addEventListener('mouseenter', () => {
-            clearTimeout(highlightElement._hideTimeout);
-        });
-        tooltip.addEventListener('mouseleave', () => {
-            this.hideTooltipAndXButton(highlightElement);
-        });
-        
         document.body.appendChild(tooltip);
 
-        // Create X button
-        const xButton = document.createElement('div');
-        xButton.className = 'hate-speech-x-button';
-        xButton.innerHTML = '✕';
-        
-        // Add mouse events to X button
-        xButton.addEventListener('mouseenter', () => {
-            clearTimeout(highlightElement._hideTimeout);
-        });
-        xButton.addEventListener('mouseleave', () => {
-            this.hideTooltipAndXButton(highlightElement);
-        });
-        xButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.removeHateSpeechElement(highlightElement);
-        });
-        
-        document.body.appendChild(xButton);
+        // Position tooltip
+        this.positionTooltip(highlightElement, tooltip);
 
-        // Position tooltip and X button
-        this.positionTooltipAndXButton(highlightElement, tooltip, xButton);
-
-        // Store references for cleanup
+        // Store reference for cleanup
         highlightElement._tooltip = tooltip;
-        highlightElement._xButton = xButton;
     }
 
-    hideTooltipAndXButton(highlightElement) {
-        // Clear any pending hide timeout
-        clearTimeout(highlightElement._hideTimeout);
-        
+    hideTooltip(highlightElement) {
         if (highlightElement._tooltip) {
             highlightElement._tooltip.remove();
             highlightElement._tooltip = null;
         }
-        if (highlightElement._xButton) {
-            highlightElement._xButton.remove();
-            highlightElement._xButton = null;
-        }
     }
 
-    positionTooltipAndXButton(highlightElement, tooltip, xButton) {
+    positionTooltip(highlightElement, tooltip) {
         const rect = highlightElement.getBoundingClientRect();
         
         // Position tooltip above the element
@@ -286,21 +253,16 @@ class HateSpeechDetector {
         tooltip.style.bottom = (window.innerHeight - rect.top + 5) + 'px';
         tooltip.style.left = (rect.left + rect.width / 2) + 'px';
         tooltip.style.transform = 'translateX(-50%)';
-
-        // Position X button at top-right corner
-        xButton.style.position = 'fixed';
-        xButton.style.top = (rect.top - 10) + 'px';
-        xButton.style.left = (rect.right - 10) + 'px';
     }
 
     removeHateSpeechElement(highlightElement) {
-        // Clean up tooltip and X button
-        this.hideTooltipAndXButton(highlightElement);
+        // Clean up tooltip
+        this.hideTooltip(highlightElement);
         
         // Add some debugging
-        console.log('Starting shatter effect for element:', highlightElement);
+        console.log('Starting particle effect for element:', highlightElement);
         
-        // Apply glass shatter effect
+        // Apply particle shatter effect
         this.applyShatterEffect(highlightElement);
     }
 
@@ -384,8 +346,8 @@ class HateSpeechDetector {
         // Remove all existing highlights and their associated elements
         const highlights = document.querySelectorAll('.hate-speech-highlight');
         highlights.forEach(highlight => {
-            // Clean up tooltip and X button if they exist
-            this.hideTooltipAndXButton(highlight);
+            // Clean up tooltip if it exists
+            this.hideTooltip(highlight);
             
             const parent = highlight.parentNode;
             parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
@@ -398,8 +360,8 @@ class HateSpeechDetector {
             element.classList.remove('hate-speech-scanned');
         });
 
-        // Clean up any orphaned tooltip or X button elements
-        document.querySelectorAll('.hate-speech-tooltip, .hate-speech-x-button').forEach(el => el.remove());
+        // Clean up any orphaned tooltip elements
+        document.querySelectorAll('.hate-speech-tooltip').forEach(el => el.remove());
     }
 
     toggleDetection() {
