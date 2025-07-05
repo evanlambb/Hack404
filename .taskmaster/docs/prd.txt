@@ -1,0 +1,115 @@
+# Bias & Hate Speech Detection Web App - Frontend MVP PRD
+
+## Project Overview
+A Next.js frontend application that allows users to input text and interact with highlighted bias/hate speech detection results. The frontend will communicate with an external API (backend handled by other developers).
+
+## Core Vision
+Build a clean, intuitive frontend interface that displays AI analysis results and provides an excellent user experience for reviewing and improving text inclusivity.
+
+## Target Audience
+- General public writing emails, articles, and text content
+- Content creators and writers
+- Anyone wanting to improve the inclusivity of their writing
+
+## MVP Feature Set - Frontend Only
+
+### 1. Next.js Frontend Application
+- Next.js 14+ with App Router and TypeScript
+- Single-page application focused on core user workflow
+- Responsive design for desktop and mobile
+- Clean, modern UI with TailwindCSS
+
+### 2. Text Input Interface
+- Large textarea for text input (copy/paste or typing)
+- Submit button to trigger analysis
+- Character count and basic validation
+- Clear/reset functionality
+
+### 3. Results Display System
+- Visual highlighting of flagged words with yellow background
+- Preserve original text formatting and structure
+- Clean presentation of analysis results
+
+### 4. Interactive Word Suggestions
+- Hover-activated dropdown menus on highlighted words
+- Display 3-5 word alternatives per flagged term
+- One-click word replacement functionality
+- Smooth animations and transitions
+
+### 5. User Experience Features
+- Before/after text comparison view
+- Undo/redo functionality for word replacements
+- Copy final text to clipboard
+- Loading states during API calls
+- Error handling for API failures
+
+## Technical Requirements - Frontend Only
+
+### Frontend Stack
+- Next.js 14+ with App Router and TypeScript
+- TailwindCSS for styling and responsive design
+- React hooks for state management
+- Fetch API for external API communication
+- TypeScript interfaces for data structures
+
+### API Integration (Frontend Only)
+- Call external backend API for text analysis
+- Handle API request/response formatting
+- Manage loading states and error handling
+- No backend development required
+
+## Out of Scope
+- Backend API development (handled by other team)
+- User authentication or accounts
+- Database integration
+- Real-time collaborative features
+- Advanced AI model work
+
+## API Contract (External - Frontend Consumption Only)
+```typescript
+// POST /api/analyze (External API)
+Request: {
+  text: string;
+}
+
+Response: {
+  success: boolean;
+  data?: {
+    flaggedWords: Array<{
+      word: string;
+      startIndex: number;
+      endIndex: number;
+      suggestions: string[];
+    }>;
+  };
+  error?: string;
+}
+```
+
+## Technology Stack
+- **Frontend**: Next.js 14+, React 18+, TypeScript
+- **Styling**: TailwindCSS
+- **State Management**: React hooks
+- **API Client**: Fetch API
+- **Development**: Node.js 18+, npm/yarn
+- **Deployment**: Vercel
+
+## Implementation Priority
+1. Next.js project setup with TypeScript and TailwindCSS
+2. Main layout and UI components
+3. Text input component with validation
+4. API service layer for external backend communication
+5. Text highlighting system
+6. Interactive suggestion dropdowns
+7. Word replacement functionality
+8. Before/after comparison view
+9. Copy to clipboard and user feedback
+10. Error handling and loading states
+11. Mobile responsiveness
+12. Final testing and polish
+
+## Timeline Estimate
+Frontend MVP: 1-2 weeks for experienced Next.js developer
+Key milestones:
+- Week 1: Setup, core UI, API integration, highlighting system
+- Week 2: Interactions, word replacement, polish, testing 

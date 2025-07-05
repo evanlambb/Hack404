@@ -1,0 +1,43 @@
+# Task ID: 3
+# Title: Implement Text Input Component with Validation
+# Status: pending
+# Dependencies: 2
+# Priority: high
+# Description: Create textarea component with character count, validation, and clear/reset functionality
+# Details:
+Create TextInput component with large textarea using TailwindCSS styling. Implement character counter with real-time updates. Add basic validation for minimum/maximum text length. Create clear/reset button functionality. Add proper form handling with controlled components using useState. Implement proper focus states and accessibility attributes (aria-label, aria-describedby). Style with consistent design system using TailwindCSS utilities.
+
+# Test Strategy:
+Test character counting accuracy. Validate form submission with various text lengths. Test clear functionality resets state properly. Verify keyboard navigation and accessibility compliance.
+
+# Subtasks:
+## 1. Extract TextInput as Reusable Component [pending]
+### Dependencies: None
+### Description: Create src/components/TextInput.tsx as a reusable component extracted from the BiasDetectionApp
+### Details:
+Extract the textarea functionality from BiasDetectionApp into a standalone, reusable TextInput component. Include props for value, onChange, placeholder, disabled state, and styling customization. Export proper TypeScript interfaces for the component props.
+
+## 2. Implement Character Counter Display [pending]
+### Dependencies: 3.1
+### Description: Add real-time character counting with visual feedback and limits
+### Details:
+Add character counter below the textarea showing current count vs maximum (e.g., '150 / 5000 characters'). Implement visual feedback with color changes when approaching limits (yellow at 80%, red at 95%). Include proper styling with TailwindCSS classes.
+
+## 3. Add Input Validation Logic [pending]
+### Dependencies: 3.2
+### Description: Implement client-side validation for text input with error messages
+### Details:
+Add validation functions for minimum length (5 characters), maximum length (5000 characters), and empty input. Display user-friendly error messages below the textarea. Prevent form submission when validation fails. Include validation state in component props and styling.
+
+## 4. Implement Clear/Reset Functionality [pending]
+### Dependencies: 3.3
+### Description: Add clear button that resets the textarea and all associated state
+### Details:
+Create a clear/reset button that empties the textarea, resets character count, clears validation errors, and resets any analysis results. Include proper styling with secondary button variant. Add confirmation dialog for users with substantial text to prevent accidental data loss.
+
+## 5. Add Accessibility Features [pending]
+### Dependencies: 3.4
+### Description: Implement WCAG compliance with proper ARIA labels and keyboard navigation
+### Details:
+Add proper ARIA labels (aria-label, aria-describedby), associate error messages with the input, implement keyboard navigation support, add focus management, include screen reader friendly text for character counter, and ensure proper tab order. Test with screen readers and keyboard-only navigation.
+
