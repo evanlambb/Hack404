@@ -30,7 +30,7 @@ class HateSpeechDetector {
 
     async scanPage() {
         // Remove previous highlights
-        this.removeHighlights();
+        //this.removeHighlights();
 
         if (!this.isEnabled) return;
 
