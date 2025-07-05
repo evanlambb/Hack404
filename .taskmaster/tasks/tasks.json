@@ -1,0 +1,280 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Next.js Project with TypeScript and TailwindCSS",
+        "description": "Initialize Next.js 14+ project with App Router, TypeScript configuration, and TailwindCSS setup",
+        "details": "Create new Next.js project using 'npx create-next-app@latest --typescript --tailwind --app'. Configure tsconfig.json for strict TypeScript settings. Setup TailwindCSS with custom configuration for the project theme. Initialize project structure with src/ directory, components/, lib/, and types/ folders. Configure next.config.js for optimal performance. Setup package.json scripts for development and build processes.\n<info added on 2025-07-05T20:01:37.920Z>\n**TASK COMPLETED SUCCESSFULLY**\n\nProject setup has been finalized with all requirements met. The Next.js 14+ project is now fully configured and ready for development.\n\n**Completed Components:**\n- Next.js 15.3.5 project created with App Router enabled\n- TypeScript 5 configured with strict compiler settings for enhanced type safety\n- TailwindCSS v4 integrated with PostCSS configuration\n- ESLint setup with Next.js-specific rules for code quality\n- Complete project structure established with src/, components/, lib/, and types/ directories\n- Comprehensive type definitions created for bias detection application\n- Robust API service layer implemented with proper error handling\n- All TypeScript compilation issues resolved\n- Production build verified and working\n\n**Technical Specifications Confirmed:**\n- Next.js 15.3.5 with App Router\n- React 19\n- TypeScript 5 with strict configuration\n- TailwindCSS v4\n- ESLint with Next.js rules\n\n**Key Implementation Notes:**\n- Package naming follows npm lowercase requirements\n- Type guards implemented for array filtering with maintained type safety\n- Clean API abstraction layer separating UI from backend communication\n- Mock data patterns established for development workflow\n- Enhanced TypeScript compiler options for maximum type safety\n\n**Status:** Production-ready foundation established. Project is prepared for frontend development phase.\n</info added on 2025-07-05T20:01:37.920Z>",
+        "testStrategy": "Verify project builds successfully with 'npm run build'. Test development server starts without errors. Validate TypeScript compilation and TailwindCSS classes are working correctly.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Create Main Layout and UI Components",
+        "description": "Build the main application layout with header, main content area, and responsive design structure",
+        "details": "Create app/layout.tsx with proper HTML structure and metadata. Build main page component in app/page.tsx. Create reusable UI components: Header component with app title, Container component for consistent spacing, Button component with variants (primary, secondary). Implement responsive design using TailwindCSS breakpoints (sm, md, lg, xl). Setup proper semantic HTML structure for accessibility.",
+        "testStrategy": "Test responsive behavior across different screen sizes. Verify proper semantic HTML structure. Test component reusability and prop handling. Validate accessibility with screen readers.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update Main Layout Structure",
+            "description": "Update app/layout.tsx with proper metadata and clean HTML structure",
+            "details": "Replace the default layout content with: 1) Update metadata (title: 'Bias Detection Tool', description: 'AI-powered text analysis for bias detection'), 2) Remove default font imports, 3) Clean up the HTML structure, 4) Add basic semantic HTML elements. Simple file replacement task.",
+            "status": "done",
+            "dependencies": []
+          },
+          {
+            "id": 2,
+            "title": "Create Basic Main Page Component",
+            "description": "Replace app/page.tsx with clean, semantic structure for the bias detection app",
+            "details": "Remove default Next.js content and create: 1) Clean semantic HTML structure, 2) Basic page title and description, 3) Placeholder for main content area, 4) Remove all default styling and images. Simple file replacement task.",
+            "status": "done",
+            "dependencies": [
+              1
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Create Header Component",
+            "description": "Build src/components/Header.tsx with app title and basic styling",
+            "details": "Create simple header component with: 1) TypeScript interface for props, 2) App title 'Bias Detection Tool', 3) Basic TailwindCSS styling (bg-white, shadow, padding), 4) Semantic HTML using <header> tag, 5) Export as default. Single component creation task.\n<info added on 2025-07-05T20:47:43.498Z>\n✅ Header Component Successfully Implemented\n\n**What was accomplished:**\n- Created src/components/Header.tsx with clean TypeScript interface\n- Implemented flexible Header component accepting title and className props\n- Used semantic HTML with proper <header> tag for accessibility\n- Applied TailwindCSS styling: bg-white, shadow-sm, border-b, responsive padding\n- Added app title \"Bias Detection Tool\" with subtitle \"AI-Powered Text Analysis\"\n- Used responsive design with max-w-7xl and proper spacing (h-16, px-4, sm:px-6, lg:px-8)\n- Successfully integrated into BiasDetectionApp component, replacing inline header\n- Added descriptive subtitle in main content area for better UX\n\n**Technical details:**\n- TypeScript compilation: ✅ No errors\n- Production build: ✅ Successful compilation\n- Component structure: Clean props interface with optional title and className\n- Styling: Professional header design with proper hierarchy and spacing\n- Integration: Seamlessly replaced existing header without breaking functionality\n\n**Ready for:** Next task (Container component creation)\n</info added on 2025-07-05T20:47:43.498Z>",
+            "status": "done",
+            "dependencies": [
+              2
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Create Container Component",
+            "description": "Build src/components/Container.tsx for consistent spacing and max-width",
+            "details": "Create wrapper component with: 1) TypeScript interface accepting children and optional className, 2) Consistent padding (px-4, py-8), 3) Max-width constraint (max-w-4xl), 4) Center alignment (mx-auto), 5) Merge additional className props. Simple wrapper component task.",
+            "status": "done",
+            "dependencies": [
+              3
+            ]
+          },
+          {
+            "id": 5,
+            "title": "Create Button Component with Variants",
+            "description": "Build src/components/Button.tsx with primary and secondary variants",
+            "details": "Create button component with: 1) TypeScript interface with variant prop ('primary' | 'secondary'), 2) Primary variant: blue background, white text, 3) Secondary variant: gray background, dark text, 4) Shared styles: padding, rounded corners, hover effects, 5) Proper button HTML element with accessibility. Component with variants task.",
+            "status": "done",
+            "dependencies": [
+              4
+            ]
+          },
+          {
+            "id": 6,
+            "title": "Add Responsive Design and Accessibility",
+            "description": "Apply TailwindCSS responsive classes and basic accessibility attributes",
+            "details": "Add responsive design to all components: 1) Use TailwindCSS breakpoints (sm:, md:, lg:), 2) Add ARIA labels where needed, 3) Ensure proper semantic HTML structure, 4) Add focus states for keyboard navigation, 5) Test responsive behavior. CSS classes and attributes task.",
+            "status": "done",
+            "dependencies": [
+              5
+            ]
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Implement Text Input Component with Validation",
+        "description": "Create textarea component with character count, validation, and clear/reset functionality",
+        "details": "Create TextInput component with large textarea using TailwindCSS styling. Implement character counter with real-time updates. Add basic validation for minimum/maximum text length. Create clear/reset button functionality. Add proper form handling with controlled components using useState. Implement proper focus states and accessibility attributes (aria-label, aria-describedby). Style with consistent design system using TailwindCSS utilities.",
+        "testStrategy": "Test character counting accuracy. Validate form submission with various text lengths. Test clear functionality resets state properly. Verify keyboard navigation and accessibility compliance.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Extract TextInput as Reusable Component",
+            "description": "Create src/components/TextInput.tsx as a reusable component extracted from the BiasDetectionApp",
+            "details": "Extract the textarea functionality from BiasDetectionApp into a standalone, reusable TextInput component. Include props for value, onChange, placeholder, disabled state, and styling customization. Export proper TypeScript interfaces for the component props.\n<info added on 2025-07-05T21:01:13.789Z>\nTextInput Component Successfully Extracted and Implemented\n\nWhat was accomplished:\n- Created src/components/TextInput.tsx as a fully reusable component\n- Extracted all textarea functionality from BiasDetectionApp into standalone component\n- Implemented comprehensive TypeScript interface (TextInputProps) with 16 configurable props\n- Added advanced features beyond the original implementation:\n  - Character counter with color feedback (red at limit, yellow at 80%, gray normally)\n  - Configurable show/hide options for character count, clear button, analyze button\n  - Customizable button text and labels\n  - Built-in error handling and display\n  - Proper TypeScript event handling\n  - maxLength enforcement at textarea level\n\nTechnical implementation:\n- Clean separation of concerns: TextInput handles UI, BiasDetectionApp handles business logic\n- Proper event handling with ChangeEvent<HTMLTextAreaElement>\n- Error display with consistent styling\n- All original styling and functionality preserved\n- TypeScript compilation: No errors\n- Production build: Successful compilation\n\nIntegration completed:\n- Successfully integrated TextInput component into BiasDetectionApp\n- Replaced 47 lines of inline code with clean component usage\n- All props properly passed and functionality preserved\n- App functionality identical to previous implementation\n\nReady for: Subtask 3.2 - Implement Character Counter Display (already partially complete in component)\n</info added on 2025-07-05T21:01:13.789Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
+          },
+          {
+            "id": 2,
+            "title": "Implement Character Counter Display",
+            "description": "Add real-time character counting with visual feedback and limits",
+            "details": "Add character counter below the textarea showing current count vs maximum (e.g., '150 / 5000 characters'). Implement visual feedback with color changes when approaching limits (yellow at 80%, red at 95%). Include proper styling with TailwindCSS classes.\n<info added on 2025-07-05T21:02:04.683Z>\n✅ Character Counter Display Already Implemented (Enhanced Version)\n\n**What was already accomplished in 3.1:**\n- Real-time character counting: `{value.length} / {maxLength} characters`\n- Enhanced visual feedback with color changes:\n  - 🔴 Red (`text-red-600`) when at character limit (100%)\n  - 🟡 Yellow (`text-yellow-600`) when approaching limit (80%+)\n  - ⚫ Gray (`text-gray-500`) for normal usage\n- Dynamic color calculation based on current usage\n- Configurable via `showCharacterCount` prop\n- Configurable `maxLength` prop (default: 5000)\n\n**Implementation details:**\n```typescript\nconst isAtLimit = value.length >= maxLength;\nconst isNearLimit = value.length >= maxLength * 0.8;\nconst characterCountColor = isAtLimit \n  ? 'text-red-600' \n  : isNearLimit \n    ? 'text-yellow-600' \n    : 'text-gray-500';\n```\n\n**Enhanced beyond requirements:**\n- Original requirement: Show count and change color at 80%/95%\n- Implementation: Smooth color transitions at 80% (yellow) and 100% (red)\n- Added configurable thresholds and customizable display\n\n**Status:** ✅ Complete - implemented in TextInput component with enhanced functionality\n</info added on 2025-07-05T21:02:04.683Z>",
+            "status": "done",
+            "dependencies": [
+              1
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 3,
+            "title": "Add Input Validation Logic",
+            "description": "Implement client-side validation for text input with error messages",
+            "details": "Add validation functions for minimum length (5 characters), maximum length (5000 characters), and empty input. Display user-friendly error messages below the textarea. Prevent form submission when validation fails. Include validation state in component props and styling.\n<info added on 2025-07-05T21:12:25.533Z>\n✅ COMPLETED - Input validation logic successfully implemented with comprehensive validation system including ValidationRule interface and 4 validation rule types (required, minLength, maxLength, custom). Real-time validation with visual error feedback now working. Form submission prevention when validation fails is active. Performance optimized with useMemo and useCallback. Critical \"Maximum update depth exceeded\" error resolved by creating stable DEFAULT_VALIDATION_RULES reference, separating validation logic into two useEffects, and removing onValidationChange from dependency array. TypeScript compilation successful with no infinite loops confirmed.\n</info added on 2025-07-05T21:12:25.533Z>",
+            "status": "done",
+            "dependencies": [
+              2
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 4,
+            "title": "Implement Clear/Reset Functionality",
+            "description": "Add clear button that resets the textarea and all associated state",
+            "details": "Create a clear/reset button that empties the textarea, resets character count, clears validation errors, and resets any analysis results. Include proper styling with secondary button variant. Add confirmation dialog for users with substantial text to prevent accidental data loss.\n<info added on 2025-07-05T21:19:07.755Z>\n✅ Clear/Reset Functionality Successfully Implemented with Confirmation Dialog\n\n**What was accomplished:**\n- Added intelligent clear button behavior with confirmation dialog\n- **Confirmation dialog triggers** when text length >= 50 characters (configurable via `confirmClearThreshold`)\n- **Immediate clear** for shorter text without confirmation\n- **Comprehensive state reset**: clears text, validation errors, and analysis results\n- **Accessibility features**: \n  - Keyboard navigation (Enter to confirm, Escape to cancel)\n  - Click outside to cancel\n  - Focus management and screen reader friendly\n- **Enhanced UX**: \n  - Shows character count in confirmation message\n  - Red \"Clear Text\" button to indicate destructive action\n  - Smooth modal overlay with z-index 50\n- **Props added**: `confirmClearThreshold` (default: 50) and `showClearConfirmation` (default: true)\n\n**Technical implementation:**\n- Added confirmation dialog state management\n- Implemented keyboard event handling (Enter/Escape)\n- Added click-outside functionality with useRef\n- Fixed TypeScript useEffect return path issue\n- Added proper dependency array for useEffect\n\n**Build status**: ✅ TypeScript compilation successful, Next.js build passing, ESLint warning resolved\n</info added on 2025-07-05T21:19:07.755Z>",
+            "status": "done",
+            "dependencies": [
+              3
+            ],
+            "parentTaskId": 3
+          },
+          {
+            "id": 5,
+            "title": "Add Accessibility Features",
+            "description": "Implement WCAG compliance with proper ARIA labels and keyboard navigation",
+            "details": "Add proper ARIA labels (aria-label, aria-describedby), associate error messages with the input, implement keyboard navigation support, add focus management, include screen reader friendly text for character counter, and ensure proper tab order. Test with screen readers and keyboard-only navigation.\n<info added on 2025-07-05T21:30:29.435Z>\nProject restructuring completed - frontend code moved to `frontend/react-app/` directory. TextInput component accessibility implementation should continue from new location. All React components including TextInput are now located in `frontend/react-app/src/` directory. Development environment verified working from new structure.\n</info added on 2025-07-05T21:30:29.435Z>",
+            "status": "pending",
+            "dependencies": [
+              4
+            ],
+            "parentTaskId": 3
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Create API Service Layer for External Backend Communication",
+        "description": "Build API service functions to communicate with external bias detection backend",
+        "details": "Create lib/api.ts with TypeScript interfaces matching the API contract. Implement analyzeText function using fetch API with proper error handling. Define TypeScript types: AnalyzeRequest, AnalyzeResponse, FlaggedWord interfaces. Add request/response validation and error handling for network failures, timeout, and API errors. Implement proper HTTP headers and request configuration. Add retry logic for failed requests.",
+        "testStrategy": "Mock API responses for testing. Verify proper error handling for network failures. Test request/response data structure validation. Validate TypeScript type safety.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Text Highlighting System",
+        "description": "Create system to visually highlight flagged words with yellow background while preserving text formatting",
+        "details": "Create TextHighlighter component that takes original text and flagged words array. Implement algorithm to split text into segments (normal text and flagged words) using startIndex and endIndex. Create highlighted spans with yellow background using TailwindCSS (bg-yellow-200). Preserve original text formatting including line breaks and spacing. Handle overlapping or adjacent flagged words correctly. Ensure proper text selection and copy behavior.",
+        "testStrategy": "Test with various text inputs including edge cases (punctuation, line breaks). Verify highlighting accuracy with different word positions. Test text selection and copy functionality. Validate performance with large text inputs.",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Build Interactive Suggestion Dropdowns",
+        "description": "Create hover-activated dropdown menus on highlighted words displaying 3-5 word alternatives",
+        "details": "Create SuggestionDropdown component with absolute positioning. Implement hover detection on highlighted words using onMouseEnter/onMouseLeave. Style dropdown with TailwindCSS: white background, shadow, border, rounded corners. Display 3-5 suggestions per flagged word from API response. Add smooth animations using TailwindCSS transitions. Handle dropdown positioning to prevent overflow outside viewport. Implement keyboard navigation for accessibility (Tab, Enter, Escape).",
+        "testStrategy": "Test hover interactions across different screen sizes. Verify dropdown positioning near viewport edges. Test keyboard navigation functionality. Validate smooth animations and transitions.",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement One-Click Word Replacement Functionality",
+        "description": "Add functionality to replace flagged words with selected suggestions and update text state",
+        "details": "Create word replacement logic that updates original text when suggestion is clicked. Implement text reconstruction algorithm that replaces specific word instances using startIndex/endIndex. Update component state to reflect changes and re-render highlighted text. Handle multiple word replacements and maintain proper text indices. Add visual feedback for successful replacements (brief highlight or animation). Ensure replacement preserves surrounding text formatting and spacing.",
+        "testStrategy": "Test word replacement accuracy with various text positions. Verify multiple replacements work correctly. Test edge cases like punctuation and special characters. Validate text state consistency after replacements.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Create Before/After Text Comparison View",
+        "description": "Build side-by-side or toggle view to compare original text with modified text",
+        "details": "Create ComparisonView component with two text display areas. Implement toggle between side-by-side and stacked layouts for responsive design. Style original text area with subtle background (gray-50) and modified text with success background (green-50). Add clear labels ('Original' and 'Improved'). Highlight changed words in both versions for easy comparison. Include toggle button to switch between comparison and single view modes. Ensure proper responsive behavior on mobile devices.",
+        "testStrategy": "Test comparison view on different screen sizes. Verify changed words are properly highlighted. Test toggle functionality between view modes. Validate responsive layout behavior.",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Add Undo/Redo Functionality for Word Replacements",
+        "description": "Implement undo/redo system to allow users to revert or reapply word changes",
+        "details": "Create history management system using useReducer or custom hook. Maintain stack of text states for undo/redo operations. Implement undo/redo buttons with proper disabled states. Add keyboard shortcuts (Ctrl+Z for undo, Ctrl+Y for redo). Store both text content and flagged words state in history. Limit history size to prevent memory issues (max 50 operations). Provide visual feedback for undo/redo actions.",
+        "testStrategy": "Test undo/redo functionality with multiple word replacements. Verify keyboard shortcuts work correctly. Test history limits and memory management. Validate proper state restoration.",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Copy to Clipboard and User Feedback",
+        "description": "Add copy to clipboard functionality with visual feedback and success notifications",
+        "details": "Create copy to clipboard functionality using navigator.clipboard.writeText(). Add copy button with clipboard icon using Heroicons or similar. Implement toast notification system for success/error feedback. Create Toast component with auto-dismiss functionality (3-second timeout). Handle clipboard API permissions and fallback for unsupported browsers. Add visual feedback on copy button (brief color change or checkmark). Style notifications with TailwindCSS animations (slide-in/fade-out).",
+        "testStrategy": "Test copy functionality across different browsers. Verify toast notifications appear and dismiss correctly. Test fallback behavior for unsupported clipboard API. Validate user feedback timing and animations.",
+        "priority": "low",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Add Loading States and Error Handling",
+        "description": "Implement comprehensive loading states during API calls and error handling for API failures",
+        "details": "Create loading spinner component with TailwindCSS animations. Implement loading state management during API calls using useState. Add skeleton loading for text analysis results. Create error boundary component for unexpected errors. Implement user-friendly error messages for different failure scenarios (network error, API timeout, invalid response). Add retry functionality for failed API calls. Disable submit button during loading to prevent multiple requests. Style error states with appropriate colors and icons.",
+        "testStrategy": "Test loading states with simulated slow network. Verify error handling for various failure scenarios. Test retry functionality works correctly. Validate error messages are user-friendly and actionable.",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Optimize Mobile Responsiveness and Final Polish",
+        "description": "Ensure excellent mobile experience and apply final UI/UX polish across all components",
+        "details": "Optimize all components for mobile devices using TailwindCSS responsive utilities. Adjust dropdown positioning and sizing for touch interfaces. Implement proper touch interactions for suggestion selection. Optimize text input and display for mobile keyboards. Add proper viewport meta tags and touch-friendly button sizes (min 44px). Test and fix any layout issues on various screen sizes. Apply consistent spacing, typography, and color scheme. Add subtle animations and micro-interactions for better UX. Optimize performance and bundle size.",
+        "testStrategy": "Test on various mobile devices and screen sizes. Verify touch interactions work properly. Test keyboard behavior on mobile devices. Validate performance metrics and loading times. Conduct comprehensive cross-browser testing.",
+        "priority": "medium",
+        "dependencies": [
+          9,
+          10,
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-05T19:10:44.350Z",
+      "updated": "2025-07-05T21:19:19.061Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
