@@ -222,8 +222,25 @@ Return ONLY the JSON response, no additional text or formatting."""
                     logger.warning(f"Invalid category detected: {category}")
                     category = "Other"
 
+                # Extract the actual text at the found position
+                actual_text = original_text[start_index:end_index]
+                
+                # Debug: Check if LLM's text_span matches what we found
+                text_to_use = actual_text
+                if actual_text.strip().lower() != text_span.strip().lower():
+                    logger.warning(f"TEXT MISMATCH DETECTED:")
+                    logger.warning(f"  LLM identified: '{text_span}'")
+                    logger.warning(f"  Found in text:   '{actual_text}'")
+                    logger.warning(f"  Position: {start_index}-{end_index}")
+                    logger.warning(f"  Context: '{original_text[max(0, start_index-20):end_index+20]}'")
+                    
+                    # Use LLM's original text to ensure tooltip/highlighting consistency
+                    # This prevents mismatches where highlighting shows different text than tooltip
+                    text_to_use = text_span
+                    logger.info(f"Using LLM's original text for consistency: '{text_to_use}'")
+
                 bias_spans.append(BiasSpan(
-                    text=original_text[start_index:end_index],  # Use actual text from original
+                    text=text_to_use,  # Use LLM's text for tooltip/highlighting consistency
                     category=category,
                     explanation=explanation,
                     suggested_revision=suggested_revision,
