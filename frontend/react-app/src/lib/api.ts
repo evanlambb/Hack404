@@ -37,64 +37,29 @@ export async function analyzeText(request: AnalysisRequest): Promise<AnalysisRes
 /**
  * Converts analysis results to flagged words format for backward compatibility
  * @param analysisResult - The analysis response from the backend
- * @returns FlaggedWord[] - Array of flagged words
+ * @returns FlaggedWord[] - Array of flagged clauses (complete phrases)
  */
 export function convertToFlaggedWords(analysisResult: AnalysisResponse): FlaggedWord[] {
   const flaggedWords: FlaggedWord[] = [];
   
   analysisResult.hate_speech_clauses.forEach((clause) => {
-    const rationaleTokens = clause.rationale_tokens.filter(token => 
-      token.is_rationale && token.token.trim().length > 0
-    );
-    
-    if (rationaleTokens.length === 0) return;
-    
-    const originalText = analysisResult.original_text;
-    const processedTokens = new Set<number>(); // Track which tokens we've already processed
-    
-    rationaleTokens.forEach((token, index) => {
-      if (processedTokens.has(index)) return; // Skip if already processed
+    if (clause.is_hate_speech) {
+      // Find the position of this clause in the original text
+      const originalText = analysisResult.original_text;
+      const clauseText = clause.clause.trim();
       
-      let mergedWord = token.token.trim();
-      let totalConfidence = token.confidence;
-      let tokenCount = 1;
+      // Use case-insensitive search to find the clause
+      const startIndex = originalText.toLowerCase().indexOf(clauseText.toLowerCase());
       
-      // Look for consecutive tokens that can be merged
-      for (let i = index + 1; i < rationaleTokens.length; i++) {
-        if (processedTokens.has(i)) continue;
-        
-        const nextToken = rationaleTokens[i];
-        if (!nextToken) continue; // Safety check
-        
-        const potentialMergedWord = mergedWord + nextToken.token.trim();
-        
-        // Check if this merged word exists as a complete word in the original text
-        // Use word boundaries to ensure it's a complete word, not part of a larger word
-        const wordRegex = new RegExp(`\\b${potentialMergedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-        
-        if (wordRegex.test(originalText)) {
-          // This forms a valid complete word in the original text
-          mergedWord = potentialMergedWord;
-          totalConfidence += nextToken.confidence;
-          tokenCount++;
-          processedTokens.add(i); // Mark this token as processed
-        }
-      }
-      
-      // Find the position of this merged word in the original text
-      const wordRegex = new RegExp(`\\b${mergedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-      const match = originalText.match(wordRegex);
-      
-      if (match && match.index !== undefined) {
-        const startIndex = match.index;
-        const endIndex = startIndex + mergedWord.length;
+      if (startIndex !== -1) {
+        const endIndex = startIndex + clauseText.length;
         
         flaggedWords.push({
-          word: mergedWord,
+          word: clauseText, // This is now the complete phrase/clause
           startIndex,
           endIndex,
           category: 'hate_speech',
-          confidence: totalConfidence / tokenCount, // Average confidence
+          confidence: clause.confidence,
           suggestions: [
             {
               word: '[Consider rephrasing]',
@@ -105,9 +70,7 @@ export function convertToFlaggedWords(analysisResult: AnalysisResponse): Flagged
           explanation: clause.justification,
         });
       }
-      
-      processedTokens.add(index); // Mark the current token as processed
-    });
+    }
   });
 
   return flaggedWords;

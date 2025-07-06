@@ -1,7 +1,6 @@
 'use client';
 
 import { AnalysisResponse, FlaggedWord } from '@/types';
-import { useState } from 'react';
 
 interface ExtendedAnalysisResponse extends AnalysisResponse {
   flaggedWords: FlaggedWord[];
@@ -25,70 +24,9 @@ interface IssuesPanelProps {
   validationErrors?: string[];
 }
 
-const getCategoryColor = (category: string) => {
-  switch (category.toLowerCase()) {
-    case 'gender_bias':
-      return {
-        bg: 'bg-gradient-to-r from-pink-100 to-rose-100',
-        border: 'border-pink-300',
-        text: 'text-pink-800',
-        badge: 'bg-pink-500',
-        icon: '♀'
-      };
-    case 'racial_bias':
-      return {
-        bg: 'bg-gradient-to-r from-orange-100 to-amber-100',
-        border: 'border-orange-300',
-        text: 'text-orange-800',
-        badge: 'bg-orange-500',
-        icon: '⚡'
-      };
-    case 'age_bias':
-      return {
-        bg: 'bg-gradient-to-r from-purple-100 to-violet-100',
-        border: 'border-purple-300',
-        text: 'text-purple-800',
-        badge: 'bg-purple-500',
-        icon: '⏰'
-      };
-    case 'religious_bias':
-      return {
-        bg: 'bg-gradient-to-r from-emerald-100 to-teal-100',
-        border: 'border-emerald-300',
-        text: 'text-emerald-800',
-        badge: 'bg-emerald-500',
-        icon: '☪'
-      };
-    case 'disability_bias':
-      return {
-        bg: 'bg-gradient-to-r from-blue-100 to-indigo-100',
-        border: 'border-blue-300',
-        text: 'text-blue-800',
-        badge: 'bg-blue-500',
-        icon: '♿'
-      };
-    default:
-      return {
-        bg: 'bg-gradient-to-r from-gray-100 to-slate-100',
-        border: 'border-gray-300',
-        text: 'text-gray-800',
-        badge: 'bg-gray-500',
-        icon: '⚠'
-      };
-  }
-};
-
-const getConfidenceColor = (confidence: number) => {
-  if (confidence >= 0.8) return 'text-red-600 bg-red-100';
-  if (confidence >= 0.6) return 'text-amber-600 bg-amber-100';
-  return 'text-green-600 bg-green-100';
-};
-
 export function IssuesPanel({ 
   analysisResult, 
   isAnalyzing, 
-  onWordReplace,
-  onIssueClick,
   text,
   onClear,
   onAnalyze,
@@ -96,28 +34,6 @@ export function IssuesPanel({
   error,
   validationErrors = []
 }: IssuesPanelProps) {
-  const [expandedIssues, setExpandedIssues] = useState<Set<number>>(new Set());
-
-  const toggleIssueExpansion = (index: number) => {
-    const newExpanded = new Set(expandedIssues);
-    if (newExpanded.has(index)) {
-      newExpanded.delete(index);
-    } else {
-      newExpanded.add(index);
-    }
-    setExpandedIssues(newExpanded);
-  };
-
-  const handleWordReplace = (originalWord: string, newWord: string) => {
-    onWordReplace(originalWord, newWord);
-  };
-
-  const handleIssueClick = (issue: FlaggedWord) => {
-    if (onIssueClick) {
-      onIssueClick(issue);
-    }
-  };
-
   return (
     <div className="w-full lg:w-96 h-full bg-white border-l border-gray-200">
       <div className="h-full flex flex-col">
@@ -168,108 +84,32 @@ export function IssuesPanel({
           )}
 
           {!isAnalyzing && analysisResult && analysisResult.flaggedWords.length > 0 && (
-            <div className="space-y-4">
-              {analysisResult.flaggedWords.map((issue, index) => {
-                const categoryStyle = getCategoryColor(issue.category);
-                const isExpanded = expandedIssues.has(index);
-                
-                return (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Problematic Phrases:</h3>
+              <div className="space-y-2">
+                {analysisResult.flaggedWords.map((issue, index) => (
                   <div 
                     key={index} 
-                    className={`${categoryStyle.bg} ${categoryStyle.border} border rounded-lg hover:shadow-sm transition-all duration-300 cursor-pointer overflow-hidden`}
-                    onClick={() => {
-                      toggleIssueExpansion(index);
-                      handleIssueClick(issue);
-                    }}
+                    className="bg-red-50 border border-red-200 rounded-lg p-3 hover:bg-red-100 transition-colors duration-200 group relative"
+                    title={issue.explanation || 'Problematic content detected'}
                   >
-                    <div className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className={`${categoryStyle.badge} w-8 h-8 rounded-full flex items-center justify-center text-white font-bold`}>
-                            {categoryStyle.icon}
-                          </div>
-                          <div>
-                            <h4 className={`font-bold ${categoryStyle.text} text-sm`}>
-                              &ldquo;{issue.word}&rdquo;
-                            </h4>
-                            <p className={`text-xs ${categoryStyle.text} opacity-80 capitalize font-medium`}>
-                              {issue.category.replace('_', ' ')}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className={`text-xs font-bold px-2 py-1 rounded-full ${getConfidenceColor(issue.confidence)}`}>
-                            {Math.round(issue.confidence * 100)}%
-                          </span>
-                          <svg 
-                            className={`w-5 h-5 ${categoryStyle.text} transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {isExpanded && (                          <div className="space-y-4 animate-fadeIn">
-                            <div className="bg-white/70 rounded-lg p-4">
-                              <h5 className="font-semibold text-gray-800 text-sm mb-2 flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Why this is problematic:
-                              </h5>
-                              <p className="text-gray-700 text-sm leading-relaxed">
-                                {issue.explanation}
-                              </p>
-                            </div>
-
-                          <div className="space-y-2">
-                            <h5 className="font-semibold text-gray-800 text-sm flex items-center gap-2">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                              </svg>
-                              Suggested alternatives:
-                            </h5>
-                            <div className="space-y-2">
-                              {issue.suggestions.map((suggestion, suggestionIndex) => (
-                                <button
-                                  key={suggestionIndex}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleWordReplace(issue.word, suggestion.word);
-                                  }}
-                                  className="w-full text-left p-3 bg-white/80 hover:bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 group"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex-1">
-                                      <span className="font-semibold text-gray-800 text-sm">
-                                        &ldquo;{suggestion.word}&rdquo;
-                                      </span>
-                                      <div className="flex items-center gap-2 mt-1">
-                                        <span className={`text-xs font-medium px-2 py-1 rounded-full ${getConfidenceColor(suggestion.confidence)}`}>
-                                          {Math.round(suggestion.confidence * 100)}% match
-                                        </span>
-                                      </div>
-                                      <p className="text-xs text-gray-600 mt-1">
-                                        {suggestion.reason}
-                                      </p>
-                                    </div>
-                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></div>
+                      <span className="font-medium text-red-800">
+                        &ldquo;{issue.word}&rdquo;
+                      </span>
                     </div>
+                    
+                    {/* Tooltip on hover */}
+                    {issue.explanation && (
+                      <div className="absolute left-0 top-full mt-2 w-full bg-gray-900 text-white text-sm p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg">
+                        <div className="absolute -top-1 left-4 w-2 h-2 bg-gray-900 rotate-45"></div>
+                        {issue.explanation}
+                      </div>
+                    )}
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           )}
         </div>
