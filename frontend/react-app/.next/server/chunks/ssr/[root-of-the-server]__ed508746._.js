@@ -447,149 +447,22 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                 className: "space-y-4",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                htmlFor: "text-input",
-                                className: "block text-sm font-semibold text-gray-700 mb-3",
-                                children: label
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 217,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                                id: "text-input",
-                                value: value,
-                                onChange: handleTextChange,
-                                placeholder: placeholder,
-                                maxLength: maxLength,
-                                className: "w-full h-96 px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none transition-all duration-200 bg-gray-50",
-                                disabled: disabled || isAnalyzing
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 223,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                            id: "text-input",
+                            value: value,
+                            onChange: handleTextChange,
+                            placeholder: placeholder,
+                            maxLength: maxLength,
+                            className: "w-full h-96 px-4 py-3 placeholder-gray-400 text-gray-900 focus:outline-none resize-none transition-all duration-200 bg-gray-50 border-0",
+                            disabled: disabled || isAnalyzing
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/TextInput.tsx",
+                            lineNumber: 217,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
                         lineNumber: 216,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center",
-                        children: [
-                            showCharacterCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: `text-sm ${characterCountColor} flex items-center gap-1`,
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                        className: "w-4 h-4",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        viewBox: "0 0 24 24",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                            strokeLinecap: "round",
-                                            strokeLinejoin: "round",
-                                            strokeWidth: 2,
-                                            d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 239,
-                                            columnNumber: 17
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 238,
-                                        columnNumber: 15
-                                    }, this),
-                                    value.length,
-                                    " / ",
-                                    maxLength,
-                                    " characters"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 237,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex gap-3",
-                                children: [
-                                    showClearButton && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: handleClearClick,
-                                        disabled: !value || isAnalyzing,
-                                        className: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200",
-                                        children: clearButtonText
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 246,
-                                        columnNumber: 15
-                                    }, this),
-                                    showAnalyzeButton && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: handleAnalyzeClick,
-                                        disabled: !value.trim() || isAnalyzing || !isValid,
-                                        className: "px-6 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200",
-                                        children: isAnalyzing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center gap-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/TextInput.tsx",
-                                                    lineNumber: 262,
-                                                    columnNumber: 21
-                                                }, this),
-                                                "Analyzing..."
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 261,
-                                            columnNumber: 19
-                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center gap-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                    className: "w-4 h-4",
-                                                    fill: "none",
-                                                    stroke: "currentColor",
-                                                    viewBox: "0 0 24 24",
-                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                        strokeLinecap: "round",
-                                                        strokeLinejoin: "round",
-                                                        strokeWidth: 2,
-                                                        d: "M13 10V3L4 14h7v7l9-11h-7z"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 268,
-                                                        columnNumber: 23
-                                                    }, this)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/TextInput.tsx",
-                                                    lineNumber: 267,
-                                                    columnNumber: 21
-                                                }, this),
-                                                analyzeButtonText
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 266,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 255,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 244,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 235,
                         columnNumber: 9
                     }, this),
                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -611,17 +484,17 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             d: "M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 284,
+                                            lineNumber: 234,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 283,
+                                        lineNumber: 233,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 282,
+                                    lineNumber: 232,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -632,7 +505,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             children: "Error"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 288,
+                                            lineNumber: 238,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -640,24 +513,24 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             children: error
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 291,
+                                            lineNumber: 241,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 287,
+                                    lineNumber: 237,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 281,
+                            lineNumber: 231,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 280,
+                        lineNumber: 230,
                         columnNumber: 11
                     }, this),
                     validationErrors.length > 0 && validateOnChange && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -679,17 +552,17 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 305,
+                                            lineNumber: 255,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 304,
+                                        lineNumber: 254,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 303,
+                                    lineNumber: 253,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -703,7 +576,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 309,
+                                            lineNumber: 259,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -716,29 +589,29 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                                     ]
                                                 }, index, true, {
                                                     fileName: "[project]/src/components/TextInput.tsx",
-                                                    lineNumber: 314,
+                                                    lineNumber: 264,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 312,
+                                            lineNumber: 262,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 308,
+                                    lineNumber: 258,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 302,
+                            lineNumber: 252,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 301,
+                        lineNumber: 251,
                         columnNumber: 11
                     }, this)
                 ]
@@ -770,17 +643,17 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 332,
+                                            lineNumber: 282,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 331,
+                                        lineNumber: 281,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 330,
+                                    lineNumber: 280,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -788,13 +661,13 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                     children: "Confirm Clear Text"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 335,
+                                    lineNumber: 285,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 329,
+                            lineNumber: 279,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -806,7 +679,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 339,
+                            lineNumber: 289,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -818,7 +691,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 343,
+                                    lineNumber: 293,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -827,24 +700,24 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                     children: "Clear Text"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 349,
+                                    lineNumber: 299,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 342,
+                            lineNumber: 292,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 328,
+                    lineNumber: 278,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 327,
+                lineNumber: 277,
                 columnNumber: 9
             }, this)
         ]
@@ -925,7 +798,7 @@ const getConfidenceColor = (confidence)=>{
     if (confidence >= 0.6) return 'text-amber-600 bg-amber-100';
     return 'text-green-600 bg-green-100';
 };
-function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick }) {
+function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick, text, onClear, onAnalyze, maxLength }) {
     const [expandedIssues, setExpandedIssues] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(new Set());
     const toggleIssueExpansion = (index)=>{
         const newExpanded = new Set(expandedIssues);
@@ -969,17 +842,17 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                             d: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 108,
+                                            lineNumber: 117,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 107,
+                                        lineNumber: 116,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 106,
+                                    lineNumber: 115,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -987,13 +860,13 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                     children: "Issues Found"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 111,
+                                    lineNumber: 120,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 105,
+                            lineNumber: 114,
                             columnNumber: 11
                         }, this),
                         analysisResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1007,7 +880,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                             children: "Analysis Confidence"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 119,
+                                            lineNumber: 128,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1022,12 +895,12 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 122,
+                                                        lineNumber: 131,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 121,
+                                                    lineNumber: 130,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1038,19 +911,19 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 127,
+                                                    lineNumber: 136,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 120,
+                                            lineNumber: 129,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 118,
+                                    lineNumber: 127,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1064,7 +937,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                     children: analysisResult.flaggedWords.length
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 135,
+                                                    lineNumber: 144,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1072,13 +945,13 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                     children: "Issues Found"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 136,
+                                                    lineNumber: 145,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 134,
+                                            lineNumber: 143,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1089,7 +962,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                     children: new Set(analysisResult.flaggedWords.map((fw)=>fw.category)).size
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 139,
+                                                    lineNumber: 148,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1097,31 +970,31 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                     children: "Categories"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 142,
+                                                    lineNumber: 151,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 138,
+                                            lineNumber: 147,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 142,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 117,
+                            lineNumber: 126,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                    lineNumber: 104,
+                    lineNumber: 113,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1136,7 +1009,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                         className: "w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 154,
+                                        lineNumber: 163,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1144,7 +1017,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                         children: "Analyzing text for bias..."
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 155,
+                                        lineNumber: 164,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1152,18 +1025,18 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                         children: "This may take a moment"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 156,
+                                        lineNumber: 165,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                lineNumber: 153,
+                                lineNumber: 162,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 152,
+                            lineNumber: 161,
                             columnNumber: 13
                         }, this),
                         !isAnalyzing && (!analysisResult || analysisResult.flaggedWords.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1183,17 +1056,17 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                             d: "M5 13l4 4L19 7"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 165,
+                                            lineNumber: 174,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 164,
+                                        lineNumber: 173,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 163,
+                                    lineNumber: 172,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1201,7 +1074,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                     children: analysisResult ? 'No Issues Found!' : 'Ready to Analyze'
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 168,
+                                    lineNumber: 177,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1209,13 +1082,13 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                     children: analysisResult ? 'Your text looks great! No bias or problematic language detected.' : 'Enter some text and click "Analyze Text" to get started.'
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 171,
+                                    lineNumber: 180,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 162,
+                            lineNumber: 171,
                             columnNumber: 13
                         }, this),
                         !isAnalyzing && analysisResult && analysisResult.flaggedWords.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1243,7 +1116,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                 children: categoryStyle.icon
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 198,
+                                                                lineNumber: 207,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1257,7 +1130,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 202,
+                                                                        lineNumber: 211,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1265,19 +1138,19 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                         children: issue.category.replace('_', ' ')
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 205,
+                                                                        lineNumber: 214,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 201,
+                                                                lineNumber: 210,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 197,
+                                                        lineNumber: 206,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1291,7 +1164,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 211,
+                                                                lineNumber: 220,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -1306,24 +1179,24 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                     d: "M19 9l-7 7-7-7"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                    lineNumber: 220,
+                                                                    lineNumber: 229,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 214,
+                                                                lineNumber: 223,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 210,
+                                                        lineNumber: 219,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                lineNumber: 196,
+                                                lineNumber: 205,
                                                 columnNumber: 23
                                             }, this),
                                             isExpanded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1347,19 +1220,19 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                             d: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                            lineNumber: 229,
+                                                                            lineNumber: 238,
                                                                             columnNumber: 35
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 228,
+                                                                        lineNumber: 237,
                                                                         columnNumber: 33
                                                                     }, this),
                                                                     "Why this is problematic:"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 227,
+                                                                lineNumber: 236,
                                                                 columnNumber: 31
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1367,13 +1240,13 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                 children: issue.explanation
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 233,
+                                                                lineNumber: 242,
                                                                 columnNumber: 31
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 226,
+                                                        lineNumber: 235,
                                                         columnNumber: 29
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1394,19 +1267,19 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                             d: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                            lineNumber: 241,
+                                                                            lineNumber: 250,
                                                                             columnNumber: 33
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 240,
+                                                                        lineNumber: 249,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     "Suggested alternatives:"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 239,
+                                                                lineNumber: 248,
                                                                 columnNumber: 29
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1432,7 +1305,7 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                            lineNumber: 257,
+                                                                                            lineNumber: 266,
                                                                                             columnNumber: 39
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1445,12 +1318,12 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                                                 ]
                                                                                             }, void 0, true, {
                                                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                                lineNumber: 261,
+                                                                                                lineNumber: 270,
                                                                                                 columnNumber: 41
                                                                                             }, this)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                            lineNumber: 260,
+                                                                                            lineNumber: 269,
                                                                                             columnNumber: 39
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1458,13 +1331,13 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                                             children: suggestion.reason
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                            lineNumber: 265,
+                                                                                            lineNumber: 274,
                                                                                             columnNumber: 39
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                    lineNumber: 256,
+                                                                                    lineNumber: 265,
                                                                                     columnNumber: 37
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -1479,74 +1352,197 @@ function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick 
                                                                                         d: "M9 5l7 7-7 7"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                        lineNumber: 270,
+                                                                                        lineNumber: 279,
                                                                                         columnNumber: 39
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                    lineNumber: 269,
+                                                                                    lineNumber: 278,
                                                                                     columnNumber: 37
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                            lineNumber: 255,
+                                                                            lineNumber: 264,
                                                                             columnNumber: 35
                                                                         }, this)
                                                                     }, suggestionIndex, false, {
                                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 247,
+                                                                        lineNumber: 256,
                                                                         columnNumber: 33
                                                                     }, this))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 245,
+                                                                lineNumber: 254,
                                                                 columnNumber: 29
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 238,
+                                                        lineNumber: 247,
                                                         columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                lineNumber: 225,
+                                                lineNumber: 234,
                                                 columnNumber: 65
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 195,
+                                        lineNumber: 204,
                                         columnNumber: 21
                                     }, this)
                                 }, index, false, {
                                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 187,
+                                    lineNumber: 196,
                                     columnNumber: 19
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 181,
+                            lineNumber: 190,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/IssuesPanel.tsx",
-                    lineNumber: 150,
+                    lineNumber: 159,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "sticky bottom-0 bg-white border-t border-gray-200 p-6",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "space-y-4",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: `text-sm flex items-center gap-1 ${text.length >= maxLength ? 'text-red-500 font-semibold' : text.length >= maxLength * 0.8 ? 'text-amber-500 font-medium' : 'text-gray-500'}`,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                        className: "w-4 h-4",
+                                        fill: "none",
+                                        stroke: "currentColor",
+                                        viewBox: "0 0 24 24",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                            strokeLinecap: "round",
+                                            strokeLinejoin: "round",
+                                            strokeWidth: 2,
+                                            d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/IssuesPanel.tsx",
+                                            lineNumber: 308,
+                                            columnNumber: 17
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/IssuesPanel.tsx",
+                                        lineNumber: 307,
+                                        columnNumber: 15
+                                    }, this),
+                                    text.length,
+                                    " / ",
+                                    maxLength,
+                                    " characters"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/IssuesPanel.tsx",
+                                lineNumber: 300,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex flex-col gap-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: onClear,
+                                        disabled: !text || isAnalyzing,
+                                        className: "w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200",
+                                        children: "Clear Text"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/IssuesPanel.tsx",
+                                        lineNumber: 315,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: onAnalyze,
+                                        disabled: !text.trim() || isAnalyzing,
+                                        className: "w-full px-4 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200",
+                                        children: isAnalyzing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-center justify-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
+                                                    lineNumber: 330,
+                                                    columnNumber: 21
+                                                }, this),
+                                                "Analyzing..."
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/IssuesPanel.tsx",
+                                            lineNumber: 329,
+                                            columnNumber: 19
+                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-center justify-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                    className: "w-4 h-4",
+                                                    fill: "none",
+                                                    stroke: "currentColor",
+                                                    viewBox: "0 0 24 24",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                        strokeLinecap: "round",
+                                                        strokeLinejoin: "round",
+                                                        strokeWidth: 2,
+                                                        d: "M13 10V3L4 14h7v7l9-11h-7z"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
+                                                        lineNumber: 336,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
+                                                    lineNumber: 335,
+                                                    columnNumber: 21
+                                                }, this),
+                                                "Analyze for Hate Speech"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/IssuesPanel.tsx",
+                                            lineNumber: 334,
+                                            columnNumber: 19
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/IssuesPanel.tsx",
+                                        lineNumber: 323,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/IssuesPanel.tsx",
+                                lineNumber: 314,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/IssuesPanel.tsx",
+                        lineNumber: 298,
+                        columnNumber: 11
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/src/components/IssuesPanel.tsx",
+                    lineNumber: 297,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/IssuesPanel.tsx",
-            lineNumber: 102,
+            lineNumber: 111,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/IssuesPanel.tsx",
-        lineNumber: 101,
+        lineNumber: 110,
         columnNumber: 5
     }, this);
 }
@@ -1704,21 +1700,6 @@ function BiasDetectionApp() {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "mb-6",
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                className: "text-lg text-gray-600",
-                                                children: "Analyze text for hate speech and get detailed explanations with AI-powered rationale"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                lineNumber: 150,
-                                                columnNumber: 17
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 149,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "mb-6",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$TextInput$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                                 value: text,
                                                 onChange: setText,
@@ -1736,12 +1717,12 @@ function BiasDetectionApp() {
                                                 clearButtonText: "Clear"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                lineNumber: 157,
+                                                lineNumber: 150,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 156,
+                                            lineNumber: 149,
                                             columnNumber: 15
                                         }, this),
                                         analysisResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1754,7 +1735,7 @@ function BiasDetectionApp() {
                                                         children: "Analysis Complete"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                        lineNumber: 179,
+                                                        lineNumber: 172,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1768,7 +1749,7 @@ function BiasDetectionApp() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                lineNumber: 181,
+                                                                lineNumber: 174,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1779,24 +1760,24 @@ function BiasDetectionApp() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                lineNumber: 184,
+                                                                lineNumber: 177,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                        lineNumber: 180,
+                                                        lineNumber: 173,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                lineNumber: 178,
+                                                lineNumber: 171,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 177,
+                                            lineNumber: 170,
                                             columnNumber: 17
                                         }, this),
                                         highlightedClause && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1807,7 +1788,7 @@ function BiasDetectionApp() {
                                                     children: "Selected Clause Analysis"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                    lineNumber: 195,
+                                                    lineNumber: 188,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1820,7 +1801,7 @@ function BiasDetectionApp() {
                                                                     children: "Clause:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 198,
+                                                                    lineNumber: 191,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1832,13 +1813,13 @@ function BiasDetectionApp() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 199,
+                                                                    lineNumber: 192,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                            lineNumber: 197,
+                                                            lineNumber: 190,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1848,7 +1829,7 @@ function BiasDetectionApp() {
                                                                     children: "Justification:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 202,
+                                                                    lineNumber: 195,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1856,13 +1837,13 @@ function BiasDetectionApp() {
                                                                     children: highlightedClause.justification
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 203,
+                                                                    lineNumber: 196,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                            lineNumber: 201,
+                                                            lineNumber: 194,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1875,7 +1856,7 @@ function BiasDetectionApp() {
                                                                             children: "Confidence:"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                            lineNumber: 207,
+                                                                            lineNumber: 200,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1886,13 +1867,13 @@ function BiasDetectionApp() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                            lineNumber: 208,
+                                                                            lineNumber: 201,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 206,
+                                                                    lineNumber: 199,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1902,7 +1883,7 @@ function BiasDetectionApp() {
                                                                             children: "Hate Speech Probability:"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                            lineNumber: 211,
+                                                                            lineNumber: 204,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1913,19 +1894,19 @@ function BiasDetectionApp() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                            lineNumber: 212,
+                                                                            lineNumber: 205,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 210,
+                                                                    lineNumber: 203,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                            lineNumber: 205,
+                                                            lineNumber: 198,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1935,7 +1916,7 @@ function BiasDetectionApp() {
                                                                     children: "Key Rationale Tokens:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 216,
+                                                                    lineNumber: 209,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1950,18 +1931,18 @@ function BiasDetectionApp() {
                                                                             ]
                                                                         }, index, true, {
                                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                            lineNumber: 221,
+                                                                            lineNumber: 214,
                                                                             columnNumber: 29
                                                                         }, this))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 217,
+                                                                    lineNumber: 210,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                            lineNumber: 215,
+                                                            lineNumber: 208,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1973,7 +1954,7 @@ function BiasDetectionApp() {
                                                                     children: "Remove This Clause"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 231,
+                                                                    lineNumber: 224,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1982,25 +1963,25 @@ function BiasDetectionApp() {
                                                                     children: "Close Details"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 237,
+                                                                    lineNumber: 230,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                            lineNumber: 230,
+                                                            lineNumber: 223,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                    lineNumber: 196,
+                                                    lineNumber: 189,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 194,
+                                            lineNumber: 187,
                                             columnNumber: 17
                                         }, this)
                                     ]
@@ -2026,15 +2007,19 @@ function BiasDetectionApp() {
                                     } : null,
                                     isAnalyzing: isAnalyzing,
                                     onWordReplace: handleWordReplace,
-                                    onIssueClick: handleIssueClick
+                                    onIssueClick: handleIssueClick,
+                                    text: text,
+                                    onClear: handleClearText,
+                                    onAnalyze: handleAnalyze,
+                                    maxLength: 5000
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 252,
+                                    lineNumber: 245,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 251,
+                                lineNumber: 244,
                                 columnNumber: 11
                             }, this)
                         ]
@@ -2057,20 +2042,24 @@ function BiasDetectionApp() {
                                 } : null,
                                 isAnalyzing: isAnalyzing,
                                 onWordReplace: handleWordReplace,
-                                onIssueClick: handleIssueClick
+                                onIssueClick: handleIssueClick,
+                                text: text,
+                                onClear: handleClearText,
+                                onAnalyze: handleAnalyze,
+                                maxLength: 5000
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 271,
+                                lineNumber: 268,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                            lineNumber: 270,
+                            lineNumber: 267,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 268,
+                        lineNumber: 265,
                         columnNumber: 9
                     }, this)
                 ]

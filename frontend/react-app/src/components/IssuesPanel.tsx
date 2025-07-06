@@ -8,6 +8,11 @@ interface IssuesPanelProps {
   isAnalyzing: boolean;
   onWordReplace: (originalWord: string, newWord: string) => void;
   onIssueClick?: (issue: FlaggedWord) => void;
+  // Text input controls
+  text: string;
+  onClear: () => void;
+  onAnalyze: () => void;
+  maxLength: number;
 }
 
 const getCategoryColor = (category: string) => {
@@ -73,7 +78,11 @@ export function IssuesPanel({
   analysisResult, 
   isAnalyzing, 
   onWordReplace,
-  onIssueClick 
+  onIssueClick,
+  text,
+  onClear,
+  onAnalyze,
+  maxLength
 }: IssuesPanelProps) {
   const [expandedIssues, setExpandedIssues] = useState<Set<number>>(new Set());
 
@@ -282,6 +291,56 @@ export function IssuesPanel({
               })}
             </div>
           )}
+        </div>
+
+        {/* Text Input Controls */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6">
+          <div className="space-y-4">
+            {/* Character Count */}
+            <div className={`text-sm flex items-center gap-1 ${
+              text.length >= maxLength 
+                ? 'text-red-500 font-semibold' 
+                : text.length >= maxLength * 0.8 
+                  ? 'text-amber-500 font-medium' 
+                  : 'text-gray-500'
+            }`}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {text.length} / {maxLength} characters
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={onClear}
+                disabled={!text || isAnalyzing}
+                className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                Clear Text
+              </button>
+              
+              <button
+                onClick={onAnalyze}
+                disabled={!text.trim() || isAnalyzing}
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                {isAnalyzing ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Analyzing...
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Analyze for Hate Speech
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

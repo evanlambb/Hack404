@@ -145,13 +145,6 @@ export function BiasDetectionApp() {
           {/* Left Column - Input and Text Display */}
           <div className="flex-1 overflow-y-auto p-6 lg:p-8">
             <div className="max-w-none">
-              {/* Description */}
-              <div className="mb-6">
-                <p className="text-lg text-gray-600">
-                  Analyze text for hate speech and get detailed explanations with AI-powered rationale
-                </p>
-              </div>
-
               {/* Input Section - Full width text area */}
               <div className="mb-6">
                 <TextInput
@@ -260,6 +253,10 @@ export function BiasDetectionApp() {
               isAnalyzing={isAnalyzing}
               onWordReplace={handleWordReplace}
               onIssueClick={handleIssueClick}
+              text={text}
+              onClear={handleClearText}
+              onAnalyze={handleAnalyze}
+              maxLength={5000}
             />
           </div>
         </div>
@@ -279,6 +276,10 @@ export function BiasDetectionApp() {
                 isAnalyzing={isAnalyzing}
                 onWordReplace={handleWordReplace}
                 onIssueClick={handleIssueClick}
+                text={text}
+                onClear={handleClearText}
+                onAnalyze={handleAnalyze}
+                maxLength={5000}
               />
             </div>
           )}
