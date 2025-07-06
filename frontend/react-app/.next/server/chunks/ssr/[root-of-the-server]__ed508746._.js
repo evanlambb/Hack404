@@ -14,15 +14,17 @@ module.exports = mod;
 var { g: global, __dirname } = __turbopack_context__;
 {
 /**
- * API Service Layer for Bias Detection App
+ * API Service Layer for Hate Speech Detection App
  * 
  * This module handles all communication with the backend API.
  * It provides a clean interface for our React components to use.
  */ __turbopack_context__.s({
     "ApiError": (()=>ApiError),
     "analyzeText": (()=>analyzeText),
+    "analyzeTextSimple": (()=>analyzeTextSimple),
     "checkApiHealth": (()=>checkApiHealth),
-    "createMockAnalysisResponse": (()=>createMockAnalysisResponse),
+    "convertToFlaggedWords": (()=>convertToFlaggedWords),
+    "createMockAnalysisResponseLegacy": (()=>createMockAnalysisResponseLegacy),
     "validateTextInput": (()=>validateTextInput)
 });
 // Configuration for API endpoints
@@ -30,7 +32,8 @@ const API_CONFIG = {
     baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
     endpoints: {
         analyze: '/analyze',
-        health: '/health'
+        analyzeSimple: '/analyze-simple',
+        health: '/'
     },
     timeout: 30000
 };
@@ -63,7 +66,7 @@ class ApiError extends Error {
         // Check if response is ok
         if (!response.ok) {
             const errorData = await response.json().catch(()=>({}));
-            throw new ApiError(errorData.message || `HTTP ${response.status}: ${response.statusText}`, response.status, errorData.code);
+            throw new ApiError(errorData.detail || errorData.message || `HTTP ${response.status}: ${response.statusText}`, response.status, errorData.code);
         }
         return await response.json();
     } catch (error) {
@@ -75,14 +78,33 @@ class ApiError extends Error {
     }
 }
 async function analyzeText(request) {
-    // For development/demo purposes, use mock data
-    // In production, this would make a real API call
-    if ("TURBOPACK compile-time truthy", 1) {
-        // Simulate API delay
-        await new Promise((resolve)=>setTimeout(resolve, 1000 + Math.random() * 1000));
-        return createMockAnalysisResponse(request.text);
+    try {
+        const response = await apiRequest(API_CONFIG.endpoints.analyze, {
+            method: 'POST',
+            body: JSON.stringify({
+                text: request.text,
+                confidence_threshold: request.confidence_threshold || 0.6
+            })
+        });
+        return response;
+    } catch (error) {
+        console.error('Error analyzing text:', error);
+        // Fallback to mock data if API is not available
+        if (error instanceof ApiError && error.code === 'NETWORK_ERROR') {
+            console.warn('API not available, using mock data');
+            return createMockAnalysisResponse(request.text);
+        }
+        throw error;
     }
-    "TURBOPACK unreachable";
+}
+async function analyzeTextSimple(request) {
+    return apiRequest(API_CONFIG.endpoints.analyzeSimple, {
+        method: 'POST',
+        body: JSON.stringify({
+            text: request.text,
+            confidence_threshold: request.confidence_threshold || 0.6
+        })
+    });
 }
 async function checkApiHealth() {
     return apiRequest(API_CONFIG.endpoints.health, {
@@ -105,42 +127,65 @@ function validateTextInput(text) {
         errors
     };
 }
-function createMockAnalysisResponse(text) {
-    // Simple mock that flags potentially problematic words
-    const mockWords = [
-        'stupid',
-        'dumb',
-        'crazy',
-        'insane',
-        'lame'
-    ];
-    const flaggedWords = mockWords.map((word)=>{
-        const index = text.toLowerCase().indexOf(word);
-        if (index === -1) return null;
-        return {
-            word,
-            startIndex: index,
-            endIndex: index + word.length,
-            category: 'general_bias',
-            confidence: 0.75,
-            suggestions: [
-                {
-                    word: 'unclear',
-                    confidence: 0.8,
-                    reason: 'More neutral language'
-                },
-                {
-                    word: 'confusing',
-                    confidence: 0.7,
-                    reason: 'Describes the issue without judgment'
-                }
-            ],
-            explanation: 'This word may be perceived as ableist or judgmental'
-        };
-    }).filter((item)=>item !== null);
+function convertToFlaggedWords(analysisResponse) {
+    const flaggedWords = [];
+    analysisResponse.hate_speech_clauses.forEach((clause)=>{
+        if (clause.is_hate_speech) {
+            const originalText = analysisResponse.original_text;
+            const clauseStartIndex = originalText.indexOf(clause.clause);
+            if (clauseStartIndex !== -1) {
+                // Extract significant words from rationale tokens
+                const significantWords = clause.rationale_tokens.filter((token)=>token.is_rationale && token.confidence > 0.1).map((token)=>token.token.replace('##', ''));
+                // Create flagged words for each significant token
+                significantWords.forEach((word)=>{
+                    const wordIndex = originalText.indexOf(word, clauseStartIndex);
+                    if (wordIndex !== -1) {
+                        flaggedWords.push({
+                            word,
+                            startIndex: wordIndex,
+                            endIndex: wordIndex + word.length,
+                            category: 'hate_speech',
+                            confidence: clause.confidence,
+                            suggestions: [
+                                {
+                                    word: '[content removed]',
+                                    confidence: 0.9,
+                                    reason: 'Remove harmful content'
+                                },
+                                {
+                                    word: '[inappropriate]',
+                                    confidence: 0.8,
+                                    reason: 'Mark as inappropriate'
+                                }
+                            ],
+                            explanation: clause.justification
+                        });
+                    }
+                });
+            }
+        }
+    });
+    return flaggedWords;
+}
+/**
+ * Create a mock analysis response for development/testing
+ * This is useful when the backend isn't available
+ */ function createMockAnalysisResponse(text) {
+    return {
+        original_text: text,
+        total_clauses: 1,
+        hate_speech_clauses: [],
+        summary: {
+            total_hate_speech_clauses: 0,
+            highest_confidence: 0,
+            average_confidence: 0
+        }
+    };
+}
+function createMockAnalysisResponseLegacy(text) {
     return {
         originalText: text,
-        flaggedWords,
+        flaggedWords: [],
         analysisId: `mock-${Date.now()}`,
         timestamp: new Date().toISOString(),
         confidence: 0.85
@@ -1615,7 +1660,7 @@ function BiasDetectionApp() {
     const [isAnalyzing, setIsAnalyzing] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [analysisResult, setAnalysisResult] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [highlightedIssue, setHighlightedIssue] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [highlightedClause, setHighlightedClause] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const handleAnalyze = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(async ()=>{
         if (!text.trim()) {
             setError('Please enter some text to analyze');
@@ -1623,19 +1668,11 @@ function BiasDetectionApp() {
         }
         setIsAnalyzing(true);
         setError(null);
-        setHighlightedIssue(null);
+        setHighlightedClause(null);
         try {
             const request = {
                 text: text.trim(),
-                options: {
-                    sensitivity: 'medium',
-                    categories: [
-                        'gender_bias',
-                        'racial_bias',
-                        'religious_bias',
-                        'general_bias'
-                    ]
-                }
+                confidence_threshold: 0.6
             };
             const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["analyzeText"])(request);
             setAnalysisResult(result);
@@ -1652,52 +1689,89 @@ function BiasDetectionApp() {
         setText('');
         setAnalysisResult(null);
         setError(null);
-        setHighlightedIssue(null);
+        setHighlightedClause(null);
     }, []);
-    const handleWordReplace = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((originalWord, newWord)=>{
-        const newText = text.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord);
+    const handleClauseClick = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((clause)=>{
+        setHighlightedClause(clause);
+    }, []);
+    const handleRemoveClause = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((clause)=>{
+        const newText = text.replace(clause.clause, '[content removed]');
         setText(newText);
-        // Update analysis result to reflect the change
+        // Update analysis result to remove the clause
         if (analysisResult) {
-            const updatedFlaggedWords = analysisResult.flaggedWords.filter((fw)=>fw.word !== originalWord);
+            const updatedClauses = analysisResult.hate_speech_clauses.filter((c)=>c.clause !== clause.clause);
             setAnalysisResult({
                 ...analysisResult,
-                flaggedWords: updatedFlaggedWords,
-                originalText: newText
+                hate_speech_clauses: updatedClauses,
+                original_text: newText,
+                summary: {
+                    ...analysisResult.summary,
+                    total_hate_speech_clauses: updatedClauses.length
+                }
             });
         }
     }, [
         text,
         analysisResult
     ]);
-    const handleIssueClick = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((issue)=>{
-        setHighlightedIssue(issue);
-    }, []);
     // Create highlighted text with proper formatting
     const getHighlightedText = ()=>{
-        if (!analysisResult || analysisResult.flaggedWords.length === 0) {
+        if (!analysisResult || analysisResult.hate_speech_clauses.length === 0) {
             return text;
         }
         let highlightedText = text;
-        const flaggedWords = [
-            ...analysisResult.flaggedWords
-        ].sort((a, b)=>b.startIndex - a.startIndex);
-        flaggedWords.forEach((fw)=>{
-            const beforeText = highlightedText.slice(0, fw.startIndex);
-            const flaggedWord = highlightedText.slice(fw.startIndex, fw.endIndex);
-            const afterText = highlightedText.slice(fw.endIndex);
-            const isHighlighted = highlightedIssue?.word === fw.word;
-            const highlightClass = isHighlighted ? 'bg-red-200 border-2 border-red-400 px-1 rounded font-medium' : 'bg-yellow-200 px-1 rounded';
-            highlightedText = `${beforeText}<span class="${highlightClass}">${flaggedWord}</span>${afterText}`;
+        const hateSpeechClauses = [
+            ...analysisResult.hate_speech_clauses
+        ].filter((clause)=>clause.is_hate_speech).sort((a, b)=>b.clause.length - a.clause.length); // Sort by length to avoid partial replacements
+        hateSpeechClauses.forEach((clause)=>{
+            const isHighlighted = highlightedClause?.clause === clause.clause;
+            const highlightClass = isHighlighted ? 'bg-red-200 border-2 border-red-400 px-2 py-1 rounded font-medium cursor-pointer' : 'bg-yellow-200 px-2 py-1 rounded cursor-pointer hover:bg-yellow-300';
+            const regex = new RegExp(clause.clause.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+            highlightedText = highlightedText.replace(regex, `<span class="${highlightClass}" data-clause="${clause.clause}">${clause.clause}</span>`);
         });
         return highlightedText;
     };
+    const handleWordReplace = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((originalWord, newWord)=>{
+        const newText = text.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord);
+        setText(newText);
+        // Update analysis result to reflect the change
+        if (analysisResult) {
+            const updatedClauses = analysisResult.hate_speech_clauses.map((clause)=>{
+                if (clause.clause.includes(originalWord)) {
+                    return {
+                        ...clause,
+                        clause: clause.clause.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord)
+                    };
+                }
+                return clause;
+            });
+            setAnalysisResult({
+                ...analysisResult,
+                hate_speech_clauses: updatedClauses,
+                original_text: newText
+            });
+        }
+    }, [
+        text,
+        analysisResult
+    ]);
+    // Convert analysis result to flagged words format for IssuesPanel compatibility
+    const flaggedWords = analysisResult ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["convertToFlaggedWords"])(analysisResult) : [];
+    const handleIssueClick = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((issue)=>{
+        // Find the corresponding clause for the flagged word
+        const clause = analysisResult?.hate_speech_clauses.find((c)=>c.clause.includes(issue.word) && c.is_hate_speech);
+        if (clause) {
+            setHighlightedClause(clause);
+        }
+    }, [
+        analysisResult
+    ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Header$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 101,
+                lineNumber: 140,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1715,15 +1789,15 @@ function BiasDetectionApp() {
                                             className: "mb-8",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-lg text-gray-600",
-                                                children: "Analyze text for potential bias and get suggestions for improvement"
+                                                children: "Analyze text for hate speech and get detailed explanations with AI-powered rationale"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                lineNumber: 114,
+                                                lineNumber: 150,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 110,
+                                            lineNumber: 149,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1743,22 +1817,126 @@ function BiasDetectionApp() {
                                                     showCharacterCount: true,
                                                     showClearButton: true,
                                                     showAnalyzeButton: true,
-                                                    analyzeButtonText: "Analyze Text",
+                                                    analyzeButtonText: "Analyze for Hate Speech",
                                                     clearButtonText: "Clear"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                    lineNumber: 122,
-                                                    columnNumber: 17
+                                                    lineNumber: 158,
+                                                    columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                lineNumber: 121,
-                                                columnNumber: 15
+                                                lineNumber: 157,
+                                                columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 120,
-                                            columnNumber: 13
+                                            lineNumber: 156,
+                                            columnNumber: 15
+                                        }, this),
+                                        analysisResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mb-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 p-6",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    className: "text-lg font-semibold text-gray-800 mb-4",
+                                                    children: "Analysis Results"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                    lineNumber: 180,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "grid grid-cols-1 md:grid-cols-3 gap-4",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-center",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-2xl font-bold text-blue-600",
+                                                                    children: analysisResult.total_clauses
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 183,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-sm text-gray-600",
+                                                                    children: "Total Clauses"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 184,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 182,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-center",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-2xl font-bold text-red-600",
+                                                                    children: analysisResult.summary.total_hate_speech_clauses
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 187,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-sm text-gray-600",
+                                                                    children: "Hate Speech Detected"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 188,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 186,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-center",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-2xl font-bold text-yellow-600",
+                                                                    children: [
+                                                                        (analysisResult.summary.highest_confidence * 100).toFixed(1),
+                                                                        "%"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 191,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-sm text-gray-600",
+                                                                    children: "Highest Confidence"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 194,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 190,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                    lineNumber: 181,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                            lineNumber: 179,
+                                            columnNumber: 17
                                         }, this),
                                         text && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/30 p-8 transition-all duration-300 hover:shadow-2xl",
@@ -1774,8 +1952,8 @@ function BiasDetectionApp() {
                                                                         className: "w-2 h-2 bg-green-500 rounded-full animate-pulse"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                        lineNumber: 148,
-                                                                        columnNumber: 25
+                                                                        lineNumber: 207,
+                                                                        columnNumber: 27
                                                                     }, this),
                                                                     "Analyzed Text"
                                                                 ]
@@ -1785,16 +1963,16 @@ function BiasDetectionApp() {
                                                                         className: "w-2 h-2 bg-blue-500 rounded-full"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                        lineNumber: 153,
-                                                                        columnNumber: 25
+                                                                        lineNumber: 212,
+                                                                        columnNumber: 27
                                                                     }, this),
                                                                     "Current Text"
                                                                 ]
                                                             }, void 0, true)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                            lineNumber: 145,
-                                                            columnNumber: 19
+                                                            lineNumber: 204,
+                                                            columnNumber: 21
                                                         }, this),
                                                         analysisResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                             onClick: ()=>navigator.clipboard.writeText(text),
@@ -1812,26 +1990,26 @@ function BiasDetectionApp() {
                                                                         d: "M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                        lineNumber: 164,
-                                                                        columnNumber: 25
+                                                                        lineNumber: 223,
+                                                                        columnNumber: 27
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                    lineNumber: 163,
-                                                                    columnNumber: 23
+                                                                    lineNumber: 222,
+                                                                    columnNumber: 25
                                                                 }, this),
                                                                 "Copy Text"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                            lineNumber: 159,
-                                                            columnNumber: 21
+                                                            lineNumber: 218,
+                                                            columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                    lineNumber: 144,
-                                                    columnNumber: 17
+                                                    lineNumber: 203,
+                                                    columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "prose max-w-none",
@@ -1839,18 +2017,28 @@ function BiasDetectionApp() {
                                                         className: "text-gray-900 leading-relaxed whitespace-pre-wrap",
                                                         dangerouslySetInnerHTML: {
                                                             __html: getHighlightedText()
+                                                        },
+                                                        onClick: (e)=>{
+                                                            const target = e.target;
+                                                            if (target.hasAttribute('data-clause')) {
+                                                                const clauseText = target.getAttribute('data-clause');
+                                                                const clause = analysisResult?.hate_speech_clauses.find((c)=>c.clause === clauseText);
+                                                                if (clause) {
+                                                                    handleClauseClick(clause);
+                                                                }
+                                                            }
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                        lineNumber: 172,
+                                                        lineNumber: 231,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                    lineNumber: 171,
+                                                    lineNumber: 230,
                                                     columnNumber: 19
                                                 }, this),
-                                                analysisResult && analysisResult.flaggedWords.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                analysisResult && analysisResult.hate_speech_clauses.some((c)=>c.is_hate_speech) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "mt-6 pt-6 border-t border-gray-200/50",
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "flex items-center gap-6 text-sm text-gray-600",
@@ -1863,22 +2051,22 @@ function BiasDetectionApp() {
                                                                         children: "highlighted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                        lineNumber: 183,
-                                                                        columnNumber: 25
+                                                                        lineNumber: 252,
+                                                                        columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         className: "font-medium",
-                                                                        children: "Flagged words"
+                                                                        children: "Hate speech detected"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                        lineNumber: 184,
-                                                                        columnNumber: 25
+                                                                        lineNumber: 253,
+                                                                        columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                lineNumber: 182,
-                                                                columnNumber: 23
+                                                                lineNumber: 251,
+                                                                columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex items-center gap-2",
@@ -1888,72 +2076,282 @@ function BiasDetectionApp() {
                                                                         children: "highlighted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                        lineNumber: 187,
-                                                                        columnNumber: 25
+                                                                        lineNumber: 256,
+                                                                        columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                         className: "font-medium",
                                                                         children: "Currently selected"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                        lineNumber: 188,
-                                                                        columnNumber: 25
+                                                                        lineNumber: 257,
+                                                                        columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                                lineNumber: 186,
-                                                                columnNumber: 23
+                                                                lineNumber: 255,
+                                                                columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                        lineNumber: 181,
-                                                        columnNumber: 21
+                                                        lineNumber: 250,
+                                                        columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                                    lineNumber: 180,
+                                                    lineNumber: 249,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                            lineNumber: 202,
+                                            columnNumber: 17
+                                        }, this),
+                                        highlightedClause && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "mt-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 p-6",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    className: "text-lg font-semibold text-gray-800 mb-4",
+                                                    children: "Selected Clause Analysis"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                    lineNumber: 268,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "space-y-4",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-sm font-medium text-gray-700 mb-2",
+                                                                    children: "Clause:"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 271,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "bg-gray-50 rounded-lg p-3 text-gray-900",
+                                                                    children: [
+                                                                        '"',
+                                                                        highlightedClause.clause,
+                                                                        '"'
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 272,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 270,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-sm font-medium text-gray-700 mb-2",
+                                                                    children: "Justification:"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 275,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "bg-gray-50 rounded-lg p-3 text-gray-900",
+                                                                    children: highlightedClause.justification
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 276,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 274,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "grid grid-cols-2 gap-4",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "text-sm font-medium text-gray-700 mb-2",
+                                                                            children: "Confidence:"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                            lineNumber: 280,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "text-2xl font-bold text-red-600",
+                                                                            children: [
+                                                                                (highlightedClause.confidence * 100).toFixed(1),
+                                                                                "%"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                            lineNumber: 281,
+                                                                            columnNumber: 25
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 279,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "text-sm font-medium text-gray-700 mb-2",
+                                                                            children: "Hate Speech Probability:"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                            lineNumber: 284,
+                                                                            columnNumber: 25
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "text-2xl font-bold text-orange-600",
+                                                                            children: [
+                                                                                (highlightedClause.hate_speech_probability * 100).toFixed(1),
+                                                                                "%"
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                            lineNumber: 285,
+                                                                            columnNumber: 25
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 283,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 278,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-sm font-medium text-gray-700 mb-2",
+                                                                    children: "Key Rationale Tokens:"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 289,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex flex-wrap gap-2",
+                                                                    children: highlightedClause.rationale_tokens.filter((token)=>token.is_rationale && token.confidence > 0.1).map((token, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800",
+                                                                            children: [
+                                                                                token.token.replace('##', ''),
+                                                                                " (",
+                                                                                (token.confidence * 100).toFixed(0),
+                                                                                "%)"
+                                                                            ]
+                                                                        }, index, true, {
+                                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                            lineNumber: 294,
+                                                                            columnNumber: 29
+                                                                        }, this))
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 290,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 288,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex gap-2",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    onClick: ()=>handleRemoveClause(highlightedClause),
+                                                                    className: "px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors",
+                                                                    children: "Remove This Clause"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 304,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    onClick: ()=>setHighlightedClause(null),
+                                                                    className: "px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors",
+                                                                    children: "Close Details"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                                    lineNumber: 310,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                            lineNumber: 303,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                                    lineNumber: 269,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 143,
-                                            columnNumber: 15
+                                            lineNumber: 267,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 108,
+                                    lineNumber: 147,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 107,
+                                lineNumber: 146,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "hidden lg:block flex-shrink-0",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$IssuesPanel$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["IssuesPanel"], {
-                                    analysisResult: analysisResult,
+                                    analysisResult: analysisResult ? {
+                                        originalText: analysisResult.original_text,
+                                        flaggedWords: flaggedWords,
+                                        analysisId: `analysis-${Date.now()}`,
+                                        timestamp: new Date().toISOString(),
+                                        confidence: analysisResult.summary.highest_confidence
+                                    } : null,
                                     isAnalyzing: isAnalyzing,
                                     onWordReplace: handleWordReplace,
                                     onIssueClick: handleIssueClick
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 200,
+                                    lineNumber: 325,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 199,
+                                lineNumber: 324,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 105,
+                        lineNumber: 144,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1961,35 +2359,41 @@ function BiasDetectionApp() {
                         children: (analysisResult || isAnalyzing) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "border-t border-gray-200 bg-white",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$IssuesPanel$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["IssuesPanel"], {
-                                analysisResult: analysisResult,
+                                analysisResult: analysisResult ? {
+                                    originalText: analysisResult.original_text,
+                                    flaggedWords: flaggedWords,
+                                    analysisId: `analysis-${Date.now()}`,
+                                    timestamp: new Date().toISOString(),
+                                    confidence: analysisResult.summary.highest_confidence
+                                } : null,
                                 isAnalyzing: isAnalyzing,
                                 onWordReplace: handleWordReplace,
                                 onIssueClick: handleIssueClick
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 213,
+                                lineNumber: 344,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                            lineNumber: 212,
+                            lineNumber: 343,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 210,
+                        lineNumber: 341,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 104,
+                lineNumber: 143,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-        lineNumber: 100,
+        lineNumber: 139,
         columnNumber: 5
     }, this);
 }
