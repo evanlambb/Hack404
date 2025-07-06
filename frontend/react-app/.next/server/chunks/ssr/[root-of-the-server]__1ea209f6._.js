@@ -505,23 +505,44 @@ async function analyzeText(request) {
 function convertToFlaggedWords(analysisResult) {
     const flaggedWords = [];
     analysisResult.hate_speech_clauses.forEach((clause)=>{
-        // Extract individual words from rationale tokens that are marked as rationale
-        clause.rationale_tokens.forEach((token)=>{
-            if (token.is_rationale && token.token.trim().length > 0) {
-                // Find the position of this token in the original text
-                const originalText = analysisResult.original_text;
-                const tokenText = token.token.trim();
-                // Search for the token in the original text
-                const startIndex = originalText.toLowerCase().indexOf(tokenText.toLowerCase());
-                // If we can't find the exact token, skip it
-                if (startIndex === -1) return;
-                const endIndex = startIndex + tokenText.length;
+        const rationaleTokens = clause.rationale_tokens.filter((token)=>token.is_rationale && token.token.trim().length > 0);
+        if (rationaleTokens.length === 0) return;
+        const originalText = analysisResult.original_text;
+        const processedTokens = new Set(); // Track which tokens we've already processed
+        rationaleTokens.forEach((token, index)=>{
+            if (processedTokens.has(index)) return; // Skip if already processed
+            let mergedWord = token.token.trim();
+            let totalConfidence = token.confidence;
+            let tokenCount = 1;
+            // Look for consecutive tokens that can be merged
+            for(let i = index + 1; i < rationaleTokens.length; i++){
+                if (processedTokens.has(i)) continue;
+                const nextToken = rationaleTokens[i];
+                if (!nextToken) continue; // Safety check
+                const potentialMergedWord = mergedWord + nextToken.token.trim();
+                // Check if this merged word exists as a complete word in the original text
+                // Use word boundaries to ensure it's a complete word, not part of a larger word
+                const wordRegex = new RegExp(`\\b${potentialMergedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+                if (wordRegex.test(originalText)) {
+                    // This forms a valid complete word in the original text
+                    mergedWord = potentialMergedWord;
+                    totalConfidence += nextToken.confidence;
+                    tokenCount++;
+                    processedTokens.add(i); // Mark this token as processed
+                }
+            }
+            // Find the position of this merged word in the original text
+            const wordRegex = new RegExp(`\\b${mergedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+            const match = originalText.match(wordRegex);
+            if (match && match.index !== undefined) {
+                const startIndex = match.index;
+                const endIndex = startIndex + mergedWord.length;
                 flaggedWords.push({
-                    word: tokenText,
+                    word: mergedWord,
                     startIndex,
                     endIndex,
                     category: 'hate_speech',
-                    confidence: token.confidence,
+                    confidence: totalConfidence / tokenCount,
                     suggestions: [
                         {
                             word: '[Consider rephrasing]',
@@ -532,6 +553,7 @@ function convertToFlaggedWords(analysisResult) {
                     explanation: clause.justification
                 });
             }
+            processedTokens.add(index); // Mark the current token as processed
         });
     });
     return flaggedWords;
@@ -1998,7 +2020,7 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                                     flaggedWords: flaggedWords,
                                     analysisId: `analysis-${Date.now()}`,
                                     timestamp: new Date().toISOString(),
-                                    confidence: analysisResult.summary.highest_confidence
+                                    confidence: analysisResult.summary.confidence_threshold_used
                                 } : null,
                                 isAnalyzing: isAnalyzing,
                                 onWordReplace: handleWordReplace,
@@ -2036,7 +2058,7 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                             flaggedWords: flaggedWords,
                             analysisId: `analysis-${Date.now()}`,
                             timestamp: new Date().toISOString(),
-                            confidence: analysisResult.summary.highest_confidence
+                            confidence: analysisResult.summary.confidence_threshold_used
                         } : null,
                         isAnalyzing: isAnalyzing,
                         onWordReplace: handleWordReplace,

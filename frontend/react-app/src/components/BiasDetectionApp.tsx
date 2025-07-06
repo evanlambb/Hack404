@@ -143,7 +143,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
                 flaggedWords: flaggedWords,
                 analysisId: `analysis-${Date.now()}`,
                 timestamp: new Date().toISOString(),
-                confidence: analysisResult.summary.highest_confidence
+                confidence: analysisResult.summary.confidence_threshold_used
               } : null}
               isAnalyzing={isAnalyzing}
               onWordReplace={handleWordReplace}
@@ -168,7 +168,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
                 flaggedWords: flaggedWords,
                 analysisId: `analysis-${Date.now()}`,
                 timestamp: new Date().toISOString(),
-                confidence: analysisResult.summary.highest_confidence
+                confidence: analysisResult.summary.confidence_threshold_used
               } : null}
               isAnalyzing={isAnalyzing}
               onWordReplace={handleWordReplace}
