@@ -270,10 +270,6 @@ def generate_justification(clause: str, is_hate_speech: bool, confidence: float,
     
     justifications = []
     
-    if significant_tokens:
-        token_text = ", ".join(significant_tokens[:5])
-        justifications.append(f"Key concerning words/phrases identified: {token_text}")
-    
     if confidence > 0.8:
         justifications.append("High confidence prediction based on language patterns associated with hate speech.")
     elif confidence > 0.6:

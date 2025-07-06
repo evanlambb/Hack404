@@ -883,6 +883,11 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
     const [validationErrors, setValidationErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [isValid, setIsValid] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
     const [showConfirmDialog, setShowConfirmDialog] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [tooltipContent, setTooltipContent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [tooltipPosition, setTooltipPosition] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+        x: 0,
+        y: 0
+    });
     const textareaRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const dialogRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     // Create highlighted text JSX
@@ -924,44 +929,51 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
             });
         }
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "absolute inset-0 px-6 py-6 pointer-events-none whitespace-pre-wrap break-words overflow-hidden text-transparent leading-relaxed",
+            className: "absolute inset-0 px-6 py-6 whitespace-pre-wrap break-words overflow-visible text-transparent leading-relaxed pointer-events-none",
             children: segments.map((segment, index)=>segment.isHighlighted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                    className: "bg-red-200 border-b-2 border-red-400 text-red-900 relative group pointer-events-auto",
+                    className: "bg-red-200 border-b-2 border-red-400 text-red-900 relative group cursor-help pointer-events-auto hover:bg-red-300 transition-colors",
                     title: segment.explanation || 'Problematic content detected',
                     children: [
                         segment.text,
                         segment.explanation && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "absolute bottom-full left-0 mb-2 w-64 bg-gray-900 text-white text-sm p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg",
+                            className: "fixed bg-black text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[9999] max-w-xs",
+                            style: {
+                                top: '-50px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                pointerEvents: 'none'
+                            },
                             children: [
+                                segment.explanation,
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "absolute top-full left-4 -mt-1 w-2 h-2 bg-gray-900 rotate-45"
+                                    className: "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-black"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 132,
+                                    lineNumber: 143,
                                     columnNumber: 19
-                                }, this),
-                                segment.explanation
+                                }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 131,
+                            lineNumber: 133,
                             columnNumber: 17
                         }, this)
                     ]
                 }, index, true, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 124,
+                    lineNumber: 126,
                     columnNumber: 13
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    className: "pointer-events-none",
                     children: segment.text
                 }, index, false, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 138,
+                    lineNumber: 148,
                     columnNumber: 13
                 }, this))
         }, void 0, false, {
             fileName: "[project]/src/components/TextInput.tsx",
-            lineNumber: 121,
+            lineNumber: 123,
             columnNumber: 7
         }, this);
     }, [
@@ -1134,21 +1146,21 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                 }
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 293,
+                lineNumber: 303,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute inset-0 bg-gray-50 z-0"
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 305,
+                lineNumber: 315,
                 columnNumber: 7
             }, this),
             renderHighlightedText()
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 292,
+        lineNumber: 302,
         columnNumber: 5
     }, this);
 }

@@ -71,6 +71,8 @@ export default function TextInput({
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+  const [tooltipContent, setTooltipContent] = useState<string | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -118,24 +120,32 @@ export default function TextInput({
     }
 
     return (
-      <div className="absolute inset-0 px-6 py-6 pointer-events-none whitespace-pre-wrap break-words overflow-hidden text-transparent leading-relaxed">
+      <div className="absolute inset-0 px-6 py-6 whitespace-pre-wrap break-words overflow-visible text-transparent leading-relaxed pointer-events-none">
         {segments.map((segment, index) => 
           segment.isHighlighted ? (
             <span
               key={index}
-              className="bg-red-200 border-b-2 border-red-400 text-red-900 relative group pointer-events-auto"
+              className="bg-red-200 border-b-2 border-red-400 text-red-900 relative group cursor-help pointer-events-auto hover:bg-red-300 transition-colors"
               title={segment.explanation || 'Problematic content detected'}
             >
               {segment.text}
               {segment.explanation && (
-                <div className="absolute bottom-full left-0 mb-2 w-64 bg-gray-900 text-white text-sm p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg">
-                  <div className="absolute top-full left-4 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                <div 
+                  className="fixed bg-black text-white text-xs p-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[9999] max-w-xs"
+                  style={{
+                    top: '-50px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    pointerEvents: 'none'
+                  }}
+                >
                   {segment.explanation}
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-black"></div>
                 </div>
               )}
             </span>
           ) : (
-            <span key={index}>{segment.text}</span>
+            <span key={index} className="pointer-events-none">{segment.text}</span>
           )
         )}
       </div>
