@@ -38,6 +38,7 @@ export interface TextInputProps {
   confirmClearThreshold?: number; // Characters threshold for showing confirmation dialog
   showClearConfirmation?: boolean;
   flaggedWords?: FlaggedWord[]; // New prop for highlighting
+  onClearHighlights?: () => void; // New callback to clear highlights when text changes
 }
 
 // Default empty validation rules (stable reference)
@@ -66,7 +67,8 @@ export default function TextInput({
   onValidationChange,
   confirmClearThreshold = 50,
   showClearConfirmation = true,
-  flaggedWords = []
+  flaggedWords = [],
+  onClearHighlights
 }: TextInputProps) {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(true);
@@ -230,6 +232,10 @@ export default function TextInput({
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
+    // Clear highlights whenever text changes
+    if (onClearHighlights) {
+      onClearHighlights();
+    }
   };
 
   const handleConfirmClear = useCallback(() => {

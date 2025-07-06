@@ -76,6 +76,11 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
     setError(null);
   }, []);
 
+  const handleClearHighlights = useCallback(() => {
+    setAnalysisResult(null);
+    setError(null);
+  }, []);
+
   const handleWordReplace = useCallback((originalWord: string, newWord: string) => {
     const newText = text.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord);
     setText(newText);
@@ -133,6 +138,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
               maxLength={5000}
               onValidationChange={handleValidationChange}
               flaggedWords={flaggedWords}
+              onClearHighlights={handleClearHighlights}
             />
           </div>
         </div>

@@ -931,7 +931,7 @@ var _s = __turbopack_context__.k.signature();
 ;
 // Default empty validation rules (stable reference)
 const DEFAULT_VALIDATION_RULES = [];
-function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or paste your text here...", disabled = false, isAnalyzing = false, error = null, label = "Enter text to analyze", maxLength = 5000, minLength = 5, className = "", showCharacterCount = true, showClearButton = true, showAnalyzeButton = true, analyzeButtonText = "Analyze Text", clearButtonText = "Clear", validateOnChange = true, validationRules = DEFAULT_VALIDATION_RULES, onValidationChange, confirmClearThreshold = 50, showClearConfirmation = true, flaggedWords = [] }) {
+function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or paste your text here...", disabled = false, isAnalyzing = false, error = null, label = "Enter text to analyze", maxLength = 5000, minLength = 5, className = "", showCharacterCount = true, showClearButton = true, showAnalyzeButton = true, analyzeButtonText = "Analyze Text", clearButtonText = "Clear", validateOnChange = true, validationRules = DEFAULT_VALIDATION_RULES, onValidationChange, confirmClearThreshold = 50, showClearConfirmation = true, flaggedWords = [], onClearHighlights }) {
     _s();
     const [validationErrors, setValidationErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [isValid, setIsValid] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
@@ -1008,32 +1008,32 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             className: "absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-black"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 143,
+                                            lineNumber: 145,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 135,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, index, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 126,
+                            lineNumber: 128,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                             className: "pointer-events-none",
                             children: segment.text
                         }, index, false, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 148,
+                            lineNumber: 150,
                             columnNumber: 13
                         }, this)
                 }["TextInput.useCallback[renderHighlightedText]"])
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 123,
+                lineNumber: 125,
                 columnNumber: 7
             }, this);
         }
@@ -1144,6 +1144,10 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
     ]);
     const handleTextChange = (e)=>{
         onChange(e.target.value);
+        // Clear highlights whenever text changes
+        if (onClearHighlights) {
+            onClearHighlights();
+        }
     };
     const handleConfirmClear = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
         "TextInput.useCallback[handleConfirmClear]": ()=>{
@@ -1233,21 +1237,21 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                 }
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 303,
+                lineNumber: 309,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute inset-0 bg-gray-50 z-0"
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 315,
+                lineNumber: 321,
                 columnNumber: 7
             }, this),
             renderHighlightedText()
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 302,
+        lineNumber: 308,
         columnNumber: 5
     }, this);
 }
@@ -1812,6 +1816,12 @@ function BiasDetectionApp({ initialText = '', onBack }) {
             setError(null);
         }
     }["BiasDetectionApp.useCallback[handleClearText]"], []);
+    const handleClearHighlights = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "BiasDetectionApp.useCallback[handleClearHighlights]": ()=>{
+            setAnalysisResult(null);
+            setError(null);
+        }
+    }["BiasDetectionApp.useCallback[handleClearHighlights]"], []);
     const handleWordReplace = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
         "BiasDetectionApp.useCallback[handleWordReplace]": (originalWord, newWord)=>{
             const newText = text.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord);
@@ -1865,12 +1875,12 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                     onBack: onBack
                 }, void 0, false, {
                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                    lineNumber: 121,
+                    lineNumber: 126,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 120,
+                lineNumber: 125,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1886,20 +1896,21 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                                 placeholder: "Type or paste your text here...",
                                 maxLength: 5000,
                                 onValidationChange: handleValidationChange,
-                                flaggedWords: flaggedWords
+                                flaggedWords: flaggedWords,
+                                onClearHighlights: handleClearHighlights
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 129,
+                                lineNumber: 134,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                            lineNumber: 128,
+                            lineNumber: 133,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 127,
+                        lineNumber: 132,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1925,19 +1936,19 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                                 validationErrors: validationErrors
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 141,
+                                lineNumber: 147,
                                 columnNumber: 94
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 141,
+                        lineNumber: 147,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 125,
+                lineNumber: 130,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1963,27 +1974,27 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                         validationErrors: validationErrors
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 166,
+                        lineNumber: 172,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                    lineNumber: 165,
+                    lineNumber: 171,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 163,
+                lineNumber: 169,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-        lineNumber: 118,
+        lineNumber: 123,
         columnNumber: 5
     }, this);
 }
-_s(BiasDetectionApp, "oKPDkcscZufSSIymM7y/QxFf4o0=", false, function() {
+_s(BiasDetectionApp, "q4kl6lea+vcvYjWaiTbE9AKOmvo=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"]
     ];
