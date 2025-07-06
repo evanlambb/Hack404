@@ -1,15 +1,21 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from pydantic import BaseModel, EmailStr
 import torch
 import torch.nn.functional as F
 from transformers import AutoTokenizer
 import re
 import nltk
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import logging
 import os
 import sys
+import psycopg2
+from psycopg2.extras import RealDictCursor
+from dotenv import load_dotenv
+import hashlib
+import secrets
 
 # Import the model
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +48,79 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Load environment variables
+load_dotenv()
+
+# Database setup
+def get_db_connection():
+    """Get database connection"""
+    try:
+        db_url = os.getenv("SUPABASE_DATABASE_URL")
+        if not db_url:
+            raise Exception("SUPABASE_DATABASE_URL environment variable not set")
+        
+        logger.info(f"Attempting to connect to database...")
+        conn = psycopg2.connect(
+            db_url,
+            cursor_factory=RealDictCursor
+        )
+        logger.info("Database connection successful")
+        return conn
+    except Exception as e:
+        logger.error(f"Database connection failed: {str(e)}")
+        raise e  # Let caller handle the exception
+
+# Authentication models
+class UserSignup(BaseModel):
+    email: str
+    password: str
+    name: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class AuthResponse(BaseModel):
+    success: bool
+    message: str
+    user_id: Optional[int] = None
+    token: Optional[str] = None
+
+# Authentication helpers
+security = HTTPBearer()
+
+def hash_password(password: str) -> str:
+    """Simple password hashing"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def generate_token() -> str:
+    """Generate a simple token"""
+    return secrets.token_urlsafe(32)
+
+def create_user_table():
+    """Create users table if it doesn't exist"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                token VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        logger.info("Users table created/verified successfully")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to create users table: {e}")
+        return False
+
 # Global model variables
 tokenizer = None
 model = None
@@ -69,6 +148,13 @@ async def load_model():
     """Load the model and tokenizer on startup"""
     global tokenizer, model
     try:
+        logger.info("Creating database tables...")
+        db_status = create_user_table()
+        if db_status:
+            logger.info("Database initialization successful")
+        else:
+            logger.warning("Database initialization failed - authentication endpoints may not work")
+        
         logger.info("Loading tokenizer and model...")
         tokenizer = AutoTokenizer.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
         model = Model_Rational_Label.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
@@ -203,6 +289,78 @@ def generate_justification(clause: str, is_hate_speech: bool, confidence: float,
         justifications.append(f"Potentially targets: {', '.join(detected_categories)}")
     
     return " ".join(justifications)
+
+# Authentication endpoints
+@app.post("/signup", response_model=AuthResponse)
+async def signup(user_data: UserSignup):
+    """Sign up a new user"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Check if user already exists
+        cursor.execute("SELECT id FROM users WHERE email = %s", (user_data.email,))
+        if cursor.fetchone():
+            cursor.close()
+            conn.close()
+            return AuthResponse(success=False, message="User already exists")
+        
+        # Create new user
+        password_hash = hash_password(user_data.password)
+        token = generate_token()
+        
+        cursor.execute("""
+            INSERT INTO users (email, name, password_hash, token)
+            VALUES (%s, %s, %s, %s) RETURNING id
+        """, (user_data.email, user_data.name, password_hash, token))
+        
+        user_id = cursor.fetchone()['id']
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        return AuthResponse(
+            success=True,
+            message="User created successfully",
+            user_id=user_id,
+            token=token
+        )
+        
+    except Exception as e:
+        logger.error(f"Signup error: {e}")
+        return AuthResponse(success=False, message="Database connection failed - signup unavailable")
+
+@app.post("/login", response_model=AuthResponse)
+async def login(user_data: UserLogin):
+    """Login user"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Check user credentials
+        password_hash = hash_password(user_data.password)
+        cursor.execute("""
+            SELECT id, token FROM users 
+            WHERE email = %s AND password_hash = %s
+        """, (user_data.email, password_hash))
+        
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if user:
+            return AuthResponse(
+                success=True,
+                message="Login successful",
+                user_id=user['id'],
+                token=user['token']
+            )
+        else:
+            return AuthResponse(success=False, message="Invalid credentials")
+            
+    except Exception as e:
+        logger.error(f"Login error: {e}")
+        return AuthResponse(success=False, message="Database connection failed - login unavailable")
 
 @app.get("/")
 async def root():
