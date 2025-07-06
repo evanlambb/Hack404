@@ -98,10 +98,83 @@ function createTextSegments(
     .fill(null)
     .map(() => []);
 
+  // Helper function to find text in the original text when indices are invalid
+  const findTextInOriginal = (searchText: string): { start: number; end: number } | null => {
+    if (!searchText || !searchText.trim()) return null;
+    
+    // Clean the search text
+    const cleanSearchText = searchText.trim();
+    
+    // Try exact match first (case-sensitive)
+    let index = text.indexOf(cleanSearchText);
+    if (index !== -1) {
+      return { start: index, end: index + cleanSearchText.length };
+    }
+    
+    // Try case-insensitive match
+    index = text.toLowerCase().indexOf(cleanSearchText.toLowerCase());
+    if (index !== -1) {
+      return { start: index, end: index + cleanSearchText.length };
+    }
+    
+    // Try word-based matching for partial matches
+    const words = cleanSearchText.split(/\s+/);
+    if (words.length > 1) {
+      const firstWord = words[0];
+      const lastWord = words[words.length - 1];
+      
+      const firstIndex = text.toLowerCase().indexOf(firstWord.toLowerCase());
+      const lastIndex = text.toLowerCase().lastIndexOf(lastWord.toLowerCase());
+      
+      if (firstIndex !== -1 && lastIndex !== -1 && lastIndex >= firstIndex) {
+        return { 
+          start: firstIndex, 
+          end: lastIndex + lastWord.length 
+        };
+      }
+    }
+    
+    return null;
+  };
+
   // Mark categories, explanations, and word indices for each character position
   flaggedWords.forEach((flagged, wordIndex) => {
-    const start = Math.max(0, Math.min(flagged.startIndex, text.length));
-    const end = Math.max(start, Math.min(flagged.endIndex, text.length));
+    let start = flagged.startIndex;
+    let end = flagged.endIndex;
+    
+    // Validate and fix indices
+    const isValidIndices = (
+      typeof start === 'number' && 
+      typeof end === 'number' && 
+      start >= 0 && 
+      end > start && 
+      start < text.length &&
+      end <= text.length
+    );
+    
+    if (!isValidIndices) {
+      console.warn(`Invalid indices for flagged word "${flagged.word}": start=${start}, end=${end}, text.length=${text.length}`);
+      
+      // Try to find the text in the original
+      const found = findTextInOriginal(flagged.word);
+      if (found) {
+        start = found.start;
+        end = found.end;
+        console.log(`Recovered indices for "${flagged.word}": ${start}-${end}`);
+      } else {
+        console.warn(`Could not find "${flagged.word}" in text, skipping highlighting`);
+        return; // Skip this span if we can't locate it
+      }
+    }
+    
+    // Double-check bounds after potential recovery
+    start = Math.max(0, Math.min(start, text.length - 1));
+    end = Math.max(start + 1, Math.min(end, text.length));
+    
+    // Ensure we have at least one character to highlight
+    if (start >= end) {
+      end = Math.min(start + 1, text.length);
+    }
 
     for (let i = start; i < end; i++) {
       const categoryArray = charCategories[i];

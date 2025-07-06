@@ -1,6 +1,7 @@
 import anthropic
 import json
 import logging
+import re
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 import os
@@ -208,15 +209,13 @@ Return ONLY the JSON response, no additional text or formatting."""
                 explanation = instance.get('explanation', '')
                 suggested_revision = instance.get('suggested_revision', '')
 
-                # Find the span in the original text
-                start_index = original_text.lower().find(text_span.lower())
+                # Improved text matching with multiple strategies
+                start_index, end_index = self._find_text_span(original_text, text_span)
+                
+                # Skip if we couldn't find the text at all
                 if start_index == -1:
-                    # If exact match not found, try to find similar text
-                    start_index = 0
-                    logger.warning(
-                        f"Could not find exact match for span: {text_span}")
-
-                end_index = start_index + len(text_span)
+                    logger.warning(f"Skipping span that couldn't be located: {text_span}")
+                    continue
 
                 # Validate category
                 if category not in self.bias_categories:
@@ -224,7 +223,7 @@ Return ONLY the JSON response, no additional text or formatting."""
                     category = "Other"
 
                 bias_spans.append(BiasSpan(
-                    text=text_span,
+                    text=original_text[start_index:end_index],  # Use actual text from original
                     category=category,
                     explanation=explanation,
                     suggested_revision=suggested_revision,
@@ -241,6 +240,88 @@ Return ONLY the JSON response, no additional text or formatting."""
         except Exception as e:
             logger.error(f"Error parsing response: {e}")
             return []
+
+    def _find_text_span(self, original_text: str, text_span: str) -> tuple[int, int]:
+        """Find the best match for a text span in the original text"""
+        if not text_span or not original_text:
+            return -1, -1
+            
+        # Strategy 1: Exact case-sensitive match
+        start_index = original_text.find(text_span)
+        if start_index != -1:
+            return start_index, start_index + len(text_span)
+        
+        # Strategy 2: Case-insensitive match
+        start_index = original_text.lower().find(text_span.lower())
+        if start_index != -1:
+            return start_index, start_index + len(text_span)
+        
+        # Strategy 3: Look for individual words from the span
+        span_words = re.findall(r'\w+', text_span.lower())
+        if not span_words:
+            return -1, -1
+            
+        # Find the first word of the span
+        first_word = span_words[0]
+        text_words = re.findall(r'\w+', original_text.lower())
+        
+        try:
+            first_word_index = text_words.index(first_word)
+            # Calculate character position
+            word_starts = []
+            word_pattern = re.compile(r'\w+')
+            for match in word_pattern.finditer(original_text.lower()):
+                word_starts.append(match.start())
+            
+            if first_word_index < len(word_starts):
+                start_char = word_starts[first_word_index]
+                
+                # Try to find the end by looking for the last word
+                if len(span_words) > 1:
+                    last_word = span_words[-1]
+                    # Look for last word after first word position
+                    remaining_text = original_text.lower()[start_char:]
+                    last_word_pos = remaining_text.find(last_word)
+                    if last_word_pos != -1:
+                        end_char = start_char + last_word_pos + len(last_word)
+                        return start_char, end_char
+                
+                # Fallback: use length of span
+                return start_char, min(start_char + len(text_span), len(original_text))
+                
+        except (ValueError, IndexError):
+            pass
+        
+        # Strategy 4: Fuzzy matching - find longest common substring
+        def longest_common_substring(s1: str, s2: str) -> tuple[int, int, int]:
+            """Find longest common substring, return (start_in_s1, start_in_s2, length)"""
+            s1_lower = s1.lower()
+            s2_lower = s2.lower()
+            longest_length = 0
+            best_s1_start = 0
+            best_s2_start = 0
+            
+            for i in range(len(s1_lower)):
+                for j in range(len(s2_lower)):
+                    length = 0
+                    while (i + length < len(s1_lower) and 
+                           j + length < len(s2_lower) and 
+                           s1_lower[i + length] == s2_lower[j + length]):
+                        length += 1
+                    
+                    if length > longest_length:
+                        longest_length = length
+                        best_s1_start = i
+                        best_s2_start = j
+            
+            return best_s1_start, best_s2_start, longest_length
+        
+        s1_start, s2_start, length = longest_common_substring(original_text, text_span)
+        if length >= min(4, len(text_span) // 2):  # At least 4 chars or half the span
+            return s1_start, s1_start + length
+        
+        # If all strategies fail, don't create the span
+        return -1, -1
 
     def _generate_summary(self, bias_spans: List[BiasSpan], text: str) -> Dict[str, Any]:
         """Generate summary statistics"""

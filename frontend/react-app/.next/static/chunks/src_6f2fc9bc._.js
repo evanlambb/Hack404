@@ -800,10 +800,69 @@ function createTextSegments(text, flaggedWords) {
     const charCategories = Array(text.length).fill(null).map(()=>[]);
     const charExplanations = Array(text.length).fill(null).map(()=>[]);
     const charWordIndices = Array(text.length).fill(null).map(()=>[]);
+    // Helper function to find text in the original text when indices are invalid
+    const findTextInOriginal = (searchText)=>{
+        if (!searchText || !searchText.trim()) return null;
+        // Clean the search text
+        const cleanSearchText = searchText.trim();
+        // Try exact match first (case-sensitive)
+        let index = text.indexOf(cleanSearchText);
+        if (index !== -1) {
+            return {
+                start: index,
+                end: index + cleanSearchText.length
+            };
+        }
+        // Try case-insensitive match
+        index = text.toLowerCase().indexOf(cleanSearchText.toLowerCase());
+        if (index !== -1) {
+            return {
+                start: index,
+                end: index + cleanSearchText.length
+            };
+        }
+        // Try word-based matching for partial matches
+        const words = cleanSearchText.split(/\s+/);
+        if (words.length > 1) {
+            const firstWord = words[0];
+            const lastWord = words[words.length - 1];
+            const firstIndex = text.toLowerCase().indexOf(firstWord.toLowerCase());
+            const lastIndex = text.toLowerCase().lastIndexOf(lastWord.toLowerCase());
+            if (firstIndex !== -1 && lastIndex !== -1 && lastIndex >= firstIndex) {
+                return {
+                    start: firstIndex,
+                    end: lastIndex + lastWord.length
+                };
+            }
+        }
+        return null;
+    };
     // Mark categories, explanations, and word indices for each character position
     flaggedWords.forEach((flagged, wordIndex)=>{
-        const start = Math.max(0, Math.min(flagged.startIndex, text.length));
-        const end = Math.max(start, Math.min(flagged.endIndex, text.length));
+        let start = flagged.startIndex;
+        let end = flagged.endIndex;
+        // Validate and fix indices
+        const isValidIndices = typeof start === 'number' && typeof end === 'number' && start >= 0 && end > start && start < text.length && end <= text.length;
+        if (!isValidIndices) {
+            console.warn(`Invalid indices for flagged word "${flagged.word}": start=${start}, end=${end}, text.length=${text.length}`);
+            // Try to find the text in the original
+            const found = findTextInOriginal(flagged.word);
+            if (found) {
+                start = found.start;
+                end = found.end;
+                console.log(`Recovered indices for "${flagged.word}": ${start}-${end}`);
+            } else {
+                console.warn(`Could not find "${flagged.word}" in text, skipping highlighting`);
+                return; // Skip this span if we can't locate it
+            }
+        }
+        // Double-check bounds after potential recovery
+        start = Math.max(0, Math.min(start, text.length - 1));
+        end = Math.max(start + 1, Math.min(end, text.length));
+        // Ensure we have at least one character to highlight
+        if (start >= end) {
+            end = Math.min(start + 1, text.length);
+        }
         for(let i = start; i < end; i++){
             const categoryArray = charCategories[i];
             const explanationArray = charExplanations[i];
@@ -962,7 +1021,7 @@ const SmartTooltip = ({ children, categories, explanations })=>{
                         children: getTooltipContent()
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 289,
+                        lineNumber: 362,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -972,19 +1031,19 @@ const SmartTooltip = ({ children, categories, explanations })=>{
                         }
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 292,
+                        lineNumber: 365,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 277,
+                lineNumber: 350,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 262,
+        lineNumber: 335,
         columnNumber: 5
     }, this);
 };
@@ -1014,7 +1073,7 @@ const LoadingSpinner = ({ size = 24 })=>{
                     className: "opacity-25"
                 }, void 0, false, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 315,
+                    lineNumber: 388,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -1022,18 +1081,18 @@ const LoadingSpinner = ({ size = 24 })=>{
                     d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 }, void 0, false, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 326,
+                    lineNumber: 399,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/TextInput.tsx",
-            lineNumber: 307,
+            lineNumber: 380,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 306,
+        lineNumber: 379,
         columnNumber: 5
     }, this);
 };
@@ -1051,7 +1110,7 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                             size: 32
                         }, void 0, false, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 355,
+                            lineNumber: 428,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1062,7 +1121,7 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                                     children: "Analyzing for bias..."
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 357,
+                                    lineNumber: 430,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1070,19 +1129,19 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                                     children: "This may take a few moments"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 358,
+                                    lineNumber: 431,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 356,
+                            lineNumber: 429,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 354,
+                    lineNumber: 427,
                     columnNumber: 9
                 }, this);
             }
@@ -1092,7 +1151,7 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                     children: 'Analysis results will appear here after you click "Analyze for Bias"'
                 }, void 0, false, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 368,
+                    lineNumber: 441,
                     columnNumber: 9
                 }, this);
             }
@@ -1105,20 +1164,20 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                             children: "✓ No bias detected"
                         }, void 0, false, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 377,
+                            lineNumber: 450,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             children: text
                         }, void 0, false, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 380,
+                            lineNumber: 453,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 376,
+                    lineNumber: 449,
                     columnNumber: 9
                 }, this);
             }
@@ -1155,12 +1214,12 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                                         children: segment.text
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 415,
+                                        lineNumber: 488,
                                         columnNumber: 19
                                     }, this)
                                 }, segmentKey, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 410,
+                                    lineNumber: 483,
                                     columnNumber: 17
                                 }, this);
                             } else {
@@ -1168,7 +1227,7 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                                     children: segment.text
                                 }, segmentKey, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 430,
+                                    lineNumber: 503,
                                     columnNumber: 22
                                 }, this);
                             }
@@ -1176,12 +1235,12 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                     }["AnalysisOutput.useCallback[renderContent]"])
                 }, void 0, false, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 389,
+                    lineNumber: 462,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 388,
+                lineNumber: 461,
                 columnNumber: 7
             }, this);
         }
@@ -1208,7 +1267,7 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/TextInput.tsx",
-            lineNumber: 451,
+            lineNumber: 524,
             columnNumber: 7
         }, this);
     };
@@ -1223,21 +1282,21 @@ const AnalysisOutput = ({ text, flaggedWords, isAnalyzing, onWordClick, analysis
                         children: "Analysis Results"
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 465,
+                        lineNumber: 538,
                         columnNumber: 9
                     }, this),
                     getBiasCountDisplay()
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 464,
+                lineNumber: 537,
                 columnNumber: 7
             }, this),
             renderContent()
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 463,
+        lineNumber: 536,
         columnNumber: 5
     }, this);
 };
@@ -1255,12 +1314,12 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                     children: "Reasoning & Suggestions"
                 }, void 0, false, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 494,
+                    lineNumber: 567,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 493,
+                lineNumber: 566,
                 columnNumber: 7
             }, this),
             isAnalyzing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1270,7 +1329,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                         size: 28
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 501,
+                        lineNumber: 574,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1281,7 +1340,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                 children: "Preparing analysis..."
                             }, void 0, false, {
                                 fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 503,
+                                lineNumber: 576,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1289,26 +1348,26 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                 children: "Detailed explanations will appear here"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 504,
+                                lineNumber: 577,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 502,
+                        lineNumber: 575,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 500,
+                lineNumber: 573,
                 columnNumber: 9
             }, this) : flaggedWords.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "text-gray-400 italic",
                 children: "Bias explanations and suggested revisions will appear here"
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 510,
+                lineNumber: 583,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-3",
@@ -1318,7 +1377,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                         children: "Click on highlighted text or boxes to expand details:"
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 515,
+                        lineNumber: 588,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1343,7 +1402,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 536,
+                                                        lineNumber: 609,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1355,13 +1414,13 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 540,
+                                                        lineNumber: 613,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 535,
+                                                lineNumber: 608,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1372,7 +1431,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         children: word.category
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 545,
+                                                        lineNumber: 618,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -1387,24 +1446,24 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                             d: "M19 9l-7 7-7-7"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TextInput.tsx",
-                                                            lineNumber: 556,
+                                                            lineNumber: 629,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 548,
+                                                        lineNumber: 621,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 544,
+                                                lineNumber: 617,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 534,
+                                        lineNumber: 607,
                                         columnNumber: 19
                                     }, this),
                                     isExpanded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1417,7 +1476,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         children: "Bias Category:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 571,
+                                                        lineNumber: 644,
                                                         columnNumber: 25
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1429,13 +1488,13 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         children: word.category
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 574,
+                                                        lineNumber: 647,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 570,
+                                                lineNumber: 643,
                                                 columnNumber: 23
                                             }, this),
                                             word.explanation && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1445,7 +1504,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         children: "Why this is problematic:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 588,
+                                                        lineNumber: 661,
                                                         columnNumber: 27
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1453,13 +1512,13 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         children: word.explanation
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 591,
+                                                        lineNumber: 664,
                                                         columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 587,
+                                                lineNumber: 660,
                                                 columnNumber: 25
                                             }, this),
                                             word.suggestions && word.suggestions.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1469,7 +1528,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                         children: "Suggested revisions:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 600,
+                                                        lineNumber: 673,
                                                         columnNumber: 27
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1486,7 +1545,7 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                                        lineNumber: 609,
+                                                                        lineNumber: 682,
                                                                         columnNumber: 33
                                                                     }, this),
                                                                     suggestion.reason && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1494,54 +1553,54 @@ const ReasoningPanel = ({ selectedWord, flaggedWords, onWordSelect, expandedItem
                                                                         children: suggestion.reason
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                                        lineNumber: 613,
+                                                                        lineNumber: 686,
                                                                         columnNumber: 35
                                                                     }, this)
                                                                 ]
                                                             }, sugIndex, true, {
                                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                                lineNumber: 605,
+                                                                lineNumber: 678,
                                                                 columnNumber: 31
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 603,
+                                                        lineNumber: 676,
                                                         columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 599,
+                                                lineNumber: 672,
                                                 columnNumber: 25
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 568,
+                                        lineNumber: 641,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, index, true, {
                                 fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 524,
+                                lineNumber: 597,
                                 columnNumber: 17
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 518,
+                        lineNumber: 591,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 514,
+                lineNumber: 587,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 492,
+        lineNumber: 565,
         columnNumber: 5
     }, this);
 };
@@ -1556,20 +1615,20 @@ const ResizeHandle = ({ onMouseDown })=>{
                 className: "absolute inset-y-0 -left-1 -right-1"
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 643,
+                lineNumber: 716,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-8 bg-gray-400 group-hover:bg-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 644,
+                lineNumber: 717,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 639,
+        lineNumber: 712,
         columnNumber: 5
     }, this);
 };
@@ -1892,7 +1951,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                         className: "absolute inset-0 bg-gray-50 z-0"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 952,
+                                        lineNumber: 1025,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -1906,13 +1965,13 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                         disabled: disabled || isAnalyzing
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 954,
+                                        lineNumber: 1027,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 951,
+                                lineNumber: 1024,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1931,7 +1990,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                                         children: clearButtonText
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 970,
+                                                        lineNumber: 1043,
                                                         columnNumber: 19
                                                     }, this),
                                                     showAnalyzeButton && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1941,13 +2000,13 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                                         children: isAnalyzing ? "Analyzing..." : analyzeButtonText
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 980,
+                                                        lineNumber: 1053,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 968,
+                                                lineNumber: 1041,
                                                 columnNumber: 15
                                             }, this),
                                             showCharacterCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1960,13 +2019,13 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 991,
+                                                lineNumber: 1064,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 967,
+                                        lineNumber: 1040,
                                         columnNumber: 13
                                     }, this),
                                     validationErrors.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1976,24 +2035,24 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                                 children: error
                                             }, index, false, {
                                                 fileName: "[project]/src/components/TextInput.tsx",
-                                                lineNumber: 1000,
+                                                lineNumber: 1073,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 998,
+                                        lineNumber: 1071,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 966,
+                                lineNumber: 1039,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 950,
+                        lineNumber: 1023,
                         columnNumber: 9
                     }, this),
                     showAnalysisOutput && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2004,20 +2063,20 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                 className: "absolute inset-y-0 -left-1 -right-1"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 1015,
+                                lineNumber: 1088,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-8 bg-gray-400 group-hover:bg-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 1016,
+                                lineNumber: 1089,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 1011,
+                        lineNumber: 1084,
                         columnNumber: 11
                     }, this),
                     showAnalysisOutput && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2043,12 +2102,12 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                         onToggleReasoning: toggleExpandedItem
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 1029,
+                                        lineNumber: 1102,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 1028,
+                                    lineNumber: 1101,
                                     columnNumber: 15
                                 }, this),
                                 flaggedWords.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2059,20 +2118,20 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                             className: "absolute inset-x-0 -top-1 -bottom-1"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 1045,
+                                            lineNumber: 1118,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-1 bg-gray-400 group-hover:bg-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 1046,
+                                            lineNumber: 1119,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 1041,
+                                    lineNumber: 1114,
                                     columnNumber: 17
                                 }, this),
                                 flaggedWords.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2089,29 +2148,29 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                         isAnalyzing: isAnalyzing
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 1056,
+                                        lineNumber: 1129,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 1052,
+                                    lineNumber: 1125,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 1026,
+                            lineNumber: 1099,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 1022,
+                        lineNumber: 1095,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 944,
+                lineNumber: 1017,
                 columnNumber: 7
             }, this),
             showConfirmDialog && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2125,7 +2184,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                             children: "Confirm Clear"
                         }, void 0, false, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 1078,
+                            lineNumber: 1151,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2133,7 +2192,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                             children: "Are you sure you want to clear all text? This action cannot be undone."
                         }, void 0, false, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 1081,
+                            lineNumber: 1154,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2145,7 +2204,7 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 1086,
+                                    lineNumber: 1159,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2154,30 +2213,30 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                     children: "Clear Text"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 1092,
+                                    lineNumber: 1165,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 1085,
+                            lineNumber: 1158,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 1074,
+                    lineNumber: 1147,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 1073,
+                lineNumber: 1146,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 943,
+        lineNumber: 1016,
         columnNumber: 5
     }, this);
 }
