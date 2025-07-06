@@ -92,7 +92,7 @@ export default function Dashboard() {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-800">HateZero</h1>
+                  <h1 className="text-2xl font-bold text-gray-800">BiasGuard</h1>
                   <p className="text-sm text-gray-600 font-medium">
                     AI-powered content analysis
                   </p>

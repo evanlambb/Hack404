@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "HateZero",
+  "name": "BiasGuard",
   "version": "1.0",
   "description": "Automatically removes hate speech from web pages using AI",
   "permissions": [
@@ -19,7 +19,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "HateZero"
+    "default_title": "BiasGuard"
   },
   "icons": {
     "16": "icon16.png",

@@ -295,9 +295,9 @@ def generate_hate_speech_justification(clause: str, is_hate_speech: bool, confid
         justifications.append("Low confidence - borderline case that may require human review.")
     
     concerning_patterns = {
-        'racial': ['black', 'white', 'asian', 'hispanic', 'race', 'color'],
+        'racial': ['black', 'white', 'asian', 'hispanic', 'race', 'color', 'brown'],
         'religious': ['muslim', 'christian', 'jewish', 'religion', 'faith'],
-        'gender': ['woman', 'man', 'female', 'male', 'gender'],
+        'gender': ['woman', 'man', 'female', 'male', 'gender', 'women', 'bitch'],
         'sexual_orientation': ['gay', 'lesbian', 'homosexual', 'straight'],
         'general_offensive': ['hate', 'kill', 'die', 'stupid', 'idiot']
     }

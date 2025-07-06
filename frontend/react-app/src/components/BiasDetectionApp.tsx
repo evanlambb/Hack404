@@ -114,7 +114,7 @@ const BiasDetectionApp: React.FC<BiasDetectionAppProps> = ({
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-500 to-pink-500 px-6 py-4">
+          <div className="bg-red-500 px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-white">BiasGuard</h1>

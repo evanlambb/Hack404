@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('http://localhost:8000/', { method: 'GET' });
         if (response.ok) {
             // API is accessible
-            console.log('HateZero API is accessible');
+            console.log('BiasGuard API is accessible');
         } else {
             statusText.textContent = 'API Connection Issue';
         }
