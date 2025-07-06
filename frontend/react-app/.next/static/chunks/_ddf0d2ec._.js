@@ -117,7 +117,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 function Header() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-        className: "bg-white shadow-lg border-b border-gray-200",
+        className: "bg-white border-b border-gray-200",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -129,7 +129,7 @@ function Header() {
                             className: "flex items-center gap-3",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center shadow-lg",
+                                    className: "w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
                                         className: "w-6 h-6 text-white",
                                         fill: "none",
@@ -194,7 +194,7 @@ function Header() {
                         className: "flex items-center gap-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "hidden md:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 shadow-sm border border-gray-200",
+                                className: "hidden md:flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-200",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "w-2 h-2 bg-green-500 rounded-full animate-pulse"
@@ -218,7 +218,7 @@ function Header() {
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                className: "p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-xl transition-all duration-200",
+                                className: "p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-all duration-200",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
                                     className: "w-5 h-5",
                                     fill: "none",
@@ -471,414 +471,21 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
     const isNearLimit = value.length >= maxLength * 0.8;
     const characterCountColor = isAtLimit ? 'text-red-500 font-semibold' : isNearLimit ? 'text-amber-500 font-medium' : 'text-gray-500';
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: `bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/40 p-6 ${className}`,
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "space-y-4",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                htmlFor: "text-input",
-                                className: "block text-sm font-semibold text-gray-700 mb-3",
-                                children: label
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 217,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                                id: "text-input",
-                                value: value,
-                                onChange: handleTextChange,
-                                placeholder: placeholder,
-                                maxLength: maxLength,
-                                className: "w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none transition-all duration-200 bg-white/50",
-                                disabled: disabled || isAnalyzing
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 223,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 216,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center",
-                        children: [
-                            showCharacterCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: `text-sm ${characterCountColor} flex items-center gap-1`,
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                        className: "w-4 h-4",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        viewBox: "0 0 24 24",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                            strokeLinecap: "round",
-                                            strokeLinejoin: "round",
-                                            strokeWidth: 2,
-                                            d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 239,
-                                            columnNumber: 17
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 238,
-                                        columnNumber: 15
-                                    }, this),
-                                    value.length,
-                                    " / ",
-                                    maxLength,
-                                    " characters"
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 237,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex gap-3",
-                                children: [
-                                    showClearButton && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: handleClearClick,
-                                        disabled: !value || isAnalyzing,
-                                        className: "px-4 py-2 text-sm font-medium text-gray-700 bg-white/80 border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200",
-                                        children: clearButtonText
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 246,
-                                        columnNumber: 15
-                                    }, this),
-                                    showAnalyzeButton && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: handleAnalyzeClick,
-                                        disabled: !value.trim() || isAnalyzing || !isValid,
-                                        className: "px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 border border-transparent rounded-xl shadow-lg hover:from-red-600 hover:to-red-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105",
-                                        children: isAnalyzing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center gap-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/TextInput.tsx",
-                                                    lineNumber: 262,
-                                                    columnNumber: 21
-                                                }, this),
-                                                "Analyzing..."
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 261,
-                                            columnNumber: 19
-                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center gap-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                    className: "w-4 h-4",
-                                                    fill: "none",
-                                                    stroke: "currentColor",
-                                                    viewBox: "0 0 24 24",
-                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                        strokeLinecap: "round",
-                                                        strokeLinejoin: "round",
-                                                        strokeWidth: 2,
-                                                        d: "M13 10V3L4 14h7v7l9-11h-7z"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/components/TextInput.tsx",
-                                                        lineNumber: 268,
-                                                        columnNumber: 23
-                                                    }, this)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/TextInput.tsx",
-                                                    lineNumber: 267,
-                                                    columnNumber: 21
-                                                }, this),
-                                                analyzeButtonText
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 266,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 255,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/components/TextInput.tsx",
-                                lineNumber: 244,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 235,
-                        columnNumber: 9
-                    }, this),
-                    error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "rounded-xl bg-gradient-to-r from-red-50 to-pink-50 p-4 border border-red-200/50",
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex-shrink-0",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                        className: "h-5 w-5 text-red-400",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        viewBox: "0 0 24 24",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                            strokeLinecap: "round",
-                                            strokeLinejoin: "round",
-                                            strokeWidth: 2,
-                                            d: "M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 284,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 283,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 282,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "ml-3",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            className: "text-sm font-medium text-red-800",
-                                            children: "Error"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 288,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "mt-2 text-sm text-red-700",
-                                            children: error
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 291,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 287,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 281,
-                            columnNumber: 13
-                        }, this)
-                    }, void 0, false, {
-                        fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 280,
-                        columnNumber: 11
-                    }, this),
-                    validationErrors.length > 0 && validateOnChange && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 p-4 border border-amber-200/50",
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex-shrink-0",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                        className: "h-5 w-5 text-amber-400",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        viewBox: "0 0 24 24",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                            strokeLinecap: "round",
-                                            strokeLinejoin: "round",
-                                            strokeWidth: 2,
-                                            d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 305,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 304,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 303,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "ml-3",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            className: "text-sm font-medium text-amber-800",
-                                            children: [
-                                                "Validation ",
-                                                validationErrors.length === 1 ? 'Error' : 'Errors'
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 309,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "mt-2",
-                                            children: validationErrors.map((validationError, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "text-sm text-amber-700",
-                                                    children: [
-                                                        "• ",
-                                                        validationError
-                                                    ]
-                                                }, index, true, {
-                                                    fileName: "[project]/src/components/TextInput.tsx",
-                                                    lineNumber: 314,
-                                                    columnNumber: 21
-                                                }, this))
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 312,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 308,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 302,
-                            columnNumber: 13
-                        }, this)
-                    }, void 0, false, {
-                        fileName: "[project]/src/components/TextInput.tsx",
-                        lineNumber: 301,
-                        columnNumber: 11
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 215,
-                columnNumber: 7
-            }, this),
-            showConfirmDialog && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    ref: dialogRef,
-                    className: "bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-white/20",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex items-center gap-3 mb-4",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                        className: "w-5 h-5 text-amber-600",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        viewBox: "0 0 24 24",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                            strokeLinecap: "round",
-                                            strokeLinejoin: "round",
-                                            strokeWidth: 2,
-                                            d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/TextInput.tsx",
-                                            lineNumber: 332,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/TextInput.tsx",
-                                        lineNumber: 331,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 330,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                    className: "text-lg font-semibold text-gray-900",
-                                    children: "Confirm Clear Text"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 335,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 329,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                            className: "text-gray-600 mb-6",
-                            children: [
-                                "You have ",
-                                value.length,
-                                " characters of text. Are you sure you want to clear all your text? This action cannot be undone."
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 339,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex justify-end space-x-3",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: handleCancelClear,
-                                    className: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200",
-                                    children: "Cancel"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 343,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: handleConfirmClear,
-                                    className: "px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 border border-transparent rounded-xl shadow-lg hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200",
-                                    children: "Clear Text"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 349,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 342,
-                            columnNumber: 13
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 328,
-                    columnNumber: 11
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 327,
-                columnNumber: 9
-            }, this)
-        ]
-    }, void 0, true, {
+        className: `h-full ${className}`,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+            id: "text-input",
+            value: value,
+            onChange: handleTextChange,
+            placeholder: placeholder,
+            maxLength: maxLength,
+            className: "w-full h-full px-6 py-6 placeholder-gray-400 text-gray-900 focus:outline-none resize-none bg-gray-50 border-0",
+            disabled: disabled || isAnalyzing
+        }, void 0, false, {
+            fileName: "[project]/src/components/TextInput.tsx",
+            lineNumber: 215,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
         fileName: "[project]/src/components/TextInput.tsx",
         lineNumber: 214,
         columnNumber: 5
@@ -892,720 +499,257 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
 }}),
-"[project]/src/components/IssuesPanel.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
+"[project]/src/components/IssuesPanel.tsx [app-client] (ecmascript)": (function(__turbopack_context__) {
+
+var { g: global, __dirname, k: __turbopack_refresh__, m: module, e: exports } = __turbopack_context__;
+{
+const e = new Error(`Could not parse module '[project]/src/components/IssuesPanel.tsx'
+
+Unexpected token `div`. Expected jsx identifier`);
+e.code = 'MODULE_UNPARSEABLE';
+throw e;}}),
+"[project]/src/components/BiasDetectionApp.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "IssuesPanel": (()=>IssuesPanel)
+    "BiasDetectionApp": (()=>BiasDetectionApp)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/api.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Header.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$TextInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/TextInput.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$IssuesPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/IssuesPanel.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
 ;
-const getCategoryColor = (category)=>{
-    switch(category.toLowerCase()){
-        case 'gender_bias':
-            return {
-                bg: 'bg-gradient-to-r from-pink-100 to-rose-100',
-                border: 'border-pink-300',
-                text: 'text-pink-800',
-                badge: 'bg-pink-500',
-                icon: '♀'
-            };
-        case 'racial_bias':
-            return {
-                bg: 'bg-gradient-to-r from-orange-100 to-amber-100',
-                border: 'border-orange-300',
-                text: 'text-orange-800',
-                badge: 'bg-orange-500',
-                icon: '⚡'
-            };
-        case 'age_bias':
-            return {
-                bg: 'bg-gradient-to-r from-purple-100 to-violet-100',
-                border: 'border-purple-300',
-                text: 'text-purple-800',
-                badge: 'bg-purple-500',
-                icon: '⏰'
-            };
-        case 'religious_bias':
-            return {
-                bg: 'bg-gradient-to-r from-emerald-100 to-teal-100',
-                border: 'border-emerald-300',
-                text: 'text-emerald-800',
-                badge: 'bg-emerald-500',
-                icon: '☪'
-            };
-        case 'disability_bias':
-            return {
-                bg: 'bg-gradient-to-r from-blue-100 to-indigo-100',
-                border: 'border-blue-300',
-                text: 'text-blue-800',
-                badge: 'bg-blue-500',
-                icon: '♿'
-            };
-        default:
-            return {
-                bg: 'bg-gradient-to-r from-gray-100 to-slate-100',
-                border: 'border-gray-300',
-                text: 'text-gray-800',
-                badge: 'bg-gray-500',
-                icon: '⚠'
-            };
-    }
-};
-const getConfidenceColor = (confidence)=>{
-    if (confidence >= 0.8) return 'text-red-600 bg-red-100';
-    if (confidence >= 0.6) return 'text-amber-600 bg-amber-100';
-    return 'text-green-600 bg-green-100';
-};
-function IssuesPanel({ analysisResult, isAnalyzing, onWordReplace, onIssueClick }) {
+;
+;
+;
+;
+function BiasDetectionApp() {
     _s();
-    const [expandedIssues, setExpandedIssues] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(new Set());
-    const toggleIssueExpansion = (index)=>{
-        const newExpanded = new Set(expandedIssues);
-        if (newExpanded.has(index)) {
-            newExpanded.delete(index);
-        } else {
-            newExpanded.add(index);
+    const [text, setText] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [isAnalyzing, setIsAnalyzing] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [analysisResult, setAnalysisResult] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [validationErrors, setValidationErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const handleValidationChange = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "BiasDetectionApp.useCallback[handleValidationChange]": (isValid, errors)=>{
+            setValidationErrors(errors);
         }
-        setExpandedIssues(newExpanded);
-    };
-    const handleWordReplace = (originalWord, newWord)=>{
-        onWordReplace(originalWord, newWord);
-    };
-    const handleIssueClick = (issue)=>{
-        if (onIssueClick) {
-            onIssueClick(issue);
+    }["BiasDetectionApp.useCallback[handleValidationChange]"], []);
+    const handleAnalyze = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "BiasDetectionApp.useCallback[handleAnalyze]": async ()=>{
+            if (!text.trim()) {
+                setError('Please enter some text to analyze');
+                return;
+            }
+            setIsAnalyzing(true);
+            setError(null);
+            try {
+                const request = {
+                    text: text.trim(),
+                    confidence_threshold: 0.6
+                };
+                const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["analyzeText"])(request);
+                setAnalysisResult(result);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'An error occurred during analysis');
+                setAnalysisResult(null);
+            } finally{
+                setIsAnalyzing(false);
+            }
         }
-    };
+    }["BiasDetectionApp.useCallback[handleAnalyze]"], [
+        text
+    ]);
+    const handleClearText = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "BiasDetectionApp.useCallback[handleClearText]": ()=>{
+            setText('');
+            setAnalysisResult(null);
+            setError(null);
+        }
+    }["BiasDetectionApp.useCallback[handleClearText]"], []);
+    const handleWordReplace = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "BiasDetectionApp.useCallback[handleWordReplace]": (originalWord, newWord)=>{
+            const newText = text.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord);
+            setText(newText);
+            // Update analysis result to reflect the change
+            if (analysisResult) {
+                const updatedClauses = analysisResult.hate_speech_clauses.map({
+                    "BiasDetectionApp.useCallback[handleWordReplace].updatedClauses": (clause)=>{
+                        if (clause.clause.includes(originalWord)) {
+                            return {
+                                ...clause,
+                                clause: clause.clause.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord)
+                            };
+                        }
+                        return clause;
+                    }
+                }["BiasDetectionApp.useCallback[handleWordReplace].updatedClauses"]);
+                setAnalysisResult({
+                    ...analysisResult,
+                    hate_speech_clauses: updatedClauses,
+                    original_text: newText
+                });
+            }
+        }
+    }["BiasDetectionApp.useCallback[handleWordReplace]"], [
+        text,
+        analysisResult
+    ]);
+    // Convert analysis result to flagged words format for IssuesPanel compatibility
+    const flaggedWords = analysisResult ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["convertToFlaggedWords"])(analysisResult) : [];
+    const handleIssueClick = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "BiasDetectionApp.useCallback[handleIssueClick]": (issue)=>{
+            // Find the corresponding clause for the flagged word
+            const clause = analysisResult?.hate_speech_clauses.find({
+                "BiasDetectionApp.useCallback[handleIssueClick]": (c)=>c.clause.includes(issue.word) && c.is_hate_speech
+            }["BiasDetectionApp.useCallback[handleIssueClick]"]);
+            if (clause) {
+                // Could do something with the clause here if needed
+                console.log('Selected clause:', clause);
+            }
+        }
+    }["BiasDetectionApp.useCallback[handleIssueClick]"], [
+        analysisResult
+    ]);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "w-full lg:w-96 h-full bg-gradient-to-b from-white via-slate-50/50 to-gray-100/30 border-l-2 border-gradient-to-b from-red-200 to-red-300 shadow-2xl backdrop-blur-sm",
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "h-full flex flex-col",
-            children: [
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "sticky top-0 bg-gradient-to-r from-white via-red-50/80 to-pink-50/60 backdrop-blur-sm border-b-2 border-red-100/50 p-6 shadow-lg",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex items-center gap-3 mb-4",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                        className: "w-5 h-5 text-white",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        viewBox: "0 0 24 24",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                            strokeLinecap: "round",
-                                            strokeLinejoin: "round",
-                                            strokeWidth: 2,
-                                            d: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 108,
-                                            columnNumber: 17
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 107,
-                                        columnNumber: 15
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 106,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                    className: "text-xl font-bold text-gray-800",
-                                    children: "Issues Found"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 111,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 105,
-                            columnNumber: 11
-                        }, this),
-                        analysisResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "space-y-3",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex items-center justify-between p-3 bg-white/60 rounded-xl border border-red-200/50 shadow-sm",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "text-sm font-medium text-gray-700",
-                                            children: "Analysis Confidence"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 119,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center gap-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "flex-1 bg-gray-200 rounded-full h-2 w-16",
-                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500",
-                                                        style: {
-                                                            width: `${analysisResult.confidence * 100}%`
-                                                        }
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 122,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 121,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: `text-xs font-semibold px-2 py-1 rounded-full ${getConfidenceColor(analysisResult.confidence)}`,
-                                                    children: [
-                                                        Math.round(analysisResult.confidence * 100),
-                                                        "%"
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 127,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 120,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 118,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "grid grid-cols-2 gap-3",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "bg-white/60 rounded-xl p-3 border border-emerald-200/50 shadow-sm",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "text-lg font-bold text-emerald-700",
-                                                    children: analysisResult.flaggedWords.length
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 135,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "text-xs text-emerald-600 font-medium",
-                                                    children: "Issues Found"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 136,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 134,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "bg-white/60 rounded-xl p-3 border border-red-200/50 shadow-sm",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "text-lg font-bold text-red-700",
-                                                    children: new Set(analysisResult.flaggedWords.map((fw)=>fw.category)).size
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 139,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "text-xs text-red-600 font-medium",
-                                                    children: "Categories"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                    lineNumber: 142,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 138,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 133,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 117,
-                            columnNumber: 13
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                    lineNumber: 104,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar",
-                    children: [
-                        isAnalyzing && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex items-center justify-center py-12",
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "text-center",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 154,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-gray-600 font-medium",
-                                        children: "Analyzing text for bias..."
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 155,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "text-sm text-gray-500 mt-1",
-                                        children: "This may take a moment"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 156,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                lineNumber: 153,
-                                columnNumber: 15
-                            }, this)
-                        }, void 0, false, {
-                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 152,
-                            columnNumber: 13
-                        }, this),
-                        !isAnalyzing && (!analysisResult || analysisResult.flaggedWords.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex flex-col items-center justify-center py-12 text-center",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-20 h-20 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4 shadow-lg",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                        className: "w-8 h-8 text-green-600",
-                                        fill: "none",
-                                        stroke: "currentColor",
-                                        viewBox: "0 0 24 24",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                            strokeLinecap: "round",
-                                            strokeLinejoin: "round",
-                                            strokeWidth: 2,
-                                            d: "M5 13l4 4L19 7"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                            lineNumber: 165,
-                                            columnNumber: 19
-                                        }, this)
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 164,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 163,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                    className: "text-lg font-semibold text-gray-800 mb-2",
-                                    children: analysisResult ? 'No Issues Found!' : 'Ready to Analyze'
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 168,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    className: "text-gray-600 text-sm leading-relaxed",
-                                    children: analysisResult ? 'Your text looks great! No bias or problematic language detected.' : 'Enter some text and click "Analyze Text" to get started.'
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 171,
-                                    columnNumber: 15
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 162,
-                            columnNumber: 13
-                        }, this),
-                        !isAnalyzing && analysisResult && analysisResult.flaggedWords.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "space-y-4",
-                            children: analysisResult.flaggedWords.map((issue, index)=>{
-                                const categoryStyle = getCategoryColor(issue.category);
-                                const isExpanded = expandedIssues.has(index);
-                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: `${categoryStyle.bg} ${categoryStyle.border} border-2 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer overflow-hidden`,
-                                    onClick: ()=>{
-                                        toggleIssueExpansion(index);
-                                        handleIssueClick(issue);
-                                    },
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "p-4",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-start justify-between mb-3",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "flex items-center gap-3",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: `${categoryStyle.badge} w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shadow-md`,
-                                                                children: categoryStyle.icon
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 198,
-                                                                columnNumber: 27
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                                        className: `font-bold ${categoryStyle.text} text-sm`,
-                                                                        children: [
-                                                                            '"',
-                                                                            issue.word,
-                                                                            '"'
-                                                                        ]
-                                                                    }, void 0, true, {
-                                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 202,
-                                                                        columnNumber: 29
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                        className: `text-xs ${categoryStyle.text} opacity-80 capitalize font-medium`,
-                                                                        children: issue.category.replace('_', ' ')
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 205,
-                                                                        columnNumber: 29
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 201,
-                                                                columnNumber: 27
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 197,
-                                                        columnNumber: 25
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "flex items-center gap-2",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: `text-xs font-bold px-2 py-1 rounded-full ${getConfidenceColor(issue.confidence)}`,
-                                                                children: [
-                                                                    Math.round(issue.confidence * 100),
-                                                                    "%"
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 211,
-                                                                columnNumber: 27
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                                className: `w-5 h-5 ${categoryStyle.text} transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`,
-                                                                fill: "none",
-                                                                stroke: "currentColor",
-                                                                viewBox: "0 0 24 24",
-                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                                    strokeLinecap: "round",
-                                                                    strokeLinejoin: "round",
-                                                                    strokeWidth: 2,
-                                                                    d: "M19 9l-7 7-7-7"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                    lineNumber: 220,
-                                                                    columnNumber: 29
-                                                                }, this)
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 214,
-                                                                columnNumber: 27
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 210,
-                                                        columnNumber: 25
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                lineNumber: 196,
-                                                columnNumber: 23
-                                            }, this),
-                                            isExpanded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "space-y-4 animate-fadeIn",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "bg-white/70 rounded-xl p-4 shadow-sm",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h5", {
-                                                                className: "font-semibold text-gray-800 text-sm mb-2 flex items-center gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                                        className: "w-4 h-4",
-                                                                        fill: "none",
-                                                                        stroke: "currentColor",
-                                                                        viewBox: "0 0 24 24",
-                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                                            strokeLinecap: "round",
-                                                                            strokeLinejoin: "round",
-                                                                            strokeWidth: 2,
-                                                                            d: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                            lineNumber: 230,
-                                                                            columnNumber: 33
-                                                                        }, this)
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 229,
-                                                                        columnNumber: 31
-                                                                    }, this),
-                                                                    "Why this is problematic:"
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 228,
-                                                                columnNumber: 29
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                className: "text-gray-700 text-sm leading-relaxed",
-                                                                children: issue.explanation
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 234,
-                                                                columnNumber: 29
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 227,
-                                                        columnNumber: 27
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "space-y-2",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h5", {
-                                                                className: "font-semibold text-gray-800 text-sm flex items-center gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                                        className: "w-4 h-4",
-                                                                        fill: "none",
-                                                                        stroke: "currentColor",
-                                                                        viewBox: "0 0 24 24",
-                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                                            strokeLinecap: "round",
-                                                                            strokeLinejoin: "round",
-                                                                            strokeWidth: 2,
-                                                                            d: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                            lineNumber: 242,
-                                                                            columnNumber: 33
-                                                                        }, this)
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 241,
-                                                                        columnNumber: 31
-                                                                    }, this),
-                                                                    "Suggested alternatives:"
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 240,
-                                                                columnNumber: 29
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "space-y-2",
-                                                                children: issue.suggestions.map((suggestion, suggestionIndex)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                        onClick: (e)=>{
-                                                                            e.stopPropagation();
-                                                                            handleWordReplace(issue.word, suggestion.word);
-                                                                        },
-                                                                        className: "w-full text-left p-3 bg-white/80 hover:bg-white rounded-xl border border-gray-200/50 hover:border-gray-300 transition-all duration-200 group shadow-sm hover:shadow-md",
-                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                            className: "flex items-center justify-between",
-                                                                            children: [
-                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                                    className: "flex-1",
-                                                                                    children: [
-                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                                            className: "font-semibold text-gray-800 text-sm",
-                                                                                            children: [
-                                                                                                '"',
-                                                                                                suggestion.word,
-                                                                                                '"'
-                                                                                            ]
-                                                                                        }, void 0, true, {
-                                                                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                            lineNumber: 258,
-                                                                                            columnNumber: 39
-                                                                                        }, this),
-                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                                            className: "flex items-center gap-2 mt-1",
-                                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                                                className: `text-xs font-medium px-2 py-1 rounded-full ${getConfidenceColor(suggestion.confidence)}`,
-                                                                                                children: [
-                                                                                                    Math.round(suggestion.confidence * 100),
-                                                                                                    "% match"
-                                                                                                ]
-                                                                                            }, void 0, true, {
-                                                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                                lineNumber: 262,
-                                                                                                columnNumber: 41
-                                                                                            }, this)
-                                                                                        }, void 0, false, {
-                                                                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                            lineNumber: 261,
-                                                                                            columnNumber: 39
-                                                                                        }, this),
-                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                                            className: "text-xs text-gray-600 mt-1",
-                                                                                            children: suggestion.reason
-                                                                                        }, void 0, false, {
-                                                                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                            lineNumber: 266,
-                                                                                            columnNumber: 39
-                                                                                        }, this)
-                                                                                    ]
-                                                                                }, void 0, true, {
-                                                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                    lineNumber: 257,
-                                                                                    columnNumber: 37
-                                                                                }, this),
-                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                                                    className: "w-5 h-5 text-gray-400 group-hover:text-red-600 transition-colors duration-200",
-                                                                                    fill: "none",
-                                                                                    stroke: "currentColor",
-                                                                                    viewBox: "0 0 24 24",
-                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                                                        strokeLinecap: "round",
-                                                                                        strokeLinejoin: "round",
-                                                                                        strokeWidth: 2,
-                                                                                        d: "M9 5l7 7-7 7"
-                                                                                    }, void 0, false, {
-                                                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                        lineNumber: 271,
-                                                                                        columnNumber: 39
-                                                                                    }, this)
-                                                                                }, void 0, false, {
-                                                                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                                    lineNumber: 270,
-                                                                                    columnNumber: 37
-                                                                                }, this)
-                                                                            ]
-                                                                        }, void 0, true, {
-                                                                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                            lineNumber: 256,
-                                                                            columnNumber: 35
-                                                                        }, this)
-                                                                    }, suggestionIndex, false, {
-                                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                        lineNumber: 248,
-                                                                        columnNumber: 33
-                                                                    }, this))
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                                lineNumber: 246,
-                                                                columnNumber: 29
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                        lineNumber: 239,
-                                                        columnNumber: 27
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/components/IssuesPanel.tsx",
-                                                lineNumber: 226,
-                                                columnNumber: 25
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/components/IssuesPanel.tsx",
-                                        lineNumber: 195,
-                                        columnNumber: 21
-                                    }, this)
-                                }, index, false, {
-                                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                                    lineNumber: 187,
-                                    columnNumber: 19
-                                }, this);
-                            })
-                        }, void 0, false, {
-                            fileName: "[project]/src/components/IssuesPanel.tsx",
-                            lineNumber: 181,
-                            columnNumber: 13
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/components/IssuesPanel.tsx",
-                    lineNumber: 150,
+        className: "min-h-screen bg-gray-50 flex flex-col",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "fixed top-0 left-0 right-0 z-30 bg-white shadow-sm",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                    lineNumber: 94,
                     columnNumber: 9
                 }, this)
-            ]
-        }, void 0, true, {
-            fileName: "[project]/src/components/IssuesPanel.tsx",
-            lineNumber: 102,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
-        fileName: "[project]/src/components/IssuesPanel.tsx",
-        lineNumber: 101,
+            }, void 0, false, {
+                fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                lineNumber: 93,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex pt-20 h-screen",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-1 overflow-y-auto bg-gray-50 main-scroll-area pr-96 lg:pr-96",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "h-full p-6 lg:p-8",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$TextInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                value: text,
+                                onChange: setText,
+                                placeholder: "Type or paste your text here...",
+                                maxLength: 5000,
+                                onValidationChange: handleValidationChange
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                lineNumber: 102,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                            lineNumber: 101,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                        lineNumber: 100,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "fixed top-20 right-0 bottom-0 w-96 hidden lg:block z-20",
+                        children: [
+                            "            ",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$IssuesPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["IssuesPanel"], {
+                                analysisResult: analysisResult ? {
+                                    ...analysisResult,
+                                    flaggedWords: flaggedWords,
+                                    analysisId: `analysis-${Date.now()}`,
+                                    timestamp: new Date().toISOString(),
+                                    confidence: analysisResult.summary.highest_confidence
+                                } : null,
+                                isAnalyzing: isAnalyzing,
+                                onWordReplace: handleWordReplace,
+                                onIssueClick: handleIssueClick,
+                                text: text,
+                                onClear: handleClearText,
+                                onAnalyze: handleAnalyze,
+                                maxLength: 5000,
+                                error: error,
+                                validationErrors: validationErrors
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                                lineNumber: 113,
+                                columnNumber: 94
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                        lineNumber: 113,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                lineNumber: 98,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "lg:hidden",
+                children: (analysisResult || isAnalyzing) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "border-t border-gray-200 bg-white",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$IssuesPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["IssuesPanel"], {
+                        analysisResult: analysisResult ? {
+                            ...analysisResult,
+                            flaggedWords: flaggedWords,
+                            analysisId: `analysis-${Date.now()}`,
+                            timestamp: new Date().toISOString(),
+                            confidence: analysisResult.summary.highest_confidence
+                        } : null,
+                        isAnalyzing: isAnalyzing,
+                        onWordReplace: handleWordReplace,
+                        onIssueClick: handleIssueClick,
+                        text: text,
+                        onClear: handleClearText,
+                        onAnalyze: handleAnalyze,
+                        maxLength: 5000,
+                        error: error,
+                        validationErrors: validationErrors
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                        lineNumber: 138,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                    lineNumber: 137,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/components/BiasDetectionApp.tsx",
+                lineNumber: 135,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/components/BiasDetectionApp.tsx",
+        lineNumber: 91,
         columnNumber: 5
     }, this);
 }
-_s(IssuesPanel, "C1+Ae7jzNEEiJE2JG7yYDiE/YqE=");
-_c = IssuesPanel;
+_s(BiasDetectionApp, "8uk/8TtiFixMbddYof53kwnKGFs=");
+_c = BiasDetectionApp;
 var _c;
-__turbopack_context__.k.register(_c, "IssuesPanel");
+__turbopack_context__.k.register(_c, "BiasDetectionApp");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
 }}),
-"[project]/src/components/BiasDetectionApp.tsx [app-client] (ecmascript)": (function(__turbopack_context__) {
-
-var { g: global, __dirname, k: __turbopack_refresh__, m: module, e: exports } = __turbopack_context__;
-{
-const e = new Error(`Could not parse module '[project]/src/components/BiasDetectionApp.tsx'
-
-Expected ',', got '<'`);
-e.code = 'MODULE_UNPARSEABLE';
-throw e;}}),
 "[project]/node_modules/next/dist/compiled/react/cjs/react-jsx-dev-runtime.development.js [app-client] (ecmascript)": (function(__turbopack_context__) {
 
 var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;

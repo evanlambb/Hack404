@@ -13,6 +13,9 @@ interface IssuesPanelProps {
   onClear: () => void;
   onAnalyze: () => void;
   maxLength: number;
+  // Error handling
+  error?: string | null;
+  validationErrors?: string[];
 }
 
 const getCategoryColor = (category: string) => {
@@ -82,7 +85,9 @@ export function IssuesPanel({
   text,
   onClear,
   onAnalyze,
-  maxLength
+  maxLength,
+  error,
+  validationErrors = []
 }: IssuesPanelProps) {
   const [expandedIssues, setExpandedIssues] = useState<Set<number>>(new Set());
 
@@ -110,13 +115,8 @@ export function IssuesPanel({
     <div className="w-full lg:w-96 h-full bg-white border-l border-gray-200">
       <div className="h-full flex flex-col">
         {/* Header */}
-        <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
+        <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-4">
+          <div className="flex items-center justify-center">
             <h2 className="text-xl font-bold text-gray-800">
               Issues Found
             </h2>
@@ -296,6 +296,28 @@ export function IssuesPanel({
         {/* Text Input Controls */}
         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6">
           <div className="space-y-4">
+            {/* Validation Errors */}
+            {(error || (validationErrors && validationErrors.length > 0)) && (
+              <div className="space-y-2">
+                {error && (
+                  <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-sm font-medium text-red-700">{error}</span>
+                  </div>
+                )}
+                {validationErrors && validationErrors.map((validationError, index) => (
+                  <div key={index} className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <svg className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                    <span className="text-sm font-medium text-amber-700">{validationError}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Character Count */}
             <div className={`text-sm flex items-center gap-1 ${
               text.length >= maxLength 
