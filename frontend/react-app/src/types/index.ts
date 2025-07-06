@@ -34,10 +34,12 @@ export interface AnalysisResponse {
   total_clauses: number;
   hate_speech_clauses: ClauseAnalysis[];
   summary: {
-    total_hate_speech_clauses: number;
-    highest_confidence: number;
-    average_confidence: number;
-    most_concerning_clause?: string;
+    total_clauses_analyzed: number;
+    hate_speech_clauses_found: number;
+    hate_speech_percentage: number;
+    confidence_threshold_used: number;
+    overall_assessment: string;
+    risk_level: string;
   };
 }
 

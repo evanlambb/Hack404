@@ -3,8 +3,15 @@
 import { AnalysisResponse, FlaggedWord } from '@/types';
 import { useState } from 'react';
 
+interface ExtendedAnalysisResponse extends AnalysisResponse {
+  flaggedWords: FlaggedWord[];
+  analysisId?: string;
+  timestamp?: string;
+  confidence?: number;
+}
+
 interface IssuesPanelProps {
-  analysisResult: AnalysisResponse | null;
+  analysisResult: ExtendedAnalysisResponse | null;
   isAnalyzing: boolean;
   onWordReplace: (originalWord: string, newWord: string) => void;
   onIssueClick?: (issue: FlaggedWord) => void;
@@ -115,45 +122,19 @@ export function IssuesPanel({
     <div className="w-full lg:w-96 h-full bg-white border-l border-gray-200">
       <div className="h-full flex flex-col">
         {/* Header */}
-        <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-4">
-          <div className="flex items-center justify-center">
-            <h2 className="text-xl font-bold text-gray-800">
-              Issues Found
-            </h2>
-          </div>
-
-          {analysisResult && (
+        {analysisResult && (
+          <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-4">
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
-                <span className="text-sm font-medium text-gray-700">Analysis Confidence</span>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-gray-200 rounded-full h-2 w-16">
-                    <div 
-                      className="bg-red-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${analysisResult.confidence * 100}%` }}
-                    />
+              <div className="bg-white rounded-lg p-3 border border-gray-200">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-red-600">
+                    Issues: {analysisResult.summary?.hate_speech_clauses_found || analysisResult.hate_speech_clauses?.filter(clause => clause.is_hate_speech).length || 0}
                   </div>
-                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getConfidenceColor(analysisResult.confidence)}`}>
-                    {Math.round(analysisResult.confidence * 100)}%
-                  </span>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white rounded-lg p-3 border border-gray-200">
-                  <div className="text-lg font-bold text-emerald-700">{analysisResult.flaggedWords.length}</div>
-                  <div className="text-xs text-emerald-600 font-medium">Issues Found</div>
-                </div>
-                <div className="bg-white rounded-lg p-3 border border-gray-200">
-                  <div className="text-lg font-bold text-red-700">
-                    {new Set(analysisResult.flaggedWords.map(fw => fw.category)).size}
-                  </div>
-                  <div className="text-xs text-red-600 font-medium">Categories</div>
                 </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
@@ -209,7 +190,7 @@ export function IssuesPanel({
                           </div>
                           <div>
                             <h4 className={`font-bold ${categoryStyle.text} text-sm`}>
-                              "{issue.word}"
+                              &ldquo;{issue.word}&rdquo;
                             </h4>
                             <p className={`text-xs ${categoryStyle.text} opacity-80 capitalize font-medium`}>
                               {issue.category.replace('_', ' ')}
@@ -264,7 +245,7 @@ export function IssuesPanel({
                                   <div className="flex items-center justify-between">
                                     <div className="flex-1">
                                       <span className="font-semibold text-gray-800 text-sm">
-                                        "{suggestion.word}"
+                                        &ldquo;{suggestion.word}&rdquo;
                                       </span>
                                       <div className="flex items-center gap-2 mt-1">
                                         <span className={`text-xs font-medium px-2 py-1 rounded-full ${getConfidenceColor(suggestion.confidence)}`}>

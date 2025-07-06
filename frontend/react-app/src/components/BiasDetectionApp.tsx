@@ -26,7 +26,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
     setText(initialText);
   }, [initialText]);
 
-  const handleValidationChange = useCallback((isValid: boolean, errors: string[]) => {
+  const handleValidationChange = useCallback((_isValid: boolean, errors: string[]) => {
     setValidationErrors(errors);
   }, []);
 
@@ -144,7 +144,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
                 analysisId: `analysis-${Date.now()}`,
                 timestamp: new Date().toISOString(),
                 confidence: analysisResult.summary.highest_confidence
-              } as any : null}
+              } : null}
               isAnalyzing={isAnalyzing}
               onWordReplace={handleWordReplace}
               onIssueClick={handleIssueClick}
@@ -169,7 +169,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
                 analysisId: `analysis-${Date.now()}`,
                 timestamp: new Date().toISOString(),
                 confidence: analysisResult.summary.highest_confidence
-              } as any : null}
+              } : null}
               isAnalyzing={isAnalyzing}
               onWordReplace={handleWordReplace}
               onIssueClick={handleIssueClick}
