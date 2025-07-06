@@ -1,195 +1,206 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useEffect } from 'react';
-import { AnalysisResponse, AnalysisRequest } from '@/types';
-import { analyzeText, convertToFlaggedWords, saveAnalysis } from '@/lib/api';
-import { useAuth } from './AuthContext';
-import Header from './Header';
-import TextInput from './TextInput';
-import { IssuesPanel } from './IssuesPanel';
+import React, { useState, useEffect, useCallback } from "react";
+import { BiasAnalysisResponse, BiasSpan, AnalysisRequest } from "@/types";
+import { analyzeText } from "@/lib/api";
+import TextInput, { FlaggedWord } from "@/components/TextInput";
+import { IssuesPanel } from "@/components/IssuesPanel";
+import { useAuth } from "@/components/AuthContext";
 
 interface BiasDetectionAppProps {
   initialText?: string;
   onBack?: () => void;
 }
 
-export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppProps) {
+const BiasDetectionApp: React.FC<BiasDetectionAppProps> = ({
+  initialText = "",
+  onBack,
+}) => {
   const { user } = useAuth();
-  const [text, setText] = useState(initialText);
+  const [inputText, setInputText] = useState(initialText);
+  const [analysisText, setAnalysisText] = useState("");
+  const [analysisResults, setAnalysisResults] =
+    useState<BiasAnalysisResponse | null>(null);
+  const [flaggedWords, setFlaggedWords] = useState<FlaggedWord[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [showAnalysisOutput, setShowAnalysisOutput] = useState(false);
 
-  // Set initial text when prop changes
+  // Update input text when initialText prop changes
   useEffect(() => {
-    setText(initialText);
+    setInputText(initialText);
   }, [initialText]);
 
-  const handleValidationChange = useCallback((_isValid: boolean, errors: string[]) => {
-    setValidationErrors(errors);
-  }, []);
+  // Convert BiasSpan to FlaggedWord format
+  const convertToFlaggedWords = useCallback(
+    (biasSpans: BiasSpan[]): FlaggedWord[] => {
+      return biasSpans.map((span) => ({
+        word: span.text,
+        startIndex: span.start_index,
+        endIndex: span.end_index,
+        category: span.category,
+        explanation: span.explanation,
+        confidence: 1.0,
+        suggestions: [
+          {
+            word: span.suggested_revision || span.text,
+            confidence: 1.0,
+            reason: span.explanation,
+          },
+        ],
+      }));
+    },
+    []
+  );
 
   const handleAnalyze = useCallback(async () => {
-    if (!text.trim()) {
-      setError('Please enter some text to analyze');
+    if (!inputText.trim()) {
+      setError("Please enter some text to analyze");
       return;
     }
 
     setIsAnalyzing(true);
     setError(null);
+    setShowAnalysisOutput(true);
 
     try {
       const request: AnalysisRequest = {
-        text: text.trim(),
-        confidence_threshold: 0.6
+        text: inputText.trim(),
       };
 
-      const result = await analyzeText(request);
-      setAnalysisResult(result);
-      
-      // Auto-save the analysis to the database if user is authenticated
-      if (user?.token) {
-        try {
-          console.log('Attempting to save analysis for user:', user.id);
-          const title = `Analysis - ${new Date().toLocaleDateString()}`;
-          const saveResult = await saveAnalysis(text.trim(), result, title);
-          console.log('Save result:', saveResult);
-        } catch (saveError) {
-          console.error('Failed to save analysis:', saveError);
-          // Don't show error to user for auto-save failure
-        }
+      const response = await analyzeText(request);
+      setAnalysisResults(response);
+      setAnalysisText(inputText); // Set the text that was analyzed
+
+      if (response.bias_spans && response.bias_spans.length > 0) {
+        const flagged = convertToFlaggedWords(response.bias_spans);
+        setFlaggedWords(flagged);
       } else {
-        console.log('User not authenticated, skipping save');
+        setFlaggedWords([]);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred during analysis');
-      setAnalysisResult(null);
+      console.error("Analysis error:", err);
+      setError(
+        err instanceof Error ? err.message : "An error occurred during analysis"
+      );
+      setAnalysisResults(null);
+      setFlaggedWords([]);
     } finally {
       setIsAnalyzing(false);
     }
-  }, [text, user?.token, user?.id]);
+  }, [inputText, convertToFlaggedWords]);
 
-  const handleClearText = useCallback(() => {
-    setText('');
-    setAnalysisResult(null);
+  const handleClear = useCallback(() => {
+    setInputText("");
+    setAnalysisText("");
+    setAnalysisResults(null);
+    setFlaggedWords([]);
     setError(null);
+    setShowAnalysisOutput(false);
   }, []);
 
   const handleClearHighlights = useCallback(() => {
-    setAnalysisResult(null);
+    setFlaggedWords([]);
+    setAnalysisResults(null);
+  }, []);
+
+  const handleInputChange = useCallback((newText: string) => {
+    setInputText(newText);
     setError(null);
   }, []);
 
-  const handleWordReplace = useCallback((originalWord: string, newWord: string) => {
-    const newText = text.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord);
-    setText(newText);
-    
-    // Update analysis result to reflect the change
-    if (analysisResult) {
-      const updatedClauses = analysisResult.hate_speech_clauses.map(clause => {
-        if (clause.clause.includes(originalWord)) {
-          return {
-            ...clause,
-            clause: clause.clause.replace(new RegExp(`\\b${originalWord}\\b`, 'g'), newWord)
-          };
-        }
-        return clause;
-      });
-      
-      setAnalysisResult({
-        ...analysisResult,
-        hate_speech_clauses: updatedClauses,
-        original_text: newText
-      });
-    }
-  }, [text, analysisResult]);
-
-  // Convert analysis result to flagged words format for IssuesPanel compatibility
-  const flaggedWords = analysisResult ? convertToFlaggedWords(analysisResult) : [];
-
-  const handleIssueClick = useCallback((issue: { word: string }) => {
-    // Find the corresponding clause for the flagged word
-    const clause = analysisResult?.hate_speech_clauses.find(c => 
-      c.clause.includes(issue.word) && c.is_hate_speech
-    );
-    if (clause) {
-      // Could do something with the clause here if needed
-      console.log('Selected clause:', clause);
-    }
-  }, [analysisResult]);
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 z-30 bg-white shadow-sm">
-        <Header onBack={onBack} />
-      </div>
-      
-      {/* Main Content with Fixed Layout */}
-      <div className="flex pt-20 h-screen">
-        {/* Left Column - Text Input Area - Scrollable */}
-        <div className="flex-1 overflow-y-auto bg-gray-50 main-scroll-area pr-96 lg:pr-96">
-          <div className="h-full p-6 lg:p-8">
-            <TextInput
-              value={text}
-              onChange={setText}
-              placeholder="Type or paste your text here..."
-              maxLength={5000}
-              onValidationChange={handleValidationChange}
-              flaggedWords={flaggedWords}
-              onClearHighlights={handleClearHighlights}
-            />
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-red-500 to-pink-500 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-white">BiasGuard</h1>
+                <p className="text-red-100 mt-1">
+                  Detect and understand potential bias in your text
+                </p>
+              </div>
+              {onBack && (
+                <button
+                  onClick={onBack}
+                  className="text-white hover:text-red-100 transition-colors"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border-l-4 border-red-400 p-4 m-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg
+                    className="h-5 w-5 text-red-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Content */}
+          <div className="flex flex-col lg:flex-row">
+            {/* Text Input Section */}
+            <div className="lg:w-full">
+              <div className="h-96 lg:h-[600px]">
+                <TextInput
+                  value={inputText}
+                  onChange={handleInputChange}
+                  onClear={handleClear}
+                  onAnalyze={handleAnalyze}
+                  placeholder="Enter or paste your text here to analyze for potential bias..."
+                  isAnalyzing={isAnalyzing}
+                  error={error}
+                  maxLength={5000}
+                  showCharacterCount={true}
+                  showClearButton={true}
+                  showAnalyzeButton={true}
+                  analyzeButtonText="Analyze for Bias"
+                  clearButtonText="Clear All"
+                  flaggedWords={flaggedWords}
+                  onClearHighlights={handleClearHighlights}
+                  analysisText={analysisText}
+                  showAnalysisOutput={showAnalysisOutput}
+                  analysisResults={analysisResults}
+                />
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Right Column - Fixed Issues Panel */}
-        <div className="fixed top-20 right-0 bottom-0 w-96 hidden lg:block z-20">            <IssuesPanel
-              analysisResult={analysisResult ? {
-                ...analysisResult,
-                flaggedWords: flaggedWords,
-                analysisId: `analysis-${Date.now()}`,
-                timestamp: new Date().toISOString(),
-                confidence: analysisResult.summary.confidence_threshold_used
-              } : null}
-              isAnalyzing={isAnalyzing}
-              onWordReplace={handleWordReplace}
-              onIssueClick={handleIssueClick}
-              text={text}
-              onClear={handleClearText}
-              onAnalyze={handleAnalyze}
-              maxLength={5000}
-              error={error}
-              validationErrors={validationErrors}
-            />
-        </div>
-      </div>
-
-      {/* Mobile Issues Panel */}
-      <div className="lg:hidden">
-        {(analysisResult || isAnalyzing) && (
-          <div className="border-t border-gray-200 bg-white">
-            <IssuesPanel
-              analysisResult={analysisResult ? {
-                ...analysisResult,
-                flaggedWords: flaggedWords,
-                analysisId: `analysis-${Date.now()}`,
-                timestamp: new Date().toISOString(),
-                confidence: analysisResult.summary.confidence_threshold_used
-              } : null}
-              isAnalyzing={isAnalyzing}
-              onWordReplace={handleWordReplace}
-              onIssueClick={handleIssueClick}
-              text={text}
-              onClear={handleClearText}
-              onAnalyze={handleAnalyze}
-              maxLength={5000}
-              error={error}
-              validationErrors={validationErrors}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
-}
+};
+
+export default BiasDetectionApp;

@@ -1,9 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
-import { BiasDetectionApp } from './BiasDetectionApp';
-import { getSavedAnalyses, deleteAnalysis as deleteAnalysisAPI } from '@/lib/api';
+import { useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
+import BiasDetectionApp from "./BiasDetectionApp";
+import {
+  getSavedAnalyses,
+  deleteAnalysis as deleteAnalysisAPI,
+} from "@/lib/api";
 
 interface SavedAnalysis {
   id: number;
@@ -18,7 +21,7 @@ export default function Dashboard() {
   const { user, logout } = useAuth();
   const [savedAnalyses, setSavedAnalyses] = useState<SavedAnalysis[]>([]);
   const [showAnalyzer, setShowAnalyzer] = useState(false);
-  const [initialText, setInitialText] = useState<string>('');
+  const [initialText, setInitialText] = useState<string>("");
 
   useEffect(() => {
     // Load saved analyses from backend
@@ -30,7 +33,7 @@ export default function Dashboard() {
       const analyses = await getSavedAnalyses();
       setSavedAnalyses(analyses);
     } catch (error) {
-      console.error('Error loading saved analyses:', error);
+      console.error("Error loading saved analyses:", error);
     }
   };
 
@@ -38,10 +41,12 @@ export default function Dashboard() {
     try {
       const success = await deleteAnalysisAPI(id);
       if (success) {
-        setSavedAnalyses(prev => prev.filter(analysis => analysis.id !== id));
+        setSavedAnalyses((prev) =>
+          prev.filter((analysis) => analysis.id !== id)
+        );
       }
     } catch (error) {
-      console.error('Error deleting analysis:', error);
+      console.error("Error deleting analysis:", error);
     }
   };
 
@@ -51,11 +56,16 @@ export default function Dashboard() {
   };
 
   if (showAnalyzer) {
-    return <BiasDetectionApp initialText={initialText} onBack={() => {
-      setShowAnalyzer(false);
-      setInitialText('');
-      loadSavedAnalyses(); // Refresh analyses when coming back
-    }} />;
+    return (
+      <BiasDetectionApp
+        initialText={initialText}
+        onBack={() => {
+          setShowAnalyzer(false);
+          setInitialText("");
+          loadSavedAnalyses(); // Refresh analyses when coming back
+        }}
+      />
+    );
   }
 
   return (
@@ -67,25 +77,33 @@ export default function Dashboard() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                    />
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-800">
-                    HateZero
-                  </h1>
+                  <h1 className="text-2xl font-bold text-gray-800">HateZero</h1>
                   <p className="text-sm text-gray-600 font-medium">
                     AI-powered content analysis
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => (window.location.href = "/")}
                   className="text-gray-700 hover:text-gray-900 font-medium px-4 py-2 transition-colors"
                 >
                   Dashboard
@@ -122,13 +140,25 @@ export default function Dashboard() {
         {/* Saved Analyses */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Saved Analyses</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Saved Analyses
+            </h2>
           </div>
-          
+
           {savedAnalyses.length === 0 ? (
             <div className="px-6 py-12 text-center">
-              <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <svg
+                className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
               <p className="text-gray-500 mb-4">No analyses saved yet</p>
               <button
@@ -141,8 +171,8 @@ export default function Dashboard() {
           ) : (
             <div className="divide-y divide-gray-200">
               {savedAnalyses.map((analysis) => (
-                <div 
-                  key={analysis.id} 
+                <div
+                  key={analysis.id}
                   className="px-6 py-4 hover:bg-gray-50 cursor-pointer transition-colors"
                   onClick={() => handleAnalysisClick(analysis)}
                 >
@@ -152,14 +182,17 @@ export default function Dashboard() {
                         {analysis.title || `Analysis ${analysis.id}`}
                       </h3>
                       <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                        {analysis.text.length > 100 
-                          ? `${analysis.text.substring(0, 100)}...` 
-                          : analysis.text
-                        }
+                        {analysis.text.length > 100
+                          ? `${analysis.text.substring(0, 100)}...`
+                          : analysis.text}
                       </p>
                       <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span>{new Date(analysis.created_at).toLocaleDateString()}</span>
-                        <span>{new Date(analysis.created_at).toLocaleTimeString()}</span>
+                        <span>
+                          {new Date(analysis.created_at).toLocaleDateString()}
+                        </span>
+                        <span>
+                          {new Date(analysis.created_at).toLocaleTimeString()}
+                        </span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 ml-4">

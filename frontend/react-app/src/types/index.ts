@@ -1,6 +1,6 @@
 /**
  * Core Types for Hate Speech Detection App
- * 
+ *
  * These interfaces define the shape of data flowing through our application.
  * TypeScript helps us catch errors early and provides better IDE support.
  */
@@ -8,7 +8,6 @@
 // Main interface for text analysis requests
 export interface AnalysisRequest {
   text: string;
-  confidence_threshold?: number;
 }
 
 // Individual rationale token from the model
@@ -55,31 +54,78 @@ export interface SimpleAnalysisResponse {
   }>;
 }
 
-// For backwards compatibility with existing UI components
+// Bias detection types
+export interface BiasSpan {
+  text: string;
+  category: string;
+  explanation: string;
+  suggested_revision: string;
+  start_index: number;
+  end_index: number;
+}
+
+export interface BiasAnalysisResponse {
+  original_text: string;
+  bias_spans: BiasSpan[];
+  summary: {
+    total_bias_instances: number;
+    categories_detected: string[];
+    overall_assessment: string;
+    risk_level: string;
+    text_length: number;
+    bias_density: number;
+  };
+}
+
+// Legacy compatibility for existing UI components
 export interface FlaggedWord {
   word: string;
   startIndex: number;
   endIndex: number;
-  category: BiasCategory;
-  confidence: number;
-  suggestions: WordSuggestion[];
-  explanation?: string;
+  category: string;
+  confidence?: number;
+  suggestions: {
+    word: string;
+    confidence: number;
+    reason: string;
+  }[];
+  explanation: string;
 }
 
-export interface WordSuggestion {
-  word: string;
-  confidence: number;
-  reason?: string;
+export interface AnalysisResult {
+  analysisId: string;
+  timestamp: string;
+  flaggedWords: FlaggedWord[];
+  original_text: string;
+  bias_spans: BiasSpan[];
+  summary: BiasAnalysisResponse["summary"];
 }
 
-export type BiasCategory = 
-  | 'hate_speech'
-  | 'gender_bias'
-  | 'racial_bias'
-  | 'age_bias'
-  | 'disability_bias'
-  | 'religious_bias'
-  | 'general_bias';
+// Bias categories with their display colors
+export const BIAS_CATEGORIES = {
+  "Race / Ethnicity": { color: "#ff4444", lightColor: "#ffebee" },
+  "Gender / Gender Identity": { color: "#ff6b35", lightColor: "#fff3e0" },
+  Age: { color: "#ffa726", lightColor: "#fff8e1" },
+  "Religion / Belief System": { color: "#ffcc02", lightColor: "#fffde7" },
+  "Sexual Orientation": { color: "#66bb6a", lightColor: "#e8f5e8" },
+  "Socioeconomic Status": { color: "#42a5f5", lightColor: "#e3f2fd" },
+  "Nationality / Immigration Status": {
+    color: "#ab47bc",
+    lightColor: "#f3e5f5",
+  },
+  "Disability (Visible & Invisible)": {
+    color: "#ef5350",
+    lightColor: "#ffebee",
+  },
+  "Education Level": { color: "#26c6da", lightColor: "#e0f2f1" },
+  "Political Ideology": { color: "#ff7043", lightColor: "#fbe9e7" },
+  "Physical Appearance": {
+    color: "#8d6e63",
+    lightColor: "#efebe9",
+  },
+} as const;
+
+export type BiasCategory = keyof typeof BIAS_CATEGORIES;
 
 // UI State management types
 export interface AppState {
@@ -96,4 +142,4 @@ export interface TextSegment {
   isFlagged: boolean;
   clauseAnalysis?: ClauseAnalysis;
   key: string;
-} 
+}
