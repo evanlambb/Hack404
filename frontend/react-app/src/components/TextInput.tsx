@@ -211,151 +211,16 @@ export default function TextInput({
       : 'text-gray-500';
 
   return (
-    <div className={`${className}`}>
-      <div className="space-y-4">
-        <div>
-          <label 
-            htmlFor="text-input" 
-            className="block text-sm font-semibold text-gray-700 mb-3"
-          >
-            {label}
-          </label>
-          <textarea
-            id="text-input"
-            value={value}
-            onChange={handleTextChange}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            className="w-full h-96 px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none transition-all duration-200 bg-gray-50"
-            disabled={disabled || isAnalyzing}
-          />
-        </div>
-
-        {/* Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:justify-between sm:items-center">
-          {showCharacterCount && (
-            <div className={`text-sm ${characterCountColor} flex items-center gap-1`}>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              {value.length} / {maxLength} characters
-            </div>
-          )}
-          <div className="flex gap-3">
-            {showClearButton && (
-              <button
-                onClick={handleClearClick}
-                disabled={!value || isAnalyzing}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              >
-                {clearButtonText}
-              </button>
-            )}
-            {showAnalyzeButton && (
-              <button
-                onClick={handleAnalyzeClick}
-                disabled={!value.trim() || isAnalyzing || !isValid}
-                className="px-6 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              >
-                {isAnalyzing ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Analyzing...
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    {analyzeButtonText}
-                  </div>
-                )}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* External Error Display */}
-        {error && (
-          <div className="rounded-lg bg-red-50 p-4 border border-red-200">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">
-                  Error
-                </h3>
-                <div className="mt-2 text-sm text-red-700">
-                  {error}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Validation Errors Display */}
-        {validationErrors.length > 0 && validateOnChange && (
-          <div className="rounded-lg bg-amber-50 p-4 border border-amber-200">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-amber-800">
-                  Validation {validationErrors.length === 1 ? 'Error' : 'Errors'}
-                </h3>
-                <div className="mt-2">
-                  {validationErrors.map((validationError, index) => (
-                    <div key={index} className="text-sm text-amber-700">
-                      • {validationError}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Confirmation Dialog */}
-      {showConfirmDialog && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div ref={dialogRef} className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-white/20">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                Confirm Clear Text
-              </h3>
-            </div>
-            <p className="text-gray-600 mb-6">
-              You have {value.length} characters of text. Are you sure you want to clear all your text? This action cannot be undone.
-            </p>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={handleCancelClear}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmClear}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
-              >
-                Clear Text
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+    <div className={`h-full ${className}`}>
+      <textarea
+        id="text-input"
+        value={value}
+        onChange={handleTextChange}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        className="w-full h-full px-6 py-6 placeholder-gray-400 text-gray-900 focus:outline-none resize-none bg-gray-50 border-0"
+        disabled={disabled || isAnalyzing}
+      />
     </div>
   );
 } 
