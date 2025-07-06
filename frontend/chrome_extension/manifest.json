@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Hate Speech Detector",
+  "name": "HateZero",
   "version": "1.0",
-  "description": "Detects and highlights hate speech in web pages using AI",
+  "description": "Automatically removes hate speech from web pages using AI",
   "permissions": [
     "activeTab",
     "storage"
@@ -19,7 +19,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Hate Speech Detector"
+    "default_title": "HateZero"
   },
   "icons": {
     "16": "icon16.png",

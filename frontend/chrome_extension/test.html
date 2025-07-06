@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Page for Hate Speech Detector</title>
+    <title>Test Page for HateZero</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,29 +38,29 @@
     </style>
 </head>
 <body>
-    <h1>Hate Speech Detection Test Page</h1>
+    <h1>HateZero Test Page</h1>
     
     <div class="instructions">
         <h3>How to Test the Extension</h3>
-        <p><strong>New Feature:</strong> Hover over any highlighted hate speech to see both the detailed information tooltip AND an <strong>X</strong> button to remove the content!</p>
+        <p><strong>Two Modes:</strong> Toggle "Auto-Remove" to automatically remove detected content, or use manual mode to review and click to remove!</p>
         <ol>
             <li>Load the extension in your browser</li>
             <li>Wait for the page to be scanned</li>
             <li>Look for highlighted text (red border with pulsing animation)</li>
-            <li><strong>Hover</strong> over highlighted text to see:
+            <li><strong>Auto-Remove Mode:</strong> Content is automatically removed with particle effects</li>
+            <li><strong>Manual Mode:</strong> 
                 <ul>
-                    <li>Informational tooltip showing confidence level and AI justification</li>
-                    <li>Gray X button in the top-right corner</li>
+                    <li>Hover over highlighted text to see confidence level and AI justification</li>
+                    <li>Click anywhere on highlighted text to remove it</li>
                 </ul>
             </li>
-            <li><strong>Click the X</strong> to immediately remove the content (no confirmation needed)</li>
-            <li>Removed content will be replaced with "[Content Removed]" text</li>
+            <li>Removed content disappears with visual effects</li>
         </ol>
     </div>
     
     <div class="test-section">
         <h2>Normal Content</h2>
-        <p>This is a normal paragraph with neutral content, which is kind of gay like a woman, which is kind of gay, like a woman, faggot behaviour bro. It contains no offensive language and should not be highlighted by the hate speech detector.</p>
+        <p>This is a normal paragraph with neutral content. It contains no offensive language and should not be flagged by HateZero.</p>
         
         <p>Here's another paragraph discussing technology. Modern web browsers support many advanced features that make browsing more secure and efficient.</p>
         
@@ -70,7 +70,7 @@
     
     <div class="test-section">
         <h2>Potentially Problematic Content</h2>
-        <p>This paragraph contains some potentially problematic language that might be flagged by hate speech detection systems, depending on the sensitivity settings.</p>
+        <p>This paragraph contains some potentially problematic language that might be flagged by HateZero systems, depending on the sensitivity settings.</p>
         
         <p>Testing content with various types of language to see how the AI model responds to different contexts and phrases.</p>
     </div>
@@ -126,7 +126,7 @@
         function addDynamicContent() {
             const container = document.getElementById('dynamic-content');
             const newParagraph = document.createElement('p');
-            newParagraph.textContent = 'This is dynamically added content that should also be scanned for hate speech by the extension.';
+            newParagraph.textContent = 'This is dynamically added content that should also be scanned by HateZero.';
             container.appendChild(newParagraph);
         }
     </script>

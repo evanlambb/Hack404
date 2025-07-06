@@ -4,14 +4,16 @@ class HateSpeechDetector {
         this.apiUrl = 'http://localhost:8000/analyze-simple';
         this.isEnabled = true;
         this.confidenceThreshold = 0.6;
+        this.autoRemove = true;
         this.init();
     }
 
     async init() {
         // Load settings from storage
-        const result = await chrome.storage.sync.get(['isEnabled', 'confidenceThreshold']);
+        const result = await chrome.storage.sync.get(['isEnabled', 'confidenceThreshold', 'autoRemove']);
         this.isEnabled = result.isEnabled !== false; // Default to true
         this.confidenceThreshold = result.confidenceThreshold || 0.6;
+        this.autoRemove = result.autoRemove !== false; // Default to true
 
         if (this.isEnabled) {
             this.scanPage();
@@ -23,6 +25,12 @@ class HateSpeechDetector {
                 this.toggleDetection();
             } else if (request.action === 'updateThreshold') {
                 this.confidenceThreshold = request.threshold;
+                this.scanPage();
+            } else if (request.action === 'updateAutoRemove') {
+                this.autoRemove = request.autoRemove;
+                // Save the setting
+                chrome.storage.sync.set({ autoRemove: request.autoRemove });
+                // Re-scan page to apply new auto-remove setting
                 this.scanPage();
             }
         });
@@ -159,6 +167,49 @@ class HateSpeechDetector {
     }
 
     highlightHateSpeech(element, hateSpeechClauses) {
+        if (this.autoRemove) {
+            // Auto-remove mode: directly remove hate speech content
+            this.autoRemoveHateSpeech(element, hateSpeechClauses);
+        } else {
+            // Highlight mode: highlight for manual removal
+            this.highlightForManualRemoval(element, hateSpeechClauses);
+        }
+    }
+
+    autoRemoveHateSpeech(element, hateSpeechClauses) {
+        let originalText = element.textContent;
+        let cleanedText = originalText;
+
+        // Sort clauses by length (longest first) to avoid partial replacements
+        hateSpeechClauses.sort((a, b) => b.text.length - a.text.length);
+
+        for (const clause of hateSpeechClauses) {
+            const clauseText = clause.text.trim();
+            const regex = new RegExp(this.escapeRegExp(clauseText), 'gi');
+            cleanedText = cleanedText.replace(regex, '');
+        }
+
+        // Clean up extra whitespace
+        cleanedText = cleanedText.replace(/\s+/g, ' ').trim();
+
+        // Only update if content was removed
+        if (cleanedText !== originalText) {
+            // Create particle effect at element position before removing
+            const rect = element.getBoundingClientRect();
+            this.createParticleExplosion(rect);
+            
+            // Update element content
+            element.textContent = cleanedText;
+            element.classList.add('hate-speech-scanned');
+            
+            // If element is now empty or just whitespace, hide it
+            if (!cleanedText || cleanedText.length < 3) {
+                element.style.display = 'none';
+            }
+        }
+    }
+
+    highlightForManualRemoval(element, hateSpeechClauses) {
         let originalText = element.textContent;
         let highlightedHTML = originalText;
 

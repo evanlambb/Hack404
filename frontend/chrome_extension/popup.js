@@ -1,6 +1,7 @@
 // Popup script for the Chrome extension
 document.addEventListener('DOMContentLoaded', async () => {
     const toggleSwitch = document.getElementById('toggleSwitch');
+    const autoRemoveToggle = document.getElementById('autoRemoveToggle');
     const thresholdSlider = document.getElementById('thresholdSlider');
     const thresholdValue = document.getElementById('thresholdValue');
     const statusIndicator = document.getElementById('statusIndicator');
@@ -8,12 +9,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const rescanBtn = document.getElementById('rescanBtn');
 
     // Load current settings
-    const result = await chrome.storage.sync.get(['isEnabled', 'confidenceThreshold']);
+    const result = await chrome.storage.sync.get(['isEnabled', 'confidenceThreshold', 'autoRemove']);
     const isEnabled = result.isEnabled !== false; // Default to true
     const confidenceThreshold = result.confidenceThreshold || 0.6;
+    const autoRemove = result.autoRemove !== false; // Default to true
 
     // Update UI with current settings
     updateToggleSwitch(isEnabled);
+    updateAutoRemoveToggle(autoRemove);
     thresholdSlider.value = confidenceThreshold;
     updateThresholdDisplay(confidenceThreshold);
     updateStatus(isEnabled);
@@ -29,6 +32,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             chrome.tabs.sendMessage(tab.id, { action: 'toggle' });
+        } catch (error) {
+            console.error('Error sending message to content script:', error);
+        }
+    });
+
+    // Auto-remove toggle event
+    autoRemoveToggle.addEventListener('click', async () => {
+        const newState = !autoRemoveToggle.classList.contains('active');
+        updateAutoRemoveToggle(newState);
+        await chrome.storage.sync.set({ autoRemove: newState });
+        
+        // Send message to content script
+        try {
+            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            chrome.tabs.sendMessage(tab.id, { 
+                action: 'updateAutoRemove', 
+                autoRemove: newState 
+            });
         } catch (error) {
             console.error('Error sending message to content script:', error);
         }
@@ -84,6 +105,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function updateAutoRemoveToggle(enabled) {
+        if (enabled) {
+            autoRemoveToggle.classList.add('active');
+        } else {
+            autoRemoveToggle.classList.remove('active');
+        }
+    }
+
     function updateThresholdDisplay(threshold) {
         thresholdValue.textContent = `${Math.round(threshold * 100)}%`;
     }
@@ -92,11 +121,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (enabled) {
             statusIndicator.classList.remove('inactive');
             statusIndicator.classList.add('active');
-            statusText.textContent = 'Detection Active';
+            statusText.textContent = 'Filtering Active';
         } else {
             statusIndicator.classList.remove('active');
             statusIndicator.classList.add('inactive');
-            statusText.textContent = 'Detection Disabled';
+            statusText.textContent = 'Filtering Disabled';
         }
     }
 
@@ -105,12 +134,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('http://localhost:8000/', { method: 'GET' });
         if (response.ok) {
             // API is accessible
-            console.log('Hate Speech API is accessible');
+            console.log('HateZero API is accessible');
         } else {
             statusText.textContent = 'API Connection Issue';
         }
     } catch (error) {
         statusText.textContent = 'API Offline';
-        console.error('Cannot connect to hate speech API:', error);
+        console.error('Cannot connect to HateZero API:', error);
     }
 });
