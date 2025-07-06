@@ -72,6 +72,10 @@ export interface BiasAnalysisResponse {
     categories_detected: string[];
     overall_assessment: string;
     risk_level: string;
+    strongest_bias_category: string | null;
+    strongest_bias_severity: string | null;
+    strongest_bias_examples?: string[];
+    severity_score?: number;
     text_length: number;
     bias_density: number;
   };

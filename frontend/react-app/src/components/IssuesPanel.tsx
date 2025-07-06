@@ -36,43 +36,84 @@ export function IssuesPanel({
         {analysisResult && (
           <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-4">
             <div className="space-y-3">
+              {/* Strongest Classification - Primary Focus */}
+              {analysisResult.summary?.strongest_bias_category && (
+                <div className="bg-white rounded-lg p-4 border-2 border-red-300">
+                  <div className="text-center">
+                    <div className="text-xs font-medium text-gray-600 mb-1">
+                      STRONGEST CLASSIFICATION
+                    </div>
+                    <div className="text-lg font-bold text-red-700 mb-1">
+                      {analysisResult.summary.strongest_bias_category}
+                    </div>
+                    <div className="text-sm font-semibold mb-2" style={{
+                      color: analysisResult.summary.risk_level === 'Critical' ? '#dc2626' :
+                             analysisResult.summary.risk_level === 'High' ? '#ea580c' :
+                             analysisResult.summary.risk_level === 'Medium' ? '#d97706' :
+                             '#059669'
+                    }}>
+                      {analysisResult.summary.strongest_bias_severity || analysisResult.summary.risk_level}
+                    </div>
+                    {analysisResult.summary.strongest_bias_examples && 
+                     analysisResult.summary.strongest_bias_examples.length > 0 && (
+                      <div className="text-xs text-gray-600 mt-2">
+                        Example: "{analysisResult.summary.strongest_bias_examples[0]}"
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Summary Stats */}
               <div className="bg-white rounded-lg p-3 border border-gray-200">
                 <div className="text-center">
                   <div className="text-lg font-bold text-red-600">
-                    Issues:{" "}
+                    Total Issues:{" "}
                     {analysisResult.summary?.total_bias_instances ||
                       analysisResult.bias_spans?.length ||
                       0}
                   </div>
                   <div className="text-sm text-gray-600 mt-1">
                     {analysisResult.summary?.categories_detected?.length || 0}{" "}
-                    categories detected
+                    {(analysisResult.summary?.categories_detected?.length || 0) === 1 
+                      ? 'category' : 'categories'} detected
                   </div>
+                  {analysisResult.summary?.overall_assessment && (
+                    <div className="text-xs text-gray-500 mt-2 font-medium">
+                      {analysisResult.summary.overall_assessment}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Categories detected */}
+              {/* All Categories detected */}
               {analysisResult.summary?.categories_detected &&
-                analysisResult.summary.categories_detected.length > 0 && (
+                analysisResult.summary.categories_detected.length > 1 && (
                   <div className="bg-white rounded-lg p-3 border border-gray-200">
                     <div className="text-sm font-medium text-gray-700 mb-2">
-                      Categories Found:
+                      All Categories Found:
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {analysisResult.summary.categories_detected.map(
                         (category, index) => {
                           const colors = getBiasCategoryColor(category);
+                          const isStrongest = category === analysisResult.summary?.strongest_bias_category;
                           return (
                             <span
                               key={index}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                isStrongest ? 'ring-2 ring-red-400' : ''
+                              }`}
                               style={{
-                                backgroundColor: colors.lightColor,
-                                color: colors.color,
+                                backgroundColor: isStrongest ? colors.color : colors.lightColor,
+                                color: isStrongest ? 'white' : colors.color,
                                 border: `1px solid ${colors.color}30`,
                               }}
                             >
                               {category}
+                              {isStrongest && (
+                                <span className="ml-1 text-xs">👑</span>
+                              )}
                             </span>
                           );
                         }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { BiasAnalysisResponse, BiasSpan, AnalysisRequest } from "@/types";
+import { BiasAnalysisResponse, BiasSpan } from "@/types";
 import { analyzeText } from "@/lib/api";
 import TextInput, { FlaggedWord } from "@/components/TextInput";
 import { IssuesPanel } from "@/components/IssuesPanel";
@@ -64,11 +64,8 @@ const BiasDetectionApp: React.FC<BiasDetectionAppProps> = ({
     setShowAnalysisOutput(true);
 
     try {
-      const request: AnalysisRequest = {
-        text: inputText.trim(),
-      };
-
-      const response = await analyzeText(request);
+      // Use the new simplified API that accepts text directly
+      const response = await analyzeText(inputText.trim());
       setAnalysisResults(response);
       setAnalysisText(inputText); // Set the text that was analyzed
 

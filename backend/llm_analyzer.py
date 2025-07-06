@@ -30,26 +30,29 @@ class BiasAnalysisResponse(BaseModel):
 
 
 class LLMBiasAnalyzer:
-    def __init__(self):
+    def __init__(self, temperature: float = 0.3):
+        """Initialize the bias analyzer with configurable temperature"""
+        load_dotenv()
+        
+        # Initialize Claude client
         self.client = anthropic.Anthropic(
             api_key=os.getenv("ANTHROPIC_API_KEY"))
         # Using the latest Claude 3.5 Sonnet model
-        self.model = "claude-sonnet-4-20250514"
+        self.model = "claude-3-5-sonnet-20241022"
+        
+        # Store temperature for API calls
+        self.temperature = temperature
 
         # Define bias categories for validation
-        self.bias_categories = [
-            "Race / Ethnicity",
-            "Gender / Gender Identity",
-            "Age",
-            "Religion / Belief System",
-            "Sexual Orientation",
-            "Socioeconomic Status",
-            "Nationality / Immigration Status",
-            "Disability",
-            "Education Level",
-            "Political Ideology",
-            "Physical Appearance"
-        ]
+        self.bias_categories = {
+            "Race/Ethnicity", "Gender", "Religion", "Sexual Orientation",
+            "Age", "Disability", "Economic Status", "Political Affiliation",
+            "Nationality", "Physical Appearance", "Other"
+        }
+
+    def set_temperature(self, temperature: float):
+        """Update the temperature for API calls"""
+        self.temperature = max(0.0, min(1.0, temperature))  # Clamp between 0 and 1
 
     def get_analysis_prompt(self, text: str) -> str:
         """Generate the structured prompt for bias analysis"""
@@ -177,7 +180,7 @@ Return ONLY the JSON response, no additional text or formatting."""
             response = self.client.messages.create(
                 model=self.model,
                 max_tokens=2000,
-                temperature=0.3,
+                temperature=self.temperature,
                 system="You are a bias detection expert. Always return valid JSON as specified in the user's request.",
                 messages=[
                     {"role": "user", "content": prompt}

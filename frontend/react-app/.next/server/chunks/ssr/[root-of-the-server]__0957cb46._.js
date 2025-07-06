@@ -545,28 +545,24 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$types$2f$index$2e$ts_
 ;
 // Base URL for the backend API
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-async function analyzeText(request) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/analyze`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                text: request.text
-            })
-        });
-        if (!response.ok) {
-            const errorData = await response.json().catch(()=>({}));
-            throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error analyzing text:", error);
-        throw error instanceof Error ? error : new Error("Failed to analyze text");
+const analyzeText = async (text, temperature)=>{
+    const response = await fetch(`${API_BASE_URL}/analyze`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            text,
+            ...temperature !== undefined && {
+                temperature
+            }
+        })
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
-}
+    return response.json();
+};
 function convertBiasSpansToFlaggedWords(biasSpans, originalText) {
     const flaggedWords = [];
     biasSpans.forEach((span)=>{
@@ -2188,10 +2184,8 @@ const BiasDetectionApp = ({ initialText = "", onBack })=>{
         setError(null);
         setShowAnalysisOutput(true);
         try {
-            const request = {
-                text: inputText.trim()
-            };
-            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["analyzeText"])(request);
+            // Use the new simplified API that accepts text directly
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["analyzeText"])(inputText.trim());
             setAnalysisResults(response);
             setAnalysisText(inputText); // Set the text that was analyzed
             if (response.bias_spans && response.bias_spans.length > 0) {
@@ -2247,7 +2241,7 @@ const BiasDetectionApp = ({ initialText = "", onBack })=>{
                                             children: "BiasGuard"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 120,
+                                            lineNumber: 117,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2255,13 +2249,13 @@ const BiasDetectionApp = ({ initialText = "", onBack })=>{
                                             children: "Detect and understand potential bias in your text"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 121,
+                                            lineNumber: 118,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 119,
+                                    lineNumber: 116,
                                     columnNumber: 15
                                 }, this),
                                 onBack && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2279,28 +2273,28 @@ const BiasDetectionApp = ({ initialText = "", onBack })=>{
                                             d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 136,
+                                            lineNumber: 133,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                        lineNumber: 130,
+                                        lineNumber: 127,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 126,
+                                    lineNumber: 123,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                            lineNumber: 118,
+                            lineNumber: 115,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 117,
+                        lineNumber: 114,
                         columnNumber: 11
                     }, this),
                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2320,17 +2314,17 @@ const BiasDetectionApp = ({ initialText = "", onBack })=>{
                                             clipRule: "evenodd"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                            lineNumber: 158,
+                                            lineNumber: 155,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                        lineNumber: 153,
+                                        lineNumber: 150,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 152,
+                                    lineNumber: 149,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2340,23 +2334,23 @@ const BiasDetectionApp = ({ initialText = "", onBack })=>{
                                         children: error
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                        lineNumber: 166,
+                                        lineNumber: 163,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 165,
+                                    lineNumber: 162,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                            lineNumber: 151,
+                            lineNumber: 148,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 150,
+                        lineNumber: 147,
                         columnNumber: 13
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2386,38 +2380,38 @@ const BiasDetectionApp = ({ initialText = "", onBack })=>{
                                     analysisResults: analysisResults
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                    lineNumber: 177,
+                                    lineNumber: 174,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 176,
+                                lineNumber: 173,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                            lineNumber: 175,
+                            lineNumber: 172,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 173,
+                        lineNumber: 170,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 115,
+                lineNumber: 112,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-            lineNumber: 114,
+            lineNumber: 111,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-        lineNumber: 113,
+        lineNumber: 110,
         columnNumber: 5
     }, this);
 };

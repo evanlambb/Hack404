@@ -98,6 +98,7 @@ class SaveAnalysisRequest(BaseModel):
 
 class TextInput(BaseModel):
     text: str
+    temperature: Optional[float] = None  # Optional per-request temperature
 
 
 # Authentication helpers
@@ -199,8 +200,10 @@ async def startup_event():
                 "Database initialization failed - some endpoints may not work")
 
         logger.info("Initializing LLM bias analyzer...")
-        analyzer = LLMBiasAnalyzer()
-        logger.info("Bias analyzer initialized successfully!")
+        # Get temperature from environment variable, default to 0.3
+        default_temperature = float(os.getenv("LLM_TEMPERATURE", "0.3"))
+        analyzer = LLMBiasAnalyzer(temperature=default_temperature)
+        logger.info(f"Bias analyzer initialized successfully with temperature: {default_temperature}")
     except Exception as e:
         logger.error(f"Failed to initialize services: {e}")
         raise RuntimeError(f"Failed to initialize services: {e}")
@@ -294,7 +297,7 @@ async def root():
 
 @app.post("/analyze", response_model=BiasAnalysisResponse)
 async def analyze_text_for_bias(input_data: TextInput):
-    """Analyze text for bias using LLM"""
+    """Analyze text for bias using LLM with optional temperature configuration"""
     if not analyzer:
         raise HTTPException(
             status_code=500, detail="Bias analyzer not initialized")
@@ -304,10 +307,28 @@ async def analyze_text_for_bias(input_data: TextInput):
         if not text:
             raise HTTPException(status_code=400, detail="Text cannot be empty")
 
-        # Analyze text using LLM
-        result = await analyzer.analyze_text(text)
-        return result
+        # Store original temperature
+        original_temperature = analyzer.temperature
+        
+        # Use per-request temperature if provided
+        if input_data.temperature is not None:
+            if not (0.0 <= input_data.temperature <= 1.0):
+                raise HTTPException(
+                    status_code=400, 
+                    detail="Temperature must be between 0.0 and 1.0"
+                )
+            analyzer.set_temperature(input_data.temperature)
 
+        try:
+            # Analyze text using LLM
+            result = await analyzer.analyze_text(text)
+            return result
+        finally:
+            # Restore original temperature
+            analyzer.set_temperature(original_temperature)
+
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error during bias analysis: {e}")
         raise HTTPException(

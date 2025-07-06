@@ -14,34 +14,24 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
  * @param request - The analysis request containing text
  * @returns Promise<BiasAnalysisResponse> - The bias analysis results
  */
-export async function analyzeText(
-  request: AnalysisRequest
-): Promise<BiasAnalysisResponse> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/analyze`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: request.text,
-      }),
-    });
+export const analyzeText = async (text: string, temperature?: number): Promise<BiasAnalysisResponse> => {
+  const response = await fetch(`${API_BASE_URL}/analyze`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ 
+      text,
+      ...(temperature !== undefined && { temperature })
+    }),
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.detail || `HTTP error! status: ${response.status}`
-      );
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error analyzing text:", error);
-    throw error instanceof Error ? error : new Error("Failed to analyze text");
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-}
+
+  return response.json();
+};
 
 /**
  * Converts bias spans to flagged words format for backward compatibility
