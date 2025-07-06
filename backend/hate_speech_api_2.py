@@ -2,32 +2,29 @@ from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr
+import torch
+import torch.nn.functional as F
+from transformers import AutoTokenizer
+import re
+import nltk
 from typing import List, Dict, Any, Optional
 import logging
 import os
+import sys
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 import hashlib
 import secrets
 import json
-import torch
-import torch.nn.functional as F
-from transformers import AutoTokenizer
-import re
-import nltk
-import sys
 
-# Import the new LLM analyzer
-from llm_analyzer import LLMBiasAnalyzer, BiasAnalysisResponse, BiasSpan
-
-# Import the BERT model for hate speech detection
+# Import the model
 current_dir = os.path.dirname(os.path.abspath(__file__))
 models_dir = os.path.join(current_dir, 'bert-base-uncased-hatexplain-rationale-two')
 sys.path.append(models_dir)
 from models import Model_Rational_Label
 
-# Setup NLTK data for hate speech detection
+# Setup NLTK data
 for dataset in ['punkt', 'punkt_tab']:
     try:
         nltk.data.find(f'tokenizers/{dataset}')
@@ -39,9 +36,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="Bias Detection API",
-    description="API for detecting bias in text with LLM-powered analysis",
-    version="2.0.0"
+    title="Hate Speech Detection API",
+    description="API for detecting hate speech in text with clause-level analysis and rationales",
+    version="1.0.0"
 )
 
 app.add_middleware(
@@ -56,16 +53,13 @@ app.add_middleware(
 load_dotenv()
 
 # Database setup
-
-
 def get_db_connection():
     """Get database connection"""
     try:
         db_url = os.getenv("SUPABASE_DATABASE_URL")
         if not db_url:
-            raise Exception(
-                "SUPABASE_DATABASE_URL environment variable not set")
-
+            raise Exception("SUPABASE_DATABASE_URL environment variable not set")
+        
         logger.info(f"Attempting to connect to database...")
         conn = psycopg2.connect(
             db_url,
@@ -78,18 +72,14 @@ def get_db_connection():
         raise e  # Let caller handle the exception
 
 # Authentication models
-
-
 class UserSignup(BaseModel):
     email: str
     password: str
     name: str
 
-
 class UserLogin(BaseModel):
     email: str
     password: str
-
 
 class AuthResponse(BaseModel):
     success: bool
@@ -98,8 +88,6 @@ class AuthResponse(BaseModel):
     token: Optional[str] = None
 
 # Analysis models
-
-
 class SavedAnalysis(BaseModel):
     id: Optional[int] = None
     user_id: int
@@ -108,31 +96,21 @@ class SavedAnalysis(BaseModel):
     title: Optional[str] = None
     created_at: Optional[str] = None
 
-
 class SaveAnalysisRequest(BaseModel):
     text: str
     result: Dict[str, Any]
     title: Optional[str] = None
 
-
-class TextInput(BaseModel):
-    text: str
-    confidence_threshold: float = 0.6
-
-
 # Authentication helpers
 security = HTTPBearer()
-
 
 def hash_password(password: str) -> str:
     """Simple password hashing"""
     return hashlib.sha256(password.encode()).hexdigest()
 
-
 def generate_token() -> str:
     """Generate a simple token"""
     return secrets.token_urlsafe(32)
-
 
 def create_user_table():
     """Create users table if it doesn't exist"""
@@ -158,7 +136,6 @@ def create_user_table():
         logger.error(f"Failed to create users table: {e}")
         return False
 
-
 def create_analyses_table():
     """Create analyses table if it doesn't exist"""
     try:
@@ -183,14 +160,12 @@ def create_analyses_table():
         logger.error(f"Failed to create analyses table: {e}")
         return False
 
-
 def get_user_from_token(token: str) -> Optional[Dict]:
     """Get user information from token"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            "SELECT id, email, name FROM users WHERE token = %s", (token,))
+        cursor.execute("SELECT id, email, name FROM users WHERE token = %s", (token,))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
@@ -199,8 +174,7 @@ def get_user_from_token(token: str) -> Optional[Dict]:
         logger.error(f"Error getting user from token: {e}")
         return None
 
-
-# Hate speech analysis helpers
+# Analysis helpers
 def split_text_into_clauses(text: str) -> List[str]:
     """Split text into sentences and clauses for analysis"""
     sentences = nltk.sent_tokenize(text)
@@ -224,25 +198,13 @@ def split_text_into_clauses(text: str) -> List[str]:
     
     return [clause for clause in clauses if len(clause.split()) >= 3]
 
-
-def analyze_clause_for_hate_speech(clause: str, confidence_threshold: float = 0.6) -> Dict[str, Any]:
+def analyze_clause_for_hate_speech(clause: str) -> Dict[str, Any]:
     """Analyze a single clause for hate speech"""
-    global hate_speech_tokenizer, hate_speech_model
-    
-    if not hate_speech_tokenizer or not hate_speech_model:
-        return {
-            'clause': clause,
-            'is_hate_speech': False,
-            'confidence': 0.0,
-            'hate_speech_probability': 0.0,
-            'justification': "Hate speech model not loaded"
-        }
-    
     try:
-        inputs = hate_speech_tokenizer(clause, return_tensors="pt", truncation=True, max_length=512)
+        inputs = tokenizer(clause, return_tensors="pt", truncation=True, max_length=512)
         
         with torch.no_grad():
-            classification_logits, token_logits = hate_speech_model(
+            classification_logits, token_logits = model(
                 input_ids=inputs['input_ids'], 
                 attention_mask=inputs['attention_mask']
             )
@@ -252,18 +214,38 @@ def analyze_clause_for_hate_speech(clause: str, confidence_threshold: float = 0.
         confidence = classification_probs[0][predicted_class].item()
         hate_speech_probability = classification_probs[0][1].item()
         
-        is_hate_speech = predicted_class.item() == 1 and hate_speech_probability >= confidence_threshold
+        token_probs = F.softmax(token_logits, dim=-1)
+        tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
         
-        justification = generate_hate_speech_justification(
-            clause, is_hate_speech, confidence
+        rationale_tokens = []
+        significant_tokens = []
+        
+        for token, token_prob in zip(tokens, token_probs[0]):
+            if token not in ['[CLS]', '[SEP]', '[PAD]']:
+                rationale_prob = token_prob[1].item()
+                is_rationale = rationale_prob > 0.1
+                
+                rationale_tokens.append({
+                    'token': token.replace('##', ''),
+                    'is_rationale': is_rationale,
+                    'confidence': rationale_prob
+                })
+                
+                if is_rationale:
+                    significant_tokens.append(token.replace('##', ''))
+        
+        justification = generate_justification(
+            clause, predicted_class.item() == 1, confidence, significant_tokens
         )
         
         return {
             'clause': clause,
-            'is_hate_speech': is_hate_speech,
+            'is_hate_speech': predicted_class.item() == 1,
             'confidence': confidence,
             'hate_speech_probability': hate_speech_probability,
-            'justification': justification
+            'rationale_tokens': rationale_tokens,
+            'justification': justification,
+            'significant_tokens': significant_tokens
         }
         
     except Exception as e:
@@ -273,12 +255,13 @@ def analyze_clause_for_hate_speech(clause: str, confidence_threshold: float = 0.
             'is_hate_speech': False,
             'confidence': 0.0,
             'hate_speech_probability': 0.0,
-            'justification': f"Error during analysis: {str(e)}"
+            'rationale_tokens': [],
+            'justification': f"Error during analysis: {str(e)}",
+            'significant_tokens': []
         }
 
-
-def generate_hate_speech_justification(clause: str, is_hate_speech: bool, confidence: float) -> str:
-    """Generate a human-readable justification for the hate speech prediction"""
+def generate_justification(clause: str, is_hate_speech: bool, confidence: float, significant_tokens: List[str]) -> str:
+    """Generate a human-readable justification for the prediction"""
     if not is_hate_speech:
         if confidence > 0.9:
             return "This text appears to be neutral or positive with no indicators of hate speech."
@@ -314,17 +297,32 @@ def generate_hate_speech_justification(clause: str, is_hate_speech: bool, confid
     
     return " ".join(justifications)
 
+# Global model variables
+tokenizer = None
+model = None
 
-# Global analyzer instances
-analyzer = None
-hate_speech_tokenizer = None
-hate_speech_model = None
+class TextInput(BaseModel):
+    text: str
+    confidence_threshold: float = 0.6
 
+class ClauseAnalysis(BaseModel):
+    clause: str
+    is_hate_speech: bool
+    confidence: float
+    hate_speech_probability: float
+    rationale_tokens: List[Dict[str, Any]]
+    justification: str
+
+class AnalysisResponse(BaseModel):
+    original_text: str
+    total_clauses: int
+    hate_speech_clauses: List[ClauseAnalysis]
+    summary: Dict[str, Any]
 
 @app.on_event("startup")
-async def startup_event():
-    """Initialize services on startup"""
-    global analyzer, hate_speech_tokenizer, hate_speech_model
+async def load_model():
+    """Load the model and tokenizer on startup"""
+    global tokenizer, model
     try:
         logger.info("Creating database tables...")
         user_table_status = create_user_table()
@@ -332,65 +330,56 @@ async def startup_event():
         if user_table_status and analyses_table_status:
             logger.info("Database initialization successful")
         else:
-            logger.warning(
-                "Database initialization failed - some endpoints may not work")
-
-        logger.info("Initializing LLM bias analyzer...")
-        analyzer = LLMBiasAnalyzer()
-        logger.info("Bias analyzer initialized successfully!")
+            logger.warning("Database initialization failed - some endpoints may not work")
         
-        logger.info("Loading hate speech detection model...")
-        hate_speech_tokenizer = AutoTokenizer.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
-        hate_speech_model = Model_Rational_Label.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
-        hate_speech_model.eval()
-        logger.info("Hate speech model loaded successfully!")
+        logger.info("Loading tokenizer and model...")
+        tokenizer = AutoTokenizer.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
+        model = Model_Rational_Label.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
+        model.eval()
+        logger.info("Model loaded successfully!")
     except Exception as e:
-        logger.error(f"Failed to initialize services: {e}")
-        raise RuntimeError(f"Failed to initialize services: {e}")
+        logger.error(f"Failed to load model: {e}")
+        raise RuntimeError(f"Failed to load model: {e}")
 
 # Authentication endpoints
-
-
 @app.post("/signup", response_model=AuthResponse)
 async def signup(user_data: UserSignup):
     """Sign up a new user"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
+        
         # Check if user already exists
-        cursor.execute("SELECT id FROM users WHERE email = %s",
-                       (user_data.email,))
+        cursor.execute("SELECT id FROM users WHERE email = %s", (user_data.email,))
         if cursor.fetchone():
             cursor.close()
             conn.close()
             return AuthResponse(success=False, message="User already exists")
-
+        
         # Create new user
         password_hash = hash_password(user_data.password)
         token = generate_token()
-
+        
         cursor.execute("""
             INSERT INTO users (email, name, password_hash, token)
             VALUES (%s, %s, %s, %s) RETURNING id
         """, (user_data.email, user_data.name, password_hash, token))
-
+        
         user_id = cursor.fetchone()['id']
         conn.commit()
         cursor.close()
         conn.close()
-
+        
         return AuthResponse(
             success=True,
             message="User created successfully",
             user_id=user_id,
             token=token
         )
-
+        
     except Exception as e:
         logger.error(f"Signup error: {e}")
         return AuthResponse(success=False, message="Database connection failed - signup unavailable")
-
 
 @app.post("/login", response_model=AuthResponse)
 async def login(user_data: UserLogin):
@@ -398,18 +387,18 @@ async def login(user_data: UserLogin):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
+        
         # Check user credentials
         password_hash = hash_password(user_data.password)
         cursor.execute("""
             SELECT id, token FROM users 
             WHERE email = %s AND password_hash = %s
         """, (user_data.email, password_hash))
-
+        
         user = cursor.fetchone()
         cursor.close()
         conn.close()
-
+        
         if user:
             return AuthResponse(
                 success=True,
@@ -419,105 +408,44 @@ async def login(user_data: UserLogin):
             )
         else:
             return AuthResponse(success=False, message="Invalid credentials")
-
+            
     except Exception as e:
         logger.error(f"Login error: {e}")
         return AuthResponse(success=False, message="Database connection failed - login unavailable")
 
-
 @app.get("/")
 async def root():
     """Health check endpoint"""
-    global hate_speech_model, hate_speech_tokenizer
     return {
-        "message": "Bias Detection API is running",
+        "message": "Hate Speech Detection API is running",
         "status": "healthy",
-        "analyzer_loaded": analyzer is not None,
-        "hate_speech_model_loaded": hate_speech_model is not None and hate_speech_tokenizer is not None
+        "model_loaded": model is not None
     }
 
-
-@app.post("/analyze", response_model=BiasAnalysisResponse)
-async def analyze_text_for_bias(input_data: TextInput):
-    """Analyze text for bias using LLM"""
-    if not analyzer:
-        raise HTTPException(
-            status_code=500, detail="Bias analyzer not initialized")
-
-    try:
-        text = input_data.text.strip()
-        if not text:
-            raise HTTPException(status_code=400, detail="Text cannot be empty")
-
-        # Analyze text using LLM
-        result = await analyzer.analyze_text(text)
-        return result
-
-    except Exception as e:
-        logger.error(f"Error during bias analysis: {e}")
-        raise HTTPException(
-            status_code=500, detail=f"Bias analysis failed: {str(e)}")
-
-
-@app.post("/analyze-simple")
-async def analyze_simple(input_data: TextInput):
-    """Simplified endpoint that returns bias spans in a simplified format"""
-    try:
-        result = await analyze_text_for_bias(input_data)
-
-        return {
-            "bias_detected": len(result.bias_spans) > 0,
-            "bias_spans": [
-                {
-                    "text": span.text,
-                    "category": span.category,
-                    "explanation": span.explanation,
-                    "suggested_revision": span.suggested_revision
-                }
-                for span in result.bias_spans
-            ],
-            "summary": result.summary
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/analyze-hate-speech")
-async def analyze_hate_speech(input_data: TextInput):
-    """Analyze text for hate speech using BERT model - compatible with Chrome extension"""
-    global hate_speech_tokenizer, hate_speech_model
+@app.post("/analyze", response_model=AnalysisResponse)
+async def analyze_text_for_hate_speech(input_data: TextInput):
+    """Analyze text for hate speech by splitting into clauses and analyzing each one"""
+    if not model or not tokenizer:
+        raise HTTPException(status_code=500, detail="Model not loaded")
     
-    if not hate_speech_tokenizer or not hate_speech_model:
-        raise HTTPException(
-            status_code=500, detail="Hate speech model not initialized")
-
     try:
         text = input_data.text.strip()
         if not text:
             raise HTTPException(status_code=400, detail="Text cannot be empty")
-
-        # Get confidence threshold from input, default to 0.6
-        confidence_threshold = getattr(input_data, 'confidence_threshold', 0.6)
         
-        # Split text into clauses for analysis
         clauses = split_text_into_clauses(text)
         if not clauses:
             clauses = [text]
-
+        
         hate_speech_clauses = []
-
+        
         for clause in clauses:
-            analysis = analyze_clause_for_hate_speech(clause, confidence_threshold)
+            analysis = analyze_clause_for_hate_speech(clause)
             
-            if analysis['is_hate_speech']:
-                hate_speech_clauses.append({
-                    "text": analysis['clause'],
-                    "confidence": analysis['confidence'],
-                    "justification": analysis['justification']
-                })
-
-        # Generate summary
+            if (analysis['is_hate_speech'] and 
+                analysis['hate_speech_probability'] >= input_data.confidence_threshold):
+                hate_speech_clauses.append(ClauseAnalysis(**analysis))
+        
         total_clauses = len(clauses)
         hate_speech_count = len(hate_speech_clauses)
         
@@ -525,7 +453,7 @@ async def analyze_hate_speech(input_data: TextInput):
             "total_clauses_analyzed": total_clauses,
             "hate_speech_clauses_found": hate_speech_count,
             "hate_speech_percentage": (hate_speech_count / total_clauses * 100) if total_clauses > 0 else 0,
-            "confidence_threshold_used": confidence_threshold,
+            "confidence_threshold_used": input_data.confidence_threshold,
             "overall_assessment": "Contains hate speech" if hate_speech_count > 0 else "No hate speech detected",
             "risk_level": (
                 "High" if hate_speech_count > total_clauses * 0.5 else
@@ -533,129 +461,161 @@ async def analyze_hate_speech(input_data: TextInput):
                 "Low"
             )
         }
-
-        # Return format compatible with Chrome extension
-        return {
-            "hate_speech_detected": len(hate_speech_clauses) > 0,
-            "hate_speech_clauses": hate_speech_clauses,
-            "summary": summary
-        }
-
+        
+        return AnalysisResponse(
+            original_text=text,
+            total_clauses=total_clauses,
+            hate_speech_clauses=hate_speech_clauses,
+            summary=summary
+        )
+        
     except Exception as e:
-        logger.error(f"Error during hate speech analysis: {e}")
-        raise HTTPException(
-            status_code=500, detail=f"Hate speech analysis failed: {str(e)}")
+        logger.error(f"Error during analysis: {e}")
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
+@app.post("/analyze-simple")
+async def analyze_simple(input_data: TextInput):
+    """Simplified endpoint that returns just the hate speech clauses as a list"""
+    try:
+        result = await analyze_text_for_hate_speech(input_data)
+        
+        return {
+            "hate_speech_detected": len(result.hate_speech_clauses) > 0,
+            "hate_speech_clauses": [
+                {
+                    "text": clause.clause,
+                    "confidence": clause.confidence,
+                    "justification": clause.justification
+                }
+                for clause in result.hate_speech_clauses
+            ],
+            "summary": result.summary
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/save-analysis", response_model=AuthResponse)
 async def save_analysis(analysis_data: SaveAnalysisRequest, user: HTTPAuthorizationCredentials = Depends(security)):
     """Save an analysis result to the database"""
     try:
-        # Get user from token
-        user_data = get_user_from_token(user.credentials)
-        if not user_data:
-            return AuthResponse(success=False, message="Invalid token")
-
         conn = get_db_connection()
         cursor = conn.cursor()
-
+        
+        # Get user ID from token
+        token = user.credentials
+        cursor.execute("SELECT id FROM users WHERE token = %s", (token,))
+        user_record = cursor.fetchone()
+        
+        if not user_record:
+            cursor.close()
+            conn.close()
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        
+        user_id = user_record['id']
+        
+        # Save analysis result
         cursor.execute("""
             INSERT INTO analyses (user_id, text, result, title)
             VALUES (%s, %s, %s, %s) RETURNING id
-        """, (user_data['id'], analysis_data.text, json.dumps(analysis_data.result), analysis_data.title))
-
+        """, (user_id, analysis_data.text, json.dumps(analysis_data.result), analysis_data.title))
+        
         analysis_id = cursor.fetchone()['id']
         conn.commit()
         cursor.close()
         conn.close()
-
+        
         return AuthResponse(
             success=True,
             message="Analysis saved successfully",
-            user_id=analysis_id
+            user_id=user_id,
+            token=token
         )
-
+        
     except Exception as e:
-        logger.error(f"Save analysis error: {e}")
-        return AuthResponse(success=False, message="Database connection failed - save unavailable")
-
+        logger.error(f"Error saving analysis: {e}")
+        return AuthResponse(success=False, message="Failed to save analysis")
 
 @app.get("/saved-analyses", response_model=List[SavedAnalysis])
 async def get_saved_analyses(user: HTTPAuthorizationCredentials = Depends(security)):
-    """Get all saved analyses for the authenticated user"""
+    """Retrieve saved analyses for the authenticated user"""
     try:
-        # Get user from token
-        user_data = get_user_from_token(user.credentials)
-        if not user_data:
-            raise HTTPException(status_code=401, detail="Invalid token")
-
         conn = get_db_connection()
         cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT id, user_id, text, result, title, created_at
-            FROM analyses
-            WHERE user_id = %s
-            ORDER BY created_at DESC
-        """, (user_data['id'],))
-
+        
+        # Get user ID from token
+        token = user.credentials
+        cursor.execute("SELECT id FROM users WHERE token = %s", (token,))
+        user_record = cursor.fetchone()
+        
+        if not user_record:
+            cursor.close()
+            conn.close()
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        
+        user_id = user_record['id']
+        
+        # Retrieve saved analyses
+        cursor.execute("SELECT * FROM analyses WHERE user_id = %s ORDER BY created_at DESC", (user_id,))
         analyses = cursor.fetchall()
         cursor.close()
         conn.close()
-
-        return [
-            SavedAnalysis(
-                id=analysis['id'],
-                user_id=analysis['user_id'],
-                text=analysis['text'],
-                result=analysis['result'],
-                title=analysis['title'],
-                created_at=analysis['created_at'].isoformat(
-                ) if analysis['created_at'] else None
-            )
-            for analysis in analyses
-        ]
-
+        
+        # Convert to SavedAnalysis objects with proper formatting
+        formatted_analyses = []
+        for analysis in analyses:
+            analysis_dict = dict(analysis)
+            # Convert datetime to string
+            analysis_dict['created_at'] = analysis_dict['created_at'].isoformat()
+            # Parse JSON result back to dict
+            if isinstance(analysis_dict['result'], str):
+                analysis_dict['result'] = json.loads(analysis_dict['result'])
+            formatted_analyses.append(SavedAnalysis(**analysis_dict))
+        
+        return formatted_analyses
+        
     except Exception as e:
-        logger.error(f"Get saved analyses error: {e}")
-        raise HTTPException(
-            status_code=500, detail="Database connection failed - retrieval unavailable")
-
+        logger.error(f"Error retrieving saved analyses: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve saved analyses")
 
 @app.delete("/delete-analysis/{analysis_id}", response_model=AuthResponse)
 async def delete_analysis(analysis_id: int, user: HTTPAuthorizationCredentials = Depends(security)):
     """Delete a saved analysis"""
     try:
-        # Get user from token
-        user_data = get_user_from_token(user.credentials)
-        if not user_data:
-            return AuthResponse(success=False, message="Invalid token")
-
         conn = get_db_connection()
         cursor = conn.cursor()
-
-        # Check if analysis belongs to user
-        cursor.execute("""
-            SELECT id FROM analyses 
-            WHERE id = %s AND user_id = %s
-        """, (analysis_id, user_data['id']))
-
-        if not cursor.fetchone():
+        
+        # Get user ID from token
+        token = user.credentials
+        cursor.execute("SELECT id FROM users WHERE token = %s", (token,))
+        user_record = cursor.fetchone()
+        
+        if not user_record:
             cursor.close()
             conn.close()
-            return AuthResponse(success=False, message="Analysis not found or not owned by user")
-
-        # Delete the analysis
-        cursor.execute("DELETE FROM analyses WHERE id = %s", (analysis_id,))
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        
+        user_id = user_record['id']
+        
+        # Delete analysis
+        cursor.execute("""
+            DELETE FROM analyses WHERE id = %s AND user_id = %s
+        """, (analysis_id, user_id))
+        
         conn.commit()
         cursor.close()
         conn.close()
-
-        return AuthResponse(success=True, message="Analysis deleted successfully")
-
+        
+        return AuthResponse(
+            success=True,
+            message="Analysis deleted successfully",
+            user_id=user_id,
+            token=token
+        )
+        
     except Exception as e:
-        logger.error(f"Delete analysis error: {e}")
-        return AuthResponse(success=False, message="Database connection failed - deletion unavailable")
+        logger.error(f"Error deleting analysis: {e}")
+        return AuthResponse(success=False, message="Failed to delete analysis")
 
 if __name__ == "__main__":
     import uvicorn

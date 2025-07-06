@@ -78,7 +78,7 @@ __turbopack_context__.s({
     "login": (()=>login),
     "signup": (()=>signup)
 });
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = ("TURBOPACK compile-time value", "http://localhost:8000") || 'http://localhost:8000';
 async function signup(email, password, name) {
     try {
         const response = await fetch(`${API_URL}/signup`, {
@@ -544,7 +544,7 @@ __turbopack_context__.s({
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$types$2f$index$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/types/index.ts [app-ssr] (ecmascript)");
 ;
 // Base URL for the backend API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = ("TURBOPACK compile-time value", "http://localhost:8000") || "http://localhost:8000";
 async function analyzeText(request) {
     try {
         const response = await fetch(`${API_BASE_URL}/analyze`, {

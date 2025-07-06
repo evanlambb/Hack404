@@ -1,7 +1,7 @@
 // Content script that runs on all web pages
 class HateSpeechDetector {
     constructor() {
-        this.apiUrl = 'http://localhost:8000/analyze-simple';
+        this.apiUrl = 'http://localhost:8000/analyze-hate-speech';
         this.isEnabled = true;
         this.confidenceThreshold = 0.6;
         this.autoRemove = true;
