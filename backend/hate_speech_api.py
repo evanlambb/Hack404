@@ -3,19 +3,36 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import torch
 import torch.nn.functional as F
-from transformers import AutoTokenizer
 import re
 import nltk
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import logging
 import os
 import sys
 
-# Import the model
-current_dir = os.path.dirname(os.path.abspath(__file__))
-models_dir = os.path.join(current_dir, 'bert-base-uncased-hatexplain-rationale-two')
-sys.path.append(models_dir)
-from models import Model_Rational_Label
+# Try to import transformers components with better error handling
+try:
+    from transformers import AutoTokenizer
+    TRANSFORMERS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Could not import transformers: {e}")
+    TRANSFORMERS_AVAILABLE = False
+    AutoTokenizer = None
+
+# Import the model with error handling
+try:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    models_dir = os.path.join(current_dir, 'bert-base-uncased-hatexplain-rationale-two')
+    sys.path.append(models_dir)
+    from models import Model_Rational_Label
+    MODEL_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Could not import custom model: {e}")
+    print("This is likely due to PyTorch/TorchVision compatibility issues.")
+    print("Please run: pip uninstall torch torchvision torchaudio transformers -y")
+    print("Then: pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 transformers==4.36.0")
+    MODEL_AVAILABLE = False
+    # Don't assign None to Model_Rational_Label to avoid type errors
 
 # Setup NLTK data
 for dataset in ['punkt', 'punkt_tab']:
@@ -42,9 +59,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global model variables
-tokenizer = None
-model = None
+# Global model variables with proper type annotations
+tokenizer: Optional[Any] = None
+model: Optional[Any] = None
 
 class TextInput(BaseModel):
     text: str
@@ -70,13 +87,19 @@ async def load_model():
     global tokenizer, model
     try:
         logger.info("Loading tokenizer and model...")
+        if not TRANSFORMERS_AVAILABLE or not MODEL_AVAILABLE:
+            logger.warning("Model dependencies are not installed or compatible.")
+            logger.warning("API will run in limited mode without AI model functionality.")
+            return
         tokenizer = AutoTokenizer.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
-        model = Model_Rational_Label.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
+        model = Model_Rational_Label.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two", trust_remote_code=True)
         model.eval()
         logger.info("Model loaded successfully!")
     except Exception as e:
         logger.error(f"Failed to load model: {e}")
-        raise RuntimeError(f"Failed to load model: {e}")
+        logger.warning("API will run in limited mode without AI model functionality.")
+        tokenizer = None
+        model = None
 
 def split_text_into_clauses(text: str) -> List[str]:
     """Split text into sentences and clauses for analysis"""
@@ -104,6 +127,8 @@ def split_text_into_clauses(text: str) -> List[str]:
 def analyze_clause_for_hate_speech(clause: str) -> Dict[str, Any]:
     """Analyze a single clause for hate speech"""
     try:
+        if not tokenizer or not model:
+            raise RuntimeError("Model or tokenizer not loaded.")
         inputs = tokenizer(clause, return_tensors="pt", truncation=True, max_length=512)
         
         with torch.no_grad():
