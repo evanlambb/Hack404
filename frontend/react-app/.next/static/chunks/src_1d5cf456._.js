@@ -591,20 +591,30 @@ async function analyzeSimple(text) {
 }
 async function saveAnalysis(text, result, title) {
     try {
+        console.log('saveAnalysis called with:', {
+            text: text.slice(0, 50) + '...',
+            title,
+            hasResult: !!result
+        });
+        const headers = createAuthHeaders();
+        console.log('Auth headers:', headers);
         const response = await fetch(`${API_BASE_URL}/save-analysis`, {
             method: 'POST',
-            headers: createAuthHeaders(),
+            headers,
             body: JSON.stringify({
                 text,
                 result,
                 title
             })
         });
+        console.log('Response status:', response.status);
         if (!response.ok) {
             const errorData = await response.json().catch(()=>({}));
+            console.error('Save analysis error:', errorData);
             throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Save analysis response:', data);
         return data.success;
     } catch (error) {
         console.error('Error saving analysis:', error);
@@ -648,9 +658,21 @@ async function deleteAnalysis(analysisId) {
  * Get auth token from localStorage
  */ function getAuthToken() {
     if ("TURBOPACK compile-time truthy", 1) {
-        return localStorage.getItem('auth_token');
+        // First try to get token from direct storage
+        const token = localStorage.getItem('auth_token');
+        if (token) return token;
+        // Fallback to getting token from user object
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                return user.token || null;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+            }
+        }
     }
-    "TURBOPACK unreachable";
+    return null;
 }
 /**
  * Create auth headers
@@ -2015,6 +2037,7 @@ __turbopack_context__.s({
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/api.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/AuthContext.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Header.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$TextInput$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/TextInput.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$IssuesPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/IssuesPanel.tsx [app-client] (ecmascript)");
@@ -2026,8 +2049,10 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function BiasDetectionApp({ initialText = '', onBack }) {
     _s();
+    const { user } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
     const [text, setText] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialText);
     const [isAnalyzing, setIsAnalyzing] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [analysisResult, setAnalysisResult] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
@@ -2061,13 +2086,19 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                 };
                 const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["analyzeText"])(request);
                 setAnalysisResult(result);
-                // Auto-save the analysis to the database
-                try {
-                    const title = `Analysis - ${new Date().toLocaleDateString()}`;
-                    await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["saveAnalysis"])(text.trim(), result, title);
-                } catch (saveError) {
-                    console.warn('Failed to save analysis:', saveError);
-                // Don't show error to user for auto-save failure
+                // Auto-save the analysis to the database if user is authenticated
+                if (user?.token) {
+                    try {
+                        console.log('Attempting to save analysis for user:', user.id);
+                        const title = `Analysis - ${new Date().toLocaleDateString()}`;
+                        const saveResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["saveAnalysis"])(text.trim(), result, title);
+                        console.log('Save result:', saveResult);
+                    } catch (saveError) {
+                        console.error('Failed to save analysis:', saveError);
+                    // Don't show error to user for auto-save failure
+                    }
+                } else {
+                    console.log('User not authenticated, skipping save');
                 }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred during analysis');
@@ -2077,7 +2108,9 @@ function BiasDetectionApp({ initialText = '', onBack }) {
             }
         }
     }["BiasDetectionApp.useCallback[handleAnalyze]"], [
-        text
+        text,
+        user?.token,
+        user?.id
     ]);
     const handleClearText = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
         "BiasDetectionApp.useCallback[handleClearText]": ()=>{
@@ -2139,12 +2172,12 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                     onBack: onBack
                 }, void 0, false, {
                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                    lineNumber: 113,
+                    lineNumber: 121,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 112,
+                lineNumber: 120,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2162,17 +2195,17 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                                 onValidationChange: handleValidationChange
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 121,
+                                lineNumber: 129,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                            lineNumber: 120,
+                            lineNumber: 128,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 119,
+                        lineNumber: 127,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2198,19 +2231,19 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                                 validationErrors: validationErrors
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 132,
+                                lineNumber: 140,
                                 columnNumber: 94
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 132,
+                        lineNumber: 140,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 117,
+                lineNumber: 125,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2236,27 +2269,31 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                         validationErrors: validationErrors
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 157,
+                        lineNumber: 165,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                    lineNumber: 156,
+                    lineNumber: 164,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 154,
+                lineNumber: 162,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-        lineNumber: 110,
+        lineNumber: 118,
         columnNumber: 5
     }, this);
 }
-_s(BiasDetectionApp, "StDtXv+O1HxiTBbZTyHUL6xWH2A=");
+_s(BiasDetectionApp, "oKPDkcscZufSSIymM7y/QxFf4o0=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$AuthContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"]
+    ];
+});
 _c = BiasDetectionApp;
 var _c;
 __turbopack_context__.k.register(_c, "BiasDetectionApp");

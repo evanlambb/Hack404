@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { AnalysisResponse, AnalysisRequest } from '@/types';
 import { analyzeText, convertToFlaggedWords, saveAnalysis } from '@/lib/api';
+import { useAuth } from './AuthContext';
 import Header from './Header';
 import TextInput from './TextInput';
 import { IssuesPanel } from './IssuesPanel';
@@ -13,6 +14,7 @@ interface BiasDetectionAppProps {
 }
 
 export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppProps) {
+  const { user } = useAuth();
   const [text, setText] = useState(initialText);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
@@ -46,13 +48,19 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
       const result = await analyzeText(request);
       setAnalysisResult(result);
       
-      // Auto-save the analysis to the database
-      try {
-        const title = `Analysis - ${new Date().toLocaleDateString()}`;
-        await saveAnalysis(text.trim(), result, title);
-      } catch (saveError) {
-        console.warn('Failed to save analysis:', saveError);
-        // Don't show error to user for auto-save failure
+      // Auto-save the analysis to the database if user is authenticated
+      if (user?.token) {
+        try {
+          console.log('Attempting to save analysis for user:', user.id);
+          const title = `Analysis - ${new Date().toLocaleDateString()}`;
+          const saveResult = await saveAnalysis(text.trim(), result, title);
+          console.log('Save result:', saveResult);
+        } catch (saveError) {
+          console.error('Failed to save analysis:', saveError);
+          // Don't show error to user for auto-save failure
+        }
+      } else {
+        console.log('User not authenticated, skipping save');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during analysis');
@@ -60,7 +68,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
     } finally {
       setIsAnalyzing(false);
     }
-  }, [text]);
+  }, [text, user?.token, user?.id]);
 
   const handleClearText = useCallback(() => {
     setText('');

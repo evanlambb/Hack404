@@ -16,6 +16,7 @@ from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 import hashlib
 import secrets
+import json
 
 # Import the model
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -521,7 +522,7 @@ async def save_analysis(analysis_data: SaveAnalysisRequest, user: HTTPAuthorizat
         cursor.execute("""
             INSERT INTO analyses (user_id, text, result, title)
             VALUES (%s, %s, %s, %s) RETURNING id
-        """, (user_id, analysis_data.text, analysis_data.result, analysis_data.title))
+        """, (user_id, analysis_data.text, json.dumps(analysis_data.result), analysis_data.title))
         
         analysis_id = cursor.fetchone()['id']
         conn.commit()
@@ -559,12 +560,23 @@ async def get_saved_analyses(user: HTTPAuthorizationCredentials = Depends(securi
         user_id = user_record['id']
         
         # Retrieve saved analyses
-        cursor.execute("SELECT * FROM analyses WHERE user_id = %s", (user_id,))
+        cursor.execute("SELECT * FROM analyses WHERE user_id = %s ORDER BY created_at DESC", (user_id,))
         analyses = cursor.fetchall()
         cursor.close()
         conn.close()
         
-        return [SavedAnalysis(**analysis) for analysis in analyses]
+        # Convert to SavedAnalysis objects with proper formatting
+        formatted_analyses = []
+        for analysis in analyses:
+            analysis_dict = dict(analysis)
+            # Convert datetime to string
+            analysis_dict['created_at'] = analysis_dict['created_at'].isoformat()
+            # Parse JSON result back to dict
+            if isinstance(analysis_dict['result'], str):
+                analysis_dict['result'] = json.loads(analysis_dict['result'])
+            formatted_analyses.append(SavedAnalysis(**analysis_dict))
+        
+        return formatted_analyses
         
     except Exception as e:
         logger.error(f"Error retrieving saved analyses: {e}")
