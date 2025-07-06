@@ -132,6 +132,7 @@ export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppP
               placeholder="Type or paste your text here..."
               maxLength={5000}
               onValidationChange={handleValidationChange}
+              flaggedWords={flaggedWords}
             />
           </div>
         </div>

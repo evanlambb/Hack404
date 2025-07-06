@@ -931,12 +931,103 @@ var _s = __turbopack_context__.k.signature();
 ;
 // Default empty validation rules (stable reference)
 const DEFAULT_VALIDATION_RULES = [];
-function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or paste your text here...", disabled = false, isAnalyzing = false, error = null, label = "Enter text to analyze", maxLength = 5000, minLength = 5, className = "", showCharacterCount = true, showClearButton = true, showAnalyzeButton = true, analyzeButtonText = "Analyze Text", clearButtonText = "Clear", validateOnChange = true, validationRules = DEFAULT_VALIDATION_RULES, onValidationChange, confirmClearThreshold = 50, showClearConfirmation = true }) {
+function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or paste your text here...", disabled = false, isAnalyzing = false, error = null, label = "Enter text to analyze", maxLength = 5000, minLength = 5, className = "", showCharacterCount = true, showClearButton = true, showAnalyzeButton = true, analyzeButtonText = "Analyze Text", clearButtonText = "Clear", validateOnChange = true, validationRules = DEFAULT_VALIDATION_RULES, onValidationChange, confirmClearThreshold = 50, showClearConfirmation = true, flaggedWords = [] }) {
     _s();
     const [validationErrors, setValidationErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [isValid, setIsValid] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const [showConfirmDialog, setShowConfirmDialog] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const textareaRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const dialogRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    // Create highlighted text JSX
+    const renderHighlightedText = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "TextInput.useCallback[renderHighlightedText]": ()=>{
+            if (!flaggedWords || flaggedWords.length === 0 || !value) {
+                return null;
+            }
+            const segments = [];
+            let lastIndex = 0;
+            // Sort flagged words by start index to process them in order
+            const sortedFlaggedWords = [
+                ...flaggedWords
+            ].sort({
+                "TextInput.useCallback[renderHighlightedText].sortedFlaggedWords": (a, b)=>a.startIndex - b.startIndex
+            }["TextInput.useCallback[renderHighlightedText].sortedFlaggedWords"]);
+            sortedFlaggedWords.forEach({
+                "TextInput.useCallback[renderHighlightedText]": (flagged)=>{
+                    // Add text before this flagged word
+                    if (lastIndex < flagged.startIndex) {
+                        segments.push({
+                            text: value.slice(lastIndex, flagged.startIndex),
+                            isHighlighted: false
+                        });
+                    }
+                    // Add the flagged word
+                    const segmentData = {
+                        text: value.slice(flagged.startIndex, flagged.endIndex),
+                        isHighlighted: true
+                    };
+                    if (flagged.explanation) {
+                        segmentData.explanation = flagged.explanation;
+                    }
+                    segments.push(segmentData);
+                    lastIndex = flagged.endIndex;
+                }
+            }["TextInput.useCallback[renderHighlightedText]"]);
+            // Add remaining text after the last flagged word
+            if (lastIndex < value.length) {
+                segments.push({
+                    text: value.slice(lastIndex),
+                    isHighlighted: false
+                });
+            }
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 px-6 py-6 pointer-events-none whitespace-pre-wrap break-words overflow-hidden text-transparent leading-relaxed",
+                children: segments.map({
+                    "TextInput.useCallback[renderHighlightedText]": (segment, index)=>segment.isHighlighted ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "bg-red-200 border-b-2 border-red-400 text-red-900 relative group pointer-events-auto",
+                            title: segment.explanation || 'Problematic content detected',
+                            children: [
+                                segment.text,
+                                segment.explanation && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute bottom-full left-0 mb-2 w-64 bg-gray-900 text-white text-sm p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "absolute top-full left-4 -mt-1 w-2 h-2 bg-gray-900 rotate-45"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/TextInput.tsx",
+                                            lineNumber: 131,
+                                            columnNumber: 19
+                                        }, this),
+                                        segment.explanation
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/TextInput.tsx",
+                                    lineNumber: 130,
+                                    columnNumber: 17
+                                }, this)
+                            ]
+                        }, index, true, {
+                            fileName: "[project]/src/components/TextInput.tsx",
+                            lineNumber: 123,
+                            columnNumber: 13
+                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            children: segment.text
+                        }, index, false, {
+                            fileName: "[project]/src/components/TextInput.tsx",
+                            lineNumber: 137,
+                            columnNumber: 13
+                        }, this)
+                }["TextInput.useCallback[renderHighlightedText]"])
+            }, void 0, false, {
+                fileName: "[project]/src/components/TextInput.tsx",
+                lineNumber: 120,
+                columnNumber: 7
+            }, this);
+        }
+    }["TextInput.useCallback[renderHighlightedText]"], [
+        flaggedWords,
+        value
+    ]);
     // Combine default rules with custom rules
     const allRules = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "TextInput.useMemo[allRules]": ()=>{
@@ -1113,27 +1204,41 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
     const isNearLimit = value.length >= maxLength * 0.8;
     const characterCountColor = isAtLimit ? 'text-red-500 font-semibold' : isNearLimit ? 'text-amber-500 font-medium' : 'text-gray-500';
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: `h-full ${className}`,
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-            id: "text-input",
-            value: value,
-            onChange: handleTextChange,
-            placeholder: placeholder,
-            maxLength: maxLength,
-            className: "w-full h-full px-6 py-6 placeholder-gray-400 text-gray-900 focus:outline-none resize-none bg-gray-50 border-0",
-            disabled: disabled || isAnalyzing
-        }, void 0, false, {
-            fileName: "[project]/src/components/TextInput.tsx",
-            lineNumber: 215,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
+        className: `h-full relative ${className}`,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                ref: textareaRef,
+                id: "text-input",
+                value: value,
+                onChange: handleTextChange,
+                placeholder: placeholder,
+                maxLength: maxLength,
+                className: "w-full h-full px-6 py-6 placeholder-gray-400 text-gray-900 focus:outline-none resize-none bg-gray-50 border-0 relative z-10",
+                disabled: disabled || isAnalyzing,
+                style: {
+                    background: 'transparent'
+                }
+            }, void 0, false, {
+                fileName: "[project]/src/components/TextInput.tsx",
+                lineNumber: 292,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 bg-gray-50 z-0"
+            }, void 0, false, {
+                fileName: "[project]/src/components/TextInput.tsx",
+                lineNumber: 304,
+                columnNumber: 7
+            }, this),
+            renderHighlightedText()
+        ]
+    }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 214,
+        lineNumber: 291,
         columnNumber: 5
     }, this);
 }
-_s(TextInput, "6x+mEZhpRmjNOnFNTu30LHkLnUw=");
+_s(TextInput, "nBcAKBO79ZnOCyjfV4j6nYEWXCA=");
 _c = TextInput;
 var _c;
 __turbopack_context__.k.register(_c, "TextInput");
@@ -1767,7 +1872,8 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                                 onChange: setText,
                                 placeholder: "Type or paste your text here...",
                                 maxLength: 5000,
-                                onValidationChange: handleValidationChange
+                                onValidationChange: handleValidationChange,
+                                flaggedWords: flaggedWords
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
                                 lineNumber: 129,
@@ -1806,13 +1912,13 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                                 validationErrors: validationErrors
                             }, void 0, false, {
                                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                                lineNumber: 140,
+                                lineNumber: 141,
                                 columnNumber: 94
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 140,
+                        lineNumber: 141,
                         columnNumber: 9
                     }, this)
                 ]
@@ -1844,17 +1950,17 @@ function BiasDetectionApp({ initialText = '', onBack }) {
                         validationErrors: validationErrors
                     }, void 0, false, {
                         fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                        lineNumber: 165,
+                        lineNumber: 166,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                    lineNumber: 164,
+                    lineNumber: 165,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/BiasDetectionApp.tsx",
-                lineNumber: 162,
+                lineNumber: 163,
                 columnNumber: 7
             }, this)
         ]

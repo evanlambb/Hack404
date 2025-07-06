@@ -1,5 +1,12 @@
 import { ChangeEvent, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
+export interface FlaggedWord {
+  word: string;
+  startIndex: number;
+  endIndex: number;
+  explanation?: string;
+}
+
 export interface ValidationRule {
   type: 'minLength' | 'maxLength' | 'required' | 'custom';
   value?: number;
@@ -30,6 +37,7 @@ export interface TextInputProps {
   onValidationChange?: (isValid: boolean, errors: string[]) => void;
   confirmClearThreshold?: number; // Characters threshold for showing confirmation dialog
   showClearConfirmation?: boolean;
+  flaggedWords?: FlaggedWord[]; // New prop for highlighting
 }
 
 // Default empty validation rules (stable reference)
@@ -57,12 +65,81 @@ export default function TextInput({
   validationRules = DEFAULT_VALIDATION_RULES,
   onValidationChange,
   confirmClearThreshold = 50,
-  showClearConfirmation = true
+  showClearConfirmation = true,
+  flaggedWords = []
 }: TextInputProps) {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Create highlighted text JSX
+  const renderHighlightedText = useCallback(() => {
+    if (!flaggedWords || flaggedWords.length === 0 || !value) {
+      return null;
+    }
+
+    const segments: Array<{text: string, isHighlighted: boolean, explanation?: string}> = [];
+    let lastIndex = 0;
+
+    // Sort flagged words by start index to process them in order
+    const sortedFlaggedWords = [...flaggedWords].sort((a, b) => a.startIndex - b.startIndex);
+
+    sortedFlaggedWords.forEach((flagged) => {
+      // Add text before this flagged word
+      if (lastIndex < flagged.startIndex) {
+        segments.push({
+          text: value.slice(lastIndex, flagged.startIndex),
+          isHighlighted: false
+        });
+      }
+
+      // Add the flagged word
+      const segmentData: {text: string, isHighlighted: boolean, explanation?: string} = {
+        text: value.slice(flagged.startIndex, flagged.endIndex),
+        isHighlighted: true
+      };
+      if (flagged.explanation) {
+        segmentData.explanation = flagged.explanation;
+      }
+      segments.push(segmentData);
+
+      lastIndex = flagged.endIndex;
+    });
+
+    // Add remaining text after the last flagged word
+    if (lastIndex < value.length) {
+      segments.push({
+        text: value.slice(lastIndex),
+        isHighlighted: false
+      });
+    }
+
+    return (
+      <div className="absolute inset-0 px-6 py-6 pointer-events-none whitespace-pre-wrap break-words overflow-hidden text-transparent leading-relaxed">
+        {segments.map((segment, index) => 
+          segment.isHighlighted ? (
+            <span
+              key={index}
+              className="bg-red-200 border-b-2 border-red-400 text-red-900 relative group pointer-events-auto"
+              title={segment.explanation || 'Problematic content detected'}
+            >
+              {segment.text}
+              {segment.explanation && (
+                <div className="absolute bottom-full left-0 mb-2 w-64 bg-gray-900 text-white text-sm p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg">
+                  <div className="absolute top-full left-4 -mt-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                  {segment.explanation}
+                </div>
+              )}
+            </span>
+          ) : (
+            <span key={index}>{segment.text}</span>
+          )
+        )}
+      </div>
+    );
+  }, [flaggedWords, value]);
 
   // Combine default rules with custom rules
   const allRules = useMemo(() => {
@@ -211,16 +288,22 @@ export default function TextInput({
       : 'text-gray-500';
 
   return (
-    <div className={`h-full ${className}`}>
+    <div className={`h-full relative ${className}`}>
       <textarea
+        ref={textareaRef}
         id="text-input"
         value={value}
         onChange={handleTextChange}
         placeholder={placeholder}
         maxLength={maxLength}
-        className="w-full h-full px-6 py-6 placeholder-gray-400 text-gray-900 focus:outline-none resize-none bg-gray-50 border-0"
+        className="w-full h-full px-6 py-6 placeholder-gray-400 text-gray-900 focus:outline-none resize-none bg-gray-50 border-0 relative z-10"
         disabled={disabled || isAnalyzing}
+        style={{ background: 'transparent' }}
       />
+      {/* Background layer for highlighting */}
+      <div className="absolute inset-0 bg-gray-50 z-0"></div>
+      {/* Highlighted text overlay */}
+      {renderHighlightedText()}
     </div>
   );
 } 
