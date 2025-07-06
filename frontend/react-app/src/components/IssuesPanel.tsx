@@ -98,12 +98,12 @@ export function IssuesPanel({
   };
 
   return (
-    <div className="w-full lg:w-96 h-full bg-gradient-to-b from-white via-slate-50/50 to-gray-100/30 border-l-2 border-gradient-to-b from-blue-200 to-indigo-300 shadow-2xl backdrop-blur-sm">
+    <div className="w-full lg:w-96 h-full bg-white border-l border-gray-200">
       <div className="h-full flex flex-col">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-white via-blue-50/80 to-indigo-50/60 backdrop-blur-sm border-b-2 border-blue-100/50 p-6 shadow-lg">
+        <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -115,12 +115,12 @@ export function IssuesPanel({
 
           {analysisResult && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-white/60 rounded-xl border border-blue-200/50 shadow-sm">
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
                 <span className="text-sm font-medium text-gray-700">Analysis Confidence</span>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 bg-gray-200 rounded-full h-2 w-16">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-500"
+                      className="bg-red-500 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${analysisResult.confidence * 100}%` }}
                     />
                   </div>
@@ -131,15 +131,15 @@ export function IssuesPanel({
               </div>
               
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white/60 rounded-xl p-3 border border-emerald-200/50 shadow-sm">
+                <div className="bg-white rounded-lg p-3 border border-gray-200">
                   <div className="text-lg font-bold text-emerald-700">{analysisResult.flaggedWords.length}</div>
                   <div className="text-xs text-emerald-600 font-medium">Issues Found</div>
                 </div>
-                <div className="bg-white/60 rounded-xl p-3 border border-blue-200/50 shadow-sm">
-                  <div className="text-lg font-bold text-blue-700">
+                <div className="bg-white rounded-lg p-3 border border-gray-200">
+                  <div className="text-lg font-bold text-red-700">
                     {new Set(analysisResult.flaggedWords.map(fw => fw.category)).size}
                   </div>
-                  <div className="text-xs text-blue-600 font-medium">Categories</div>
+                  <div className="text-xs text-red-600 font-medium">Categories</div>
                 </div>
               </div>
             </div>
@@ -151,7 +151,7 @@ export function IssuesPanel({
           {isAnalyzing && (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <div className="w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
                 <p className="text-gray-600 font-medium">Analyzing text for bias...</p>
                 <p className="text-sm text-gray-500 mt-1">This may take a moment</p>
               </div>
@@ -160,7 +160,7 @@ export function IssuesPanel({
 
           {!isAnalyzing && (!analysisResult || analysisResult.flaggedWords.length === 0) && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4 shadow-lg">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
@@ -186,7 +186,7 @@ export function IssuesPanel({
                 return (
                   <div 
                     key={index} 
-                    className={`${categoryStyle.bg} ${categoryStyle.border} border-2 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer overflow-hidden`}
+                    className={`${categoryStyle.bg} ${categoryStyle.border} border rounded-lg hover:shadow-sm transition-all duration-300 cursor-pointer overflow-hidden`}
                     onClick={() => {
                       toggleIssueExpansion(index);
                       handleIssueClick(issue);
@@ -195,7 +195,7 @@ export function IssuesPanel({
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <div className={`${categoryStyle.badge} w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shadow-md`}>
+                          <div className={`${categoryStyle.badge} w-8 h-8 rounded-full flex items-center justify-center text-white font-bold`}>
                             {categoryStyle.icon}
                           </div>
                           <div>
@@ -222,19 +222,18 @@ export function IssuesPanel({
                         </div>
                       </div>
 
-                      {isExpanded && (
-                        <div className="space-y-4 animate-fadeIn">
-                          <div className="bg-white/70 rounded-xl p-4 shadow-sm">
-                            <h5 className="font-semibold text-gray-800 text-sm mb-2 flex items-center gap-2">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              Why this is problematic:
-                            </h5>
-                            <p className="text-gray-700 text-sm leading-relaxed">
-                              {issue.explanation}
-                            </p>
-                          </div>
+                      {isExpanded && (                          <div className="space-y-4 animate-fadeIn">
+                            <div className="bg-white/70 rounded-lg p-4">
+                              <h5 className="font-semibold text-gray-800 text-sm mb-2 flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Why this is problematic:
+                              </h5>
+                              <p className="text-gray-700 text-sm leading-relaxed">
+                                {issue.explanation}
+                              </p>
+                            </div>
 
                           <div className="space-y-2">
                             <h5 className="font-semibold text-gray-800 text-sm flex items-center gap-2">
@@ -251,7 +250,7 @@ export function IssuesPanel({
                                     e.stopPropagation();
                                     handleWordReplace(issue.word, suggestion.word);
                                   }}
-                                  className="w-full text-left p-3 bg-white/80 hover:bg-white rounded-xl border border-gray-200/50 hover:border-gray-300 transition-all duration-200 group shadow-sm hover:shadow-md"
+                                  className="w-full text-left p-3 bg-white/80 hover:bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 group"
                                 >
                                   <div className="flex items-center justify-between">
                                     <div className="flex-1">
@@ -267,7 +266,7 @@ export function IssuesPanel({
                                         {suggestion.reason}
                                       </p>
                                     </div>
-                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-red-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </div>

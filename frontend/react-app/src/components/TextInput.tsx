@@ -211,7 +211,7 @@ export default function TextInput({
       : 'text-gray-500';
 
   return (
-    <div className={`bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/40 p-6 ${className}`}>
+    <div className={`${className}`}>
       <div className="space-y-4">
         <div>
           <label 
@@ -226,7 +226,7 @@ export default function TextInput({
             onChange={handleTextChange}
             placeholder={placeholder}
             maxLength={maxLength}
-            className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 bg-white/50"
+            className="w-full h-96 px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none transition-all duration-200 bg-gray-50"
             disabled={disabled || isAnalyzing}
           />
         </div>
@@ -246,7 +246,7 @@ export default function TextInput({
               <button
                 onClick={handleClearClick}
                 disabled={!value || isAnalyzing}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white/80 border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 {clearButtonText}
               </button>
@@ -255,7 +255,7 @@ export default function TextInput({
               <button
                 onClick={handleAnalyzeClick}
                 disabled={!value.trim() || isAnalyzing || !isValid}
-                className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 border border-transparent rounded-xl shadow-lg hover:from-blue-600 hover:to-indigo-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+                className="px-6 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2">
@@ -277,7 +277,7 @@ export default function TextInput({
 
         {/* External Error Display */}
         {error && (
-          <div className="rounded-xl bg-gradient-to-r from-red-50 to-pink-50 p-4 border border-red-200/50">
+          <div className="rounded-lg bg-red-50 p-4 border border-red-200">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,7 +298,7 @@ export default function TextInput({
 
         {/* Validation Errors Display */}
         {validationErrors.length > 0 && validateOnChange && (
-          <div className="rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 p-4 border border-amber-200/50">
+          <div className="rounded-lg bg-amber-50 p-4 border border-amber-200">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,13 +342,13 @@ export default function TextInput({
             <div className="flex justify-end space-x-3">
               <button
                 onClick={handleCancelClear}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmClear}
-                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-600 border border-transparent rounded-xl shadow-lg hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium text-white bg-red-500 border border-transparent rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
               >
                 Clear Text
               </button>
