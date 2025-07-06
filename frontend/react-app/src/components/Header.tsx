@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { useAuth } from './AuthContext';
 import AuthForm from './AuthForm';
 
-export default function Header() {
+interface HeaderProps {
+  onBack?: (() => void) | undefined;
+}
+
+export default function Header({ onBack }: HeaderProps) {
   const [showAuthForm, setShowAuthForm] = useState(false);
   const { user, logout } = useAuth();
 
@@ -14,6 +18,17 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-4">
+              {onBack && (
+                <button
+                  onClick={onBack}
+                  className="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium px-4 py-2 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Back to Dashboard
+                </button>
+              )}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

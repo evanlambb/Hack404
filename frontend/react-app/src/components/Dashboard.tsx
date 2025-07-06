@@ -3,75 +3,59 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { BiasDetectionApp } from './BiasDetectionApp';
+import { getSavedAnalyses, deleteAnalysis as deleteAnalysisAPI } from '@/lib/api';
 
 interface SavedAnalysis {
-  id: string;
+  id: number;
+  user_id: number;
   text: string;
   result: unknown;
-  timestamp: Date;
   title?: string;
+  created_at: string;
 }
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [savedAnalyses, setSavedAnalyses] = useState<SavedAnalysis[]>([]);
   const [showAnalyzer, setShowAnalyzer] = useState(false);
-  const [selectedAnalysis, setSelectedAnalysis] = useState<SavedAnalysis | null>(null);
+  const [initialText, setInitialText] = useState<string>('');
 
   useEffect(() => {
-    // Load saved analyses from localStorage
-    const saved = localStorage.getItem(`analyses_${user?.id}`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setSavedAnalyses(parsed.map((item: SavedAnalysis) => ({
-          ...item,
-          timestamp: new Date(item.timestamp)
-        })));
-      } catch (error) {
-        console.error('Error loading saved analyses:', error);
-      }
-    }
+    // Load saved analyses from backend
+    loadSavedAnalyses();
   }, [user?.id]);
 
-  const saveAnalysis = (text: string, result: unknown, title?: string) => {
-    const newAnalysis: SavedAnalysis = {
-      id: Date.now().toString(),
-      text,
-      result,
-      timestamp: new Date(),
-      title: title || `Analysis ${savedAnalyses.length + 1}`
-    };
-
-    const updatedAnalyses = [newAnalysis, ...savedAnalyses];
-    setSavedAnalyses(updatedAnalyses);
-    localStorage.setItem(`analyses_${user?.id}`, JSON.stringify(updatedAnalyses));
-  };
-
-  // For demo purposes - this will be connected later
-  const addDemoAnalysis = () => {
-    saveAnalysis(
-      "This is a sample text for demonstration purposes.",
-      { summary: { hate_speech_detected: false, confidence: 0.95 } },
-      "Demo Analysis"
-    );
-  };
-
-  // Add a demo analysis on first load if no analyses exist
-  useEffect(() => {
-    if (savedAnalyses.length === 0 && user?.id) {
-      addDemoAnalysis();
+  const loadSavedAnalyses = async () => {
+    try {
+      const analyses = await getSavedAnalyses();
+      setSavedAnalyses(analyses);
+    } catch (error) {
+      console.error('Error loading saved analyses:', error);
     }
-  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  };
 
-  const deleteAnalysis = (id: string) => {
-    const updatedAnalyses = savedAnalyses.filter(analysis => analysis.id !== id);
-    setSavedAnalyses(updatedAnalyses);
-    localStorage.setItem(`analyses_${user?.id}`, JSON.stringify(updatedAnalyses));
+  const deleteAnalysis = async (id: number) => {
+    try {
+      const success = await deleteAnalysisAPI(id);
+      if (success) {
+        setSavedAnalyses(prev => prev.filter(analysis => analysis.id !== id));
+      }
+    } catch (error) {
+      console.error('Error deleting analysis:', error);
+    }
+  };
+
+  const handleAnalysisClick = (analysis: SavedAnalysis) => {
+    setInitialText(analysis.text);
+    setShowAnalyzer(true);
   };
 
   if (showAnalyzer) {
-    return <BiasDetectionApp />;
+    return <BiasDetectionApp initialText={initialText} onBack={() => {
+      setShowAnalyzer(false);
+      setInitialText('');
+      loadSavedAnalyses(); // Refresh analyses when coming back
+    }} />;
   }
 
   return (
@@ -157,11 +141,15 @@ export default function Dashboard() {
           ) : (
             <div className="divide-y divide-gray-200">
               {savedAnalyses.map((analysis) => (
-                <div key={analysis.id} className="px-6 py-4 hover:bg-gray-50">
+                <div 
+                  key={analysis.id} 
+                  className="px-6 py-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={() => handleAnalysisClick(analysis)}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <h3 className="text-lg font-medium text-gray-900 mb-1">
-                        {analysis.title}
+                        {analysis.title || `Analysis ${analysis.id}`}
                       </h3>
                       <p className="text-gray-600 text-sm mb-2 line-clamp-2">
                         {analysis.text.length > 100 
@@ -170,19 +158,16 @@ export default function Dashboard() {
                         }
                       </p>
                       <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span>{analysis.timestamp.toLocaleDateString()}</span>
-                        <span>{analysis.timestamp.toLocaleTimeString()}</span>
+                        <span>{new Date(analysis.created_at).toLocaleDateString()}</span>
+                        <span>{new Date(analysis.created_at).toLocaleTimeString()}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 ml-4">
                       <button
-                        onClick={() => setSelectedAnalysis(analysis)}
-                        className="text-blue-600 hover:text-blue-800 font-medium text-sm"
-                      >
-                        View Details
-                      </button>
-                      <button
-                        onClick={() => deleteAnalysis(analysis.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteAnalysis(analysis.id);
+                        }}
                         className="text-red-600 hover:text-red-800 font-medium text-sm"
                       >
                         Delete
@@ -195,47 +180,6 @@ export default function Dashboard() {
           )}
         </div>
       </main>
-
-      {/* Analysis Detail Modal */}
-      {selectedAnalysis && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
-                {selectedAnalysis.title}
-              </h2>
-              <button
-                onClick={() => setSelectedAnalysis(null)}
-                className="text-gray-400 hover:text-gray-600 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Original Text</h3>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <p className="text-gray-800">{selectedAnalysis.text}</p>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Analysis Results</h3>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <pre className="text-sm text-gray-800 whitespace-pre-wrap">
-                    {JSON.stringify(selectedAnalysis.result, null, 2)}
-                  </pre>
-                </div>
-              </div>
-              
-              <div className="text-sm text-gray-500">
-                Analyzed on {selectedAnalysis.timestamp.toLocaleString()}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

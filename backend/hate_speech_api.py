@@ -86,6 +86,20 @@ class AuthResponse(BaseModel):
     user_id: Optional[int] = None
     token: Optional[str] = None
 
+# Analysis models
+class SavedAnalysis(BaseModel):
+    id: Optional[int] = None
+    user_id: int
+    text: str
+    result: Dict[str, Any]
+    title: Optional[str] = None
+    created_at: Optional[str] = None
+
+class SaveAnalysisRequest(BaseModel):
+    text: str
+    result: Dict[str, Any]
+    title: Optional[str] = None
+
 # Authentication helpers
 security = HTTPBearer()
 
@@ -121,49 +135,45 @@ def create_user_table():
         logger.error(f"Failed to create users table: {e}")
         return False
 
-# Global model variables
-tokenizer = None
-model = None
-
-class TextInput(BaseModel):
-    text: str
-    confidence_threshold: float = 0.6
-
-class ClauseAnalysis(BaseModel):
-    clause: str
-    is_hate_speech: bool
-    confidence: float
-    hate_speech_probability: float
-    rationale_tokens: List[Dict[str, Any]]
-    justification: str
-
-class AnalysisResponse(BaseModel):
-    original_text: str
-    total_clauses: int
-    hate_speech_clauses: List[ClauseAnalysis]
-    summary: Dict[str, Any]
-
-@app.on_event("startup")
-async def load_model():
-    """Load the model and tokenizer on startup"""
-    global tokenizer, model
+def create_analyses_table():
+    """Create analyses table if it doesn't exist"""
     try:
-        logger.info("Creating database tables...")
-        db_status = create_user_table()
-        if db_status:
-            logger.info("Database initialization successful")
-        else:
-            logger.warning("Database initialization failed - authentication endpoints may not work")
-        
-        logger.info("Loading tokenizer and model...")
-        tokenizer = AutoTokenizer.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
-        model = Model_Rational_Label.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
-        model.eval()
-        logger.info("Model loaded successfully!")
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS analyses (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                text TEXT NOT NULL,
+                result JSONB NOT NULL,
+                title VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        logger.info("Analyses table created/verified successfully")
+        return True
     except Exception as e:
-        logger.error(f"Failed to load model: {e}")
-        raise RuntimeError(f"Failed to load model: {e}")
+        logger.error(f"Failed to create analyses table: {e}")
+        return False
 
+def get_user_from_token(token: str) -> Optional[Dict]:
+    """Get user information from token"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, email, name FROM users WHERE token = %s", (token,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return dict(user) if user else None
+    except Exception as e:
+        logger.error(f"Error getting user from token: {e}")
+        return None
+
+# Analysis helpers
 def split_text_into_clauses(text: str) -> List[str]:
     """Split text into sentences and clauses for analysis"""
     sentences = nltk.sent_tokenize(text)
@@ -289,6 +299,50 @@ def generate_justification(clause: str, is_hate_speech: bool, confidence: float,
         justifications.append(f"Potentially targets: {', '.join(detected_categories)}")
     
     return " ".join(justifications)
+
+# Global model variables
+tokenizer = None
+model = None
+
+class TextInput(BaseModel):
+    text: str
+    confidence_threshold: float = 0.6
+
+class ClauseAnalysis(BaseModel):
+    clause: str
+    is_hate_speech: bool
+    confidence: float
+    hate_speech_probability: float
+    rationale_tokens: List[Dict[str, Any]]
+    justification: str
+
+class AnalysisResponse(BaseModel):
+    original_text: str
+    total_clauses: int
+    hate_speech_clauses: List[ClauseAnalysis]
+    summary: Dict[str, Any]
+
+@app.on_event("startup")
+async def load_model():
+    """Load the model and tokenizer on startup"""
+    global tokenizer, model
+    try:
+        logger.info("Creating database tables...")
+        user_table_status = create_user_table()
+        analyses_table_status = create_analyses_table()
+        if user_table_status and analyses_table_status:
+            logger.info("Database initialization successful")
+        else:
+            logger.warning("Database initialization failed - some endpoints may not work")
+        
+        logger.info("Loading tokenizer and model...")
+        tokenizer = AutoTokenizer.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
+        model = Model_Rational_Label.from_pretrained("Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two")
+        model.eval()
+        logger.info("Model loaded successfully!")
+    except Exception as e:
+        logger.error(f"Failed to load model: {e}")
+        raise RuntimeError(f"Failed to load model: {e}")
 
 # Authentication endpoints
 @app.post("/signup", response_model=AuthResponse)
@@ -443,6 +497,117 @@ async def analyze_simple(input_data: TextInput):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/save-analysis", response_model=AuthResponse)
+async def save_analysis(analysis_data: SaveAnalysisRequest, user: HTTPAuthorizationCredentials = Depends(security)):
+    """Save an analysis result to the database"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Get user ID from token
+        token = user.credentials
+        cursor.execute("SELECT id FROM users WHERE token = %s", (token,))
+        user_record = cursor.fetchone()
+        
+        if not user_record:
+            cursor.close()
+            conn.close()
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        
+        user_id = user_record['id']
+        
+        # Save analysis result
+        cursor.execute("""
+            INSERT INTO analyses (user_id, text, result, title)
+            VALUES (%s, %s, %s, %s) RETURNING id
+        """, (user_id, analysis_data.text, analysis_data.result, analysis_data.title))
+        
+        analysis_id = cursor.fetchone()['id']
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        return AuthResponse(
+            success=True,
+            message="Analysis saved successfully",
+            user_id=user_id,
+            token=token
+        )
+        
+    except Exception as e:
+        logger.error(f"Error saving analysis: {e}")
+        return AuthResponse(success=False, message="Failed to save analysis")
+
+@app.get("/saved-analyses", response_model=List[SavedAnalysis])
+async def get_saved_analyses(user: HTTPAuthorizationCredentials = Depends(security)):
+    """Retrieve saved analyses for the authenticated user"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Get user ID from token
+        token = user.credentials
+        cursor.execute("SELECT id FROM users WHERE token = %s", (token,))
+        user_record = cursor.fetchone()
+        
+        if not user_record:
+            cursor.close()
+            conn.close()
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        
+        user_id = user_record['id']
+        
+        # Retrieve saved analyses
+        cursor.execute("SELECT * FROM analyses WHERE user_id = %s", (user_id,))
+        analyses = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        return [SavedAnalysis(**analysis) for analysis in analyses]
+        
+    except Exception as e:
+        logger.error(f"Error retrieving saved analyses: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve saved analyses")
+
+@app.delete("/delete-analysis/{analysis_id}", response_model=AuthResponse)
+async def delete_analysis(analysis_id: int, user: HTTPAuthorizationCredentials = Depends(security)):
+    """Delete a saved analysis"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Get user ID from token
+        token = user.credentials
+        cursor.execute("SELECT id FROM users WHERE token = %s", (token,))
+        user_record = cursor.fetchone()
+        
+        if not user_record:
+            cursor.close()
+            conn.close()
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        
+        user_id = user_record['id']
+        
+        # Delete analysis
+        cursor.execute("""
+            DELETE FROM analyses WHERE id = %s AND user_id = %s
+        """, (analysis_id, user_id))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        return AuthResponse(
+            success=True,
+            message="Analysis deleted successfully",
+            user_id=user_id,
+            token=token
+        )
+        
+    except Exception as e:
+        logger.error(f"Error deleting analysis: {e}")
+        return AuthResponse(success=False, message="Failed to delete analysis")
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,18 +1,28 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { AnalysisResponse, AnalysisRequest } from '@/types';
-import { analyzeText, convertToFlaggedWords } from '@/lib/api';
+import { analyzeText, convertToFlaggedWords, saveAnalysis } from '@/lib/api';
 import Header from './Header';
 import TextInput from './TextInput';
 import { IssuesPanel } from './IssuesPanel';
 
-export function BiasDetectionApp() {
-  const [text, setText] = useState('');
+interface BiasDetectionAppProps {
+  initialText?: string;
+  onBack?: () => void;
+}
+
+export function BiasDetectionApp({ initialText = '', onBack }: BiasDetectionAppProps) {
+  const [text, setText] = useState(initialText);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  // Set initial text when prop changes
+  useEffect(() => {
+    setText(initialText);
+  }, [initialText]);
 
   const handleValidationChange = useCallback((isValid: boolean, errors: string[]) => {
     setValidationErrors(errors);
@@ -35,6 +45,15 @@ export function BiasDetectionApp() {
 
       const result = await analyzeText(request);
       setAnalysisResult(result);
+      
+      // Auto-save the analysis to the database
+      try {
+        const title = `Analysis - ${new Date().toLocaleDateString()}`;
+        await saveAnalysis(text.trim(), result, title);
+      } catch (saveError) {
+        console.warn('Failed to save analysis:', saveError);
+        // Don't show error to user for auto-save failure
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during analysis');
       setAnalysisResult(null);
@@ -91,7 +110,7 @@ export function BiasDetectionApp() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Fixed Header */}
       <div className="fixed top-0 left-0 right-0 z-30 bg-white shadow-sm">
-        <Header />
+        <Header onBack={onBack} />
       </div>
       
       {/* Main Content with Fixed Layout */}
