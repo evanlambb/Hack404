@@ -76,7 +76,8 @@ export default function TextInput({
 
   // Create highlighted text JSX
   const renderHighlightedText = useCallback(() => {
-    if (!flaggedWords || flaggedWords.length === 0 || !value) {
+    // Clear highlighting if no text or no flagged words
+    if (!value || !value.trim() || !flaggedWords || flaggedWords.length === 0) {
       return null;
     }
 

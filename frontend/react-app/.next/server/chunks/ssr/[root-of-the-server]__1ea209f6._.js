@@ -683,7 +683,7 @@ function Header({ onBack }) {
                                 children: [
                                     onBack && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         onClick: onBack,
-                                        className: "flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium px-4 py-2 transition-colors",
+                                        className: "flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium py-2 transition-colors",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
                                                 className: "w-5 h-5",
@@ -705,7 +705,7 @@ function Header({ onBack }) {
                                                 lineNumber: 26,
                                                 columnNumber: 19
                                             }, this),
-                                            "Back to Dashboard"
+                                            "Back"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/Header.tsx",
@@ -887,7 +887,8 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
     const dialogRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     // Create highlighted text JSX
     const renderHighlightedText = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])(()=>{
-        if (!flaggedWords || flaggedWords.length === 0 || !value) {
+        // Clear highlighting if no text or no flagged words
+        if (!value || !value.trim() || !flaggedWords || flaggedWords.length === 0) {
             return null;
         }
         const segments = [];
@@ -936,31 +937,31 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                                     className: "absolute top-full left-4 -mt-1 w-2 h-2 bg-gray-900 rotate-45"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TextInput.tsx",
-                                    lineNumber: 131,
+                                    lineNumber: 132,
                                     columnNumber: 19
                                 }, this),
                                 segment.explanation
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TextInput.tsx",
-                            lineNumber: 130,
+                            lineNumber: 131,
                             columnNumber: 17
                         }, this)
                     ]
                 }, index, true, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 123,
+                    lineNumber: 124,
                     columnNumber: 13
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                     children: segment.text
                 }, index, false, {
                     fileName: "[project]/src/components/TextInput.tsx",
-                    lineNumber: 137,
+                    lineNumber: 138,
                     columnNumber: 13
                 }, this))
         }, void 0, false, {
             fileName: "[project]/src/components/TextInput.tsx",
-            lineNumber: 120,
+            lineNumber: 121,
             columnNumber: 7
         }, this);
     }, [
@@ -1133,21 +1134,21 @@ function TextInput({ value, onChange, onClear, onAnalyze, placeholder = "Type or
                 }
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 292,
+                lineNumber: 293,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute inset-0 bg-gray-50 z-0"
             }, void 0, false, {
                 fileName: "[project]/src/components/TextInput.tsx",
-                lineNumber: 304,
+                lineNumber: 305,
                 columnNumber: 7
             }, this),
             renderHighlightedText()
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/TextInput.tsx",
-        lineNumber: 291,
+        lineNumber: 292,
         columnNumber: 5
     }, this);
 }
