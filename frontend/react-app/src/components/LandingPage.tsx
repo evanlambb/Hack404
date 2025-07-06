@@ -80,6 +80,19 @@ function MainContent() {
                 Use advanced AI to analyze text for hate speech, bias, and harmful content. 
                 Perfect for content moderation and research.
               </p>
+
+              {/* Stats Section */}
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="text-center p-4 bg-white rounded-lg border border-red-100 shadow-sm">
+                  <div className="text-3xl font-bold text-red-500 mb-1">95%</div>
+                  <div className="text-sm text-gray-600 font-medium">Accuracy Rate</div>
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg border border-red-100 shadow-sm">
+                  <div className="text-3xl font-bold text-red-500 mb-1">&lt;4s</div>
+                  <div className="text-sm text-gray-600 font-medium">Processing Time</div>
+                </div>
+              </div>
+
               <button 
                 onClick={() => setShowAuthForm(true)}
                 className="bg-red-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-red-600 transition-colors shadow-lg"
@@ -100,14 +113,13 @@ function MainContent() {
               </div>
               <textarea
                 placeholder="Type or paste your text here to analyze for bias and hate speech..."
-                className="w-full h-40 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none placeholder-gray-500 transition-all duration-200"
+                className="w-full h-64 p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none placeholder-gray-500 text-gray-900 transition-all duration-200"
                 maxLength={500}
               />
-              <div className="mt-4 flex justify-between items-center">
-                <span className="text-sm text-gray-500">Max 500 characters for demo</span>
+              <div className="mt-4 flex justify-end">
                 <button
                   onClick={() => setShowAuthForm(true)}
-                  className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 font-medium shadow-lg transform hover:scale-105"
+                  className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-all duration-200 font-medium"
                 >
                   Analyze Text
                 </button>

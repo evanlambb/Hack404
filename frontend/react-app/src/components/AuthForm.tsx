@@ -59,7 +59,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-red-900 via-red-800 to-gray-900 bg-opacity-95 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray-50 bg-opacity-95 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 border border-red-100">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
@@ -92,7 +92,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required={!isLogin}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-500 text-gray-900"
                 placeholder="Enter your name"
               />
             </div>
@@ -108,7 +108,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-500 text-gray-900"
               placeholder="Enter your email"
             />
           </div>
@@ -123,7 +123,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-500 text-gray-900"
               placeholder="Enter your password"
             />
           </div>
@@ -137,7 +137,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-4 rounded-md hover:from-red-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
+            className="w-full bg-red-500 text-white py-3 px-4 rounded-md hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all duration-200"
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-2">
