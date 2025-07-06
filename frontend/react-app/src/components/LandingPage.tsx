@@ -83,11 +83,11 @@ function MainContent() {
 
               {/* Stats Section */}
               <div className="grid grid-cols-2 gap-6 mb-8">
-                <div className="text-center p-4 bg-white rounded-lg border border-red-100 shadow-sm">
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
                   <div className="text-3xl font-bold text-red-500 mb-1">95%</div>
                   <div className="text-sm text-gray-600 font-medium">Accuracy Rate</div>
                 </div>
-                <div className="text-center p-4 bg-white rounded-lg border border-red-100 shadow-sm">
+                <div className="text-center p-4 bg-white rounded-lg shadow-sm">
                   <div className="text-3xl font-bold text-red-500 mb-1">&lt;4s</div>
                   <div className="text-sm text-gray-600 font-medium">Processing Time</div>
                 </div>
@@ -102,7 +102,7 @@ function MainContent() {
             </div>
             
             {/* Right side - Text input and analyze */}
-            <div className="bg-white rounded-xl shadow-xl p-6 border border-red-100">
+            <div className="bg-white rounded-xl shadow-xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-6 h-6 bg-red-500 rounded-lg flex items-center justify-center">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -60,7 +60,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
 
   return (
     <div className="fixed inset-0 bg-gray-50 bg-opacity-95 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 border border-red-100">
+      <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
